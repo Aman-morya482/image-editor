@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+
+body{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: #b2b2b2; /* Gray-300 */
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Thumb (Handle) Styling */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #303030; /* Blue-500 */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Thumb Styling for Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.more-tool:hover + .more-nav{
+  opacity: 100;
+}
