@@ -8,6 +8,9 @@ import PdfMaker from "./pages/PDF-maker";
 import TextToImage from "./pages/TextToImage";
 import ImageCompressor from "./pages/ImageCompressor";
 import ImageConvertor from "./pages/ImageConvertor";
+import Signup from "./pages/Signup";
+import Editor from "./pages/Editor";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -23,10 +26,11 @@ function App() {
           <Route path="/image-convertor" element={<ImageConvertor />} />
           <Route path="/image-detector" element={<ImageConvertor />} />
           <Route path="/image-enhancer" element={<ImageConvertor />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/image-editor" element={<Editor />} />
+          <Route path="/edit-image" element={<ImageEditor />} />
         </Route>
-
-        {/* Image Editor Route (without Navbar/Footer) */}
-        <Route path="/image-editor" element={<ImageEditor />} />
       </Routes>
     </Router>
   );

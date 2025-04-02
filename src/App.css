@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Bebas+Neue&family=Bungee+Tint&family=Caudex:ital,wght@0,400;0,700;1,400;1,700&family=Forum&family=Geostar&family=Kalam:wght@300;400;700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Monoton&family=Nosifer&family=Outfit:wght@100..900&family=Playwrite+BE+VLG:wght@100..400&family=Playwrite+PE:wght@100..400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik+Puddles&family=Sevillana&family=Silkscreen:wght@400;700&family=Tektur:wght@400..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 @import "tailwindcss";
+
 
 
 body{
@@ -7,9 +9,11 @@ body{
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-}
-
-
+    font-weight: 400;
+    font-family: 'poppins';
+    scroll-behavior: smooth;
+  }  
+  
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -41,6 +45,67 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 
-.more-tool:hover + .more-nav{
-  opacity: 100;
+.btmenu{
+  color: red;
 }
+
+.slider-border{
+  background-color: rgba(232, 232, 232, 0.43);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgb(184, 184, 184);
+  border-radius: 20px;
+}
+
+
+
+.font-poppins{
+  font-family: 'Poppins';
+}
+.font-roboto{
+  font-family: 'Roboto';
+}
+.font-sevillana{
+  font-family: 'Sevillana';
+}
+.font-ubuntu{
+  font-family: 'Ubuntu' ;
+}
+.font-caudex{
+  font-family: 'Caudex' ;
+}
+.font-nosifer{
+  font-family: 'Nosifer' ;
+}
+.font-geostar{
+  font-family: 'Geostar' ;
+}
+.font-monoton{
+  font-family: 'Monoton' ;
+}
+.font-silkscreen{
+  font-family: 'Silkscreen' ;
+}
+.font-puddles{
+  font-family: 'Puddles';
+}
+.font-tektur{
+  font-family: 'Tektur' ;
+}
+.font-bungee{
+  font-family: 'Bungee Tint' ;
+}
+
+/* 
+
+@keyframes marquee {
+  from {
+    transform: translateX(100%);
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  animation: marquee 15s linear infinite;
+} */

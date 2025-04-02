@@ -6,7 +6,7 @@ const AppLayout = () => {
   const location = useLocation();
 
   // Hide Navbar & Footer for "/image-editor"
-  const hideNavAndFooter = location.pathname === "/image-editor";
+  const hideNavAndFooter = location.pathname === "/edit-image";
 
   return (
     <div className="min-h-screen flex flex-col">

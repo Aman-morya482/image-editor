@@ -70,13 +70,17 @@ const updateFilter = useCallback((newFilters) => {
   });
 },[]);
 
-  const [text, setText] = useState("");
-  const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
-  const [textSize, setTextSize] = useState(20);
-  const [textColor, setTextColor] = useState("#000000");
-  const isDragging = useRef(false);
+    const inputRef = useRef(null); 
+    const [texts, setTexts] = useState([]);
+    const [selectedTextIndex, setSelectedTextIndex] = useState(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [offset, setOffset] = useState({ x: 50, y: 50 });
+    const [color, setColor] = useState("#000000");
+    const [fontSize, setFontSize] = useState(22);
+    const [fontFamily, setFontFamily] = useState("Arial");
+    const [isEditing, setIsEditing] = useState(false);
+    const [inputValue, setInputValue] = useState("");
 
-  const [updatedImage, setUpdatedImage] = useState(null);
   const [history,setHistory] = useState([]);
   const [historyIndex,setHistoryIndex] = useState(-1);
 
@@ -155,9 +159,26 @@ const updateFilter = useCallback((newFilters) => {
   invert(${filters.invert}%)
 `;
       ctx.drawImage(img, -canvasWidth/2, -canvasHeight/2, canvasWidth, canvasHeight);
-      drawText(ctx);
+      // drawTexts();
+      texts.forEach((text, index) => {
+      ctx.font = `${text.size}px ${text.font}`;
+      ctx.fillStyle = text.color;
+
+      // Center text positioning
+      const textWidth = ctx.measureText(text.text).width;
+      const textHeight = text.size;
+
+      ctx.fillText(text.text, text.x - textWidth / 2, text.y + textHeight / 4); 
+
+      // Highlight selected text
+      if (selectedTextIndex === index) {
+        ctx.strokeStyle = "blue";
+        ctx.strokeRect(text.x - textWidth / 2 - 5, text.y - textHeight / 2 - 5, textWidth + 10, textHeight + 10);
+      }
+    });
       ctx.restore();
     };
+
 
        const timeout = setTimeout(() => {
       saveToHistory();
@@ -165,7 +186,17 @@ const updateFilter = useCallback((newFilters) => {
 
    return () => clearInterval(timeout);
 
-  }, [image,croppedImage, text, textPosition, textColor, textSize ,rotation,flipX,flipY,filters]);
+  }, [image,croppedImage, texts,selectedTextIndex, color, rotation,flipX,flipY,filters]);
+
+  // const drawTexts = () => {
+  //   const canvas = canvasRef.current;
+  //   const ctx = canvas.getContext("2d");
+     
+  // };
+
+
+
+
 
     const saveToHistory = () => {
     const canvas = canvasRef.current;
@@ -210,9 +241,6 @@ const handleRedo = () => {
     console.log(imageData);
   };
 
-
-
-
     useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.ctrlKey && event.key === "z" || event.key === "Z") {
@@ -230,43 +258,126 @@ const handleRedo = () => {
     };
   }, [historyIndex, history]);
 
-  const drawText = (ctx) => {
-    ctx.font = `${textSize}px Arial`;
-    ctx.fillStyle = textColor;
-    ctx.textBaseline = "top";
-    ctx.fillText(text, textPosition.x, textPosition.y);
-  };
+const addText = () => {
+  const canvas = canvasRef.current;
+  if (!canvas) return;
 
-    const handleMouseDown = (e) => {
-    const rect = canvasRef.current.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
 
-    if (
-      offsetX >= textPosition.x &&
-      offsetX <= textPosition.x + textSize * text.length &&
-      offsetY >= textPosition.y &&
-      offsetY <= textPosition.y + textSize
-    ) {
-      isDragging.current = true;
+  setTexts([...texts, { 
+    text: "New Text", 
+    x: 0,  // Start from canvas center
+    y: 0,  
+    color, 
+    size: fontSize, 
+    font: fontFamily 
+  }]);
+};
+
+
+const handleMouseDown = (e) => {
+  if (isEditing) return;
+
+  const canvas = canvasRef.current;
+  const rect = canvas.getBoundingClientRect();
+
+  // Convert click position to centered coordinates
+  const x = e.clientX - rect.left - canvas.width / 2;
+  const y = e.clientY - rect.top - canvas.height / 2;
+
+  const ctx = canvas.getContext("2d");
+
+  for (let i = texts.length - 1; i >= 0; i--) {
+    const text = texts[i];
+    ctx.font = `${text.size}px ${text.font}`;
+
+    const textWidth = ctx.measureText(text.text).width;
+    const textHeight = text.size; // Approximate height
+
+    const textX = text.x - textWidth / 2; // Center text horizontally
+    const textY = text.y - textHeight / 2; // Center text vertically
+    console.log("out clicked")
+
+    // Check if mouse click is inside text bounding box
+    if (x >= textX && x <= textX + textWidth && y >= textY && y <= textY + textHeight) {
+      setSelectedTextIndex(i);
+      setOffset({ x: x - text.x, y: y - text.y });
+      setIsDragging(true);
+      console.log("in clicked")
+      return;
     }
-    console.log(isDragging);
-    console.log(rect);
+  }
+
+  setSelectedTextIndex(null);
+};
+
+
+const handleMouseMove = (e) => {
+  if (!isDragging || selectedTextIndex === null) return;
+
+  const canvas = canvasRef.current;
+  const rect = canvas.getBoundingClientRect();
+
+  // Convert mouse position to centered coordinates
+  const x = e.clientX - rect.left - canvas.width / 2;
+  const y = e.clientY - rect.top - canvas.height / 2;
+
+  const updatedTexts = [...texts];
+  updatedTexts[selectedTextIndex] = { 
+    ...updatedTexts[selectedTextIndex], 
+    x: x - offset.x, 
+    y: y - offset.y 
   };
 
-    const handleMouseMove = (e) => {
-    if (!isDragging.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    setTextPosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+  setTexts(updatedTexts);
+};
+
+
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+const handleDoubleClick = () => {
+    if (selectedTextIndex === null) return;
+
+    console.log("clicked"); // Corrected debugging line
+
+    setIsEditing(true);
+    setInputValue(texts[selectedTextIndex].text);
+
+    setTimeout(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, 50);
+};
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputBlur = () => {
+    if (selectedTextIndex !== null) {
+      const updatedTexts = [...texts];
+      updatedTexts[selectedTextIndex].text = inputValue;
+      setTexts(updatedTexts);
+    }
+    setIsEditing(false);
+  };
+
+  const updateTextProperties = (property, value) => {
+    if (selectedTextIndex === null) return;
+    setTexts((prevTexts) => {
+        const updatedTexts = [...prevTexts];
+        updatedTexts[selectedTextIndex] = { 
+            ...updatedTexts[selectedTextIndex], 
+            [property]: value 
+        };
+        return updatedTexts;
     });
   };
-
-    const handleMouseUp = () => {
-    isDragging.current = false;
-  };
-
  
    const onCropComplete = useCallback((_, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -316,10 +427,8 @@ const handleRedo = () => {
         <li onClick={()=>{navigat(-1); localStorage.setItem("uploadedImage","")}}><a className="hover:text-gray-400 text-lg md:text-2xl"><FaArrowLeft/></a></li>
         </div>
         <div className="flex gap-2 md:gap-5">
-        <button data-tooltip-id="undo-tip" onClick={handleUndo} className={`border-2 p-[6px] cursor-pointer rounded-lg text-lg md:text-2xl ${historyIndex >= 1 ? 'text-white' : 'text-gray-400'} hover:text-gray-400`} title="Undo (ctrl + Z)"><div><GrUndo /></div></button>
-        <button data-tooltip-id="redo-tip" onClick={handleRedo} className={`border-2 p-[6px] cursor-pointer rounded-lg text-lg md:text-2xl ${historyIndex < history.length - 1 ? 'text-white' : 'text-gray-400'} hover:text-gray-400`} title="Undo (ctrl + Y)"><div><GrRedo /></div></button>
-        <Tooltip id="undo-tip" place="top">Undo (Ctrl + Z)</Tooltip>
-        <Tooltip id="redo-tip" place="top">Redo (Ctrl + Y)</Tooltip>
+        <button onClick={handleUndo} className={`border-2 p-[6px] cursor-pointer rounded-lg text-lg md:text-2xl ${historyIndex >= 1 ? 'text-white' : 'text-gray-400'} hover:text-gray-400`} title="Undo (ctrl + Z)"><div><GrUndo /></div></button>
+        <button onClick={handleRedo} className={`border-2 p-[6px] cursor-pointer rounded-lg text-lg md:text-2xl ${historyIndex < history.length - 1 ? 'text-white' : 'text-gray-400'} hover:text-gray-400`} title="Undo (ctrl + Y)"><div><GrRedo /></div></button>
         </div>
         <div className="flex gap-2 md:gap-12 font-bold">
         <li onClick={downloadImage}><a href="#crop" className="border-2 border-black bg-yellow-400 hover:text-white text-sm md:text-lg px-2 md:px-3 py-2 rounded-lg text-black">Download</a></li>
@@ -346,7 +455,7 @@ const handleRedo = () => {
 )}
 
       { image &&
-      <div className="h-[93vh] w-full flex flex-col-reverse md:flex-row justify-between gap-2 overflow-y-hidden">
+      <div className="h-[90vh] w-full flex flex-col-reverse md:flex-row justify-between gap-2 overflow-y-hidden">
       <div className="md:w-[1200px] bg-gray-100 py-5 flex relative px-4">
       <ul className="flex md:flex-col items-center gap-8 overflow-x-scroll md:overflow-x-hidden">
         <li onClick={()=>toggleFeature("crop")} className={`flex flex-col justify-center w-fit items-center hover:bg-gray-200 ${togCrop && "bg-gray-200"} px-[12px] py-[6px] rounded-lg cursor-pointer`}><button onClick={()=>toggleFeature("crop")} className={`text-2xl md:text-4xl ${togCrop && "text-blue-700"}`}><MdCropFree /></button><p>Crop</p></li>
@@ -359,9 +468,9 @@ const handleRedo = () => {
       <ul>
       {/* h-full w-[400px] flex flex-col bg-white absolute shadow-lg rounded-lg px-5 py-10 top-5 ${togCrop ? "left-20" : "-left-120 z-10"} */}
         <div className={`md:h-[500px] w-full md:w-[400px] flex flex-col bg-white absolute shadow-lg rounded-lg px-2 md:px-5 py-4 md:py-10 left-0 md:top-5 ${togCrop ? "-top-50 md:left-22" : "top-50 md:-left-120"}`}>
-            <ul className="flex flex-wrap gap-4 md:gap-10 justify-center items-center">
+            <ul className="flex flex-wrap gap-4 md:gap-6 justify-center items-center">
             <button onClick={()=>{setIsCropping(true); toggleFeature("crop")}} className="bg-blue-500 hover:bg-blue-600 text-white hover:cursor-pointer border-gray-400 border-1 hover:border-gray-700 w-full py-1 md:py-2 rounded-sm md:font-semibold">Crop Image</button>
-              <div className="flex md:flex-wrap gap-8 md:gap-6  overflow-x-scroll md:overflow-hidden px-6">
+              <div className="flex md:flex-wrap gap-8 md:gap-6 md:py-6  overflow-x-scroll md:overflow-hidden md:border-t-2 md:border-b-2 border-gray-300 px-6">
               <li onClick={()=>{setIsCropping(true); setAspect(1)}} className="flex flex-col items-center font-mono"><div className="text-3xl md:text-4xl border-2 hover:border-blue-400 rounded-sm border-gray-300 px-3 py-2 md:px-6 md:py-5 justify-center "><BiRectangle/></div><p className="text-lg">1:1</p></li>
               <li onClick={()=>{setIsCropping(true); setAspect(4/3)}} className="flex flex-col items-center font-mono"><div className="text-3xl md:text-4xl border-2 hover:border-blue-400 rounded-sm border-gray-300 px-3 py-2 md:px-6 md:py-5 justify-center "><TbRectangleVertical/></div><p className="text-lg">4:3</p></li>
               <li onClick={()=>{setIsCropping(true); setAspect(16/9)}} className="flex flex-col items-center font-mono"><div className="text-3xl md:text-4xl border-2 hover:border-blue-400 rounded-sm border-gray-300 px-3 py-2 md:px-6 md:py-5 justify-center "><LuRectangleVertical/></div><p className="text-lg">16:9</p></li>
@@ -405,25 +514,25 @@ const handleRedo = () => {
           <ul className="flex md:flex-col gap-6">
             <li onClick={()=>{updateFilter({brightness:110,constrast:80,saturation:120})}}><p>filter1</p></li>
             <li onClick={()=>{updateFilter({brightness:90,constrast:120,saturation:120})}}><p>filter2</p></li>
-    <li onClick={() => updateFilter({ grayscale: 100 })}><p>B&W</p></li>
-    <li onClick={() => updateFilter({ invert: 100 })}><p>Invert</p></li>
-    <li onClick={() => updateFilter({ sepia: 80, contrast: 110, brightness: 90 })}><p>Vintage</p></li>
-    <li onClick={() => updateFilter({ hue: 220, contrast: 120, saturation: 150 })}><p>Cool Tone</p></li>
-    <li onClick={() => updateFilter({ hue: -20, contrast: 120, saturation: 140 })}><p>Warm Tone</p></li>
-    <li onClick={() => updateFilter({ brightness: 130, contrast: 110, blur: 2 })}><p>Soft Glow</p></li>
-    <li onClick={() => updateFilter({ contrast: 200, brightness: 80, saturate: 150 })}><p>Cinematic</p></li>
-    <li onClick={() => updateFilter({ brightness: 80, saturation: 50, sepia: 60 })}><p>Retro</p></li>
-    <li onClick={() => updateFilter({ contrast: 130, invert: 20, hue: 180 })}><p>Cyberpunk</p></li>
-    <li onClick={() => updateFilter({ blur: 4, opacity: 70 })}><p>Dreamy</p></li>
+            <li onClick={() => updateFilter({ grayscale: 100 })}><p>B&W</p></li>
+            <li onClick={() => updateFilter({ invert: 100 })}><p>Invert</p></li>
+            <li onClick={() => updateFilter({ sepia: 80, contrast: 110, brightness: 90 })}><p>Vintage</p></li>
+            <li onClick={() => updateFilter({ hue: 220, contrast: 120, saturation: 150 })}><p>Cool Tone</p></li>
+            <li onClick={() => updateFilter({ hue: -20, contrast: 120, saturation: 140 })}><p>Warm Tone</p></li>
+            <li onClick={() => updateFilter({ brightness: 130, contrast: 110, blur: 2 })}><p>Soft Glow</p></li>
+            <li onClick={() => updateFilter({ contrast: 200, brightness: 80, saturate: 150 })}><p>Cinematic</p></li>
+            <li onClick={() => updateFilter({ brightness: 80, saturation: 50, sepia: 60 })}><p>Retro</p></li>
+            <li onClick={() => updateFilter({ contrast: 130, invert: 20, hue: 180 })}><p>Cyberpunk</p></li>
+            <li onClick={() => updateFilter({ blur: 4, opacity: 70 })}><p>Dreamy</p></li>
           </ul>
         </div>
         <div className={`h-[200px] md:h-[500px] w-full md:w-[400px] bg-white absolute shadow-lg rounded-lg px-3 md:px-6 py-3 md:py-6 overflow-y-scroll md:overflow-y-hidden left-0 md:top-5 ${togLight ? "-top-48 md:left-22" : "top-50 md:-left-120"}`}>
         <ul className="flex flex-col gap-4">
           <li><p>Brightness</p>
-            <input type="range" min="20" max="200" value={filters.brightness} onChange={(e) => setFilters({...filters, brightness: Number(e.target.value)})}/>
+            <input type="range" min="40" max="160" value={filters.brightness} onChange={(e) => setFilters({...filters, brightness: Number(e.target.value)})}/>
             </li>
             <li><p>Contrast</p>
-            <input type="range" min="20" max="200" value={filters.contrast} onChange={(e) => setFilters({...filters, contrast: Number(e.target.value)})}/>
+            <input type="range" min="40" max="180" value={filters.contrast} onChange={(e) => setFilters({...filters, contrast: Number(e.target.value)})}/>
             </li>
             <li><p>Saturation</p>
             <input type="range" min="20" max="200" value={filters.saturation} onChange={(e) => setFilters({...filters, saturation: Number(e.target.value)})}/>
@@ -437,28 +546,16 @@ const handleRedo = () => {
         </ul>
         </div>
         <div className={`h-full w-[400px] bg-white absolute shadow-lg rounded-lg px-3 py-3 top-5 ${togText ? "left-20" : "-left-120"}`}>
-          <div className="mt-4 flex flex-col items-center">
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="p-2 border border-gray-400"
-          placeholder="Enter text"
-        />
-        <input
-          type="color"
-          value={textColor}
-          onChange={(e) => setTextColor(e.target.value)}
-          className="mt-2"
-        />
-        <input
-          type="range"
-          min="10"
-          max="50"
-          value={textSize}
-          onChange={(e) => setTextSize(parseInt(e.target.value))}
-          className="mt-2"
-        />
+          <div className="flex flex-col gap-8 py-4 px-4">
+        <button onClick={addText} className="px-4 py-2 bg-blue-500 text-white rounded">Add Text</button>
+        <p className="flex gap-4 items-center">Color:<input type="color" className="w-[80px] h-[40px]" value={color} onChange={(e) => updateTextProperties("color", e.target.value)} /></p>
+        <p className="flex gap-2 items-center">Size<input type="range" min="10" max="100" step="2" value={fontSize} onChange={(e) => { const newSize = parseInt(e.target.value, 10); setFontSize(newSize); updateTextProperties("size", newSize);}} />
+        <span>{fontSize}px</span></p>
+        <select value={fontFamily} onChange={(e) => updateTextProperties("font", e.target.value)}>
+          <option value="Arial">Arial</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Times New Roman">Times New Roman</option>
+        </select>
       </div>
         </div>
       </ul>
@@ -470,9 +567,34 @@ const handleRedo = () => {
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp} 
+        onDoubleClick={handleDoubleClick}
         className="border rounded-md" />
       </div>
       }
+      {isEditing && selectedTextIndex !== null && (
+  <input
+    ref={inputRef}
+    type="text"
+    value={inputValue}
+    onChange={handleInputChange}
+    onBlur={handleInputBlur}
+    onKeyDown={(e) => e.key === "Enter" && handleInputBlur()}
+    style={{
+      position: "absolute",
+      left: `calc(${canvasRef.current.getBoundingClientRect().left + canvasRef.current.width / 2 + texts[selectedTextIndex].x}px)`,
+      top: `calc(${canvasRef.current.getBoundingClientRect().top + canvasRef.current.height / 2 + texts[selectedTextIndex].y - texts[selectedTextIndex].size}px)`,
+      fontSize: `${texts[selectedTextIndex].size * 0.8}px`, // Adjust to better match canvas font size
+      fontFamily: texts[selectedTextIndex].font,
+      color: texts[selectedTextIndex].color,
+      border: "1px solid blue",
+      outline: "none",
+      background: "white",
+      padding: "2px",
+      zIndex: "10",
+    }}
+  />
+)}
+
       {isCropping && image && (
         <div className="">
           <Cropper
@@ -499,125 +621,3 @@ const handleRedo = () => {
 };
 
 export default ImageEditor;
-
-
-
-
-// // import React, { useRef, useState } from "react";
-
-// // const ImageEditor = () => {
-// //   const [image, setImage] = useState(null);
-// //   const [text, setText] = useState("");
-// //   const [textPosition, setTextPosition] = useState({ x: 50, y: 50 });
-// //   const [textSize, setTextSize] = useState(16);
-// //   const [textColor, setTextColor] = useState("black");
-// //   const [cropping, setCropping] = useState(false);
-// //   const [cropArea, setCropArea] = useState({ x: 50, y: 50, width: 200, height: 200 });
-// //   const canvasRef = useRef(null);
-
-// //   const handleImageUpload = (e) => {
-// //     const file = e.target.files[0];
-// //     if (file) {
-// //       const reader = new FileReader();
-// //       reader.onload = () => setImage(reader.result);
-// //       reader.readAsDataURL(file);
-// //     }
-// //   };
-
-// //   const handleMouseDown = (e) => {
-// //     const startX = e.clientX;
-// //     const startY = e.clientY;
-
-// //     const onMouseMove = (event) => {
-// //       setTextPosition((prev) => ({
-// //         x: prev.x + event.movementX,
-// //         y: prev.y + event.movementY,
-// //       }));
-// //     };
-
-// //     const onMouseUp = () => {
-// //       document.removeEventListener("mousemove", onMouseMove);
-// //       document.removeEventListener("mouseup", onMouseUp);
-// //     };
-
-// //     document.addEventListener("mousemove", onMouseMove);
-// //     document.addEventListener("mouseup", onMouseUp);
-// //   };
-
-// //   const handleCropMouseDown = (e) => {
-// //     e.preventDefault();
-// //     const startX = e.clientX;
-// //     const startY = e.clientY;
-
-// //     const onMouseMove = (event) => {
-// //       setCropArea((prev) => ({
-// //         ...prev,
-// //         x: prev.x + event.movementX,
-// //         y: prev.y + event.movementY,
-// //       }));
-// //     };
-
-// //     const onMouseUp = () => {
-// //       document.removeEventListener("mousemove", onMouseMove);
-// //       document.removeEventListener("mouseup", onMouseUp);
-// //     };
-
-// //     document.addEventListener("mousemove", onMouseMove);
-// //     document.addEventListener("mouseup", onMouseUp);
-// //   };
-
-// //   return (
-// //     <div className="flex flex-col items-center p-4">
-// //       <input type="file" accept="image/*" onChange={handleImageUpload} className="mb-4" />
-// //       <div className="relative w-[500px] h-[500px] border border-gray-300">
-// //         {image && <img src={image} alt="Uploaded" className="w-full h-full object-cover" />}
-// //         {cropping && (
-// //           <div
-// //             className="absolute border border-dashed border-red-500 resize overflow-hidden"
-// //             style={{
-// //               left: cropArea.x,
-// //               top: cropArea.y,
-// //               width: cropArea.width,
-// //               height: cropArea.height,
-// //             }}
-// //             onMouseDown={handleCropMouseDown}
-// //           />
-// //         )}
-// //         <div
-// //           className="absolute cursor-move"
-// //           style={{ left: textPosition.x, top: textPosition.y, fontSize: textSize, color: textColor }}
-// //           onMouseDown={handleMouseDown}
-// //         >
-// //           {text}
-// //         </div>
-// //       </div>
-// //       <input
-// //         type="text"
-// //         placeholder="Enter text"
-// //         value={text}
-// //         onChange={(e) => setText(e.target.value)}
-// //         className="mt-4 p-2 border border-gray-400"
-// //       />
-// //       <input
-// //         type="color"
-// //         value={textColor}
-// //         onChange={(e) => setTextColor(e.target.value)}
-// //         className="mt-2"
-// //       />
-// //       <input
-// //         type="range"
-// //         min="10"
-// //         max="50"
-// //         value={textSize}
-// //         onChange={(e) => setTextSize(parseInt(e.target.value))}
-// //         className="mt-2"
-// //       />
-// //       <button onClick={() => setCropping(!cropping)} className="mt-4 p-2 bg-blue-500 text-white">
-// //         Toggle Crop
-// //       </button>
-// //     </div>
-// //   );
-// // };
-
-// // export default ImageEditor;
-
