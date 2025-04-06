@@ -135,3 +135,38 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   animation: marquee 15s linear infinite;
 } */
+
+
+.swiper {
+  width: 280px;
+  height: 380px;
+}
+
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+}
+
+@media screen and (max-width: 500px){
+  .swiper{
+    width:220px;
+    height: 330px;
+  }
+}
+@media screen and (max-width: 1000px){
+  .swiper{
+    width:220px;
+    height: 330px;
+  }
+}
+@media screen and (max-width: 1500px){
+  .swiper{
+    width:260px;
+    height: 360px;
+  }
+}

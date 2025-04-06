@@ -8,22 +8,20 @@ import { TextPlugin } from "gsap/TextPlugin";
 import ReactCompareImage from "react-compare-image";
 import '../App.css';
 import FAQ from "../components/FAQ"
+import Slider from "../components/Slider"
 
 
-import { RiImageEditLine } from "react-icons/ri";
-import { IoImagesOutline } from "react-icons/io5";
 import { RiImageAiLine } from "react-icons/ri";
 import { PiFilePdfLight } from "react-icons/pi";
 import { RiAiGenerate2 } from "react-icons/ri";
-import { RiExchangeBoxLine } from "react-icons/ri";
 import { AiOutlineFileSync } from "react-icons/ai";
-import { VscFileMedia } from "react-icons/vsc";
 import { TbBackground } from "react-icons/tb";
 import { MdOutlineImageSearch } from "react-icons/md";
 import { MdOutlineDraw } from "react-icons/md";
-import { FaCompressArrowsAlt } from "react-icons/fa";
 import { FaCompress } from "react-icons/fa";
-
+import { PiCursorClick } from "react-icons/pi";
+import { LuUpload } from "react-icons/lu";
+import { FiDownload } from "react-icons/fi";
 
 
 
@@ -38,9 +36,6 @@ const Home = () => {
   const marText1 = useRef (null);
   const marText2 = useRef (null);
   const gradientText = useRef(null);
-  const ballRef = useRef(null);
-  const pointerX = motionValue(0);
-  const pointerY = motionValue(0);
 
 
   const words = ["Editing","Compressor","Enhancer","BG Remover","Generation","Conversion"];
@@ -184,54 +179,6 @@ const Home = () => {
               scrub:true,
             }
           })
-        gsap.fromTo(".rightBox3", { scale:0.6, opacity:0 },
-          {
-            scale:1,
-            opacity:1,
-            ease:"power2.inOut",
-            duration:1,
-            scrollTrigger:{
-              trigger:".rightBox3",
-              start:"top bottom",
-              end:"botoom 50%",
-            }
-          })
-        gsap.fromTo(".rightBox3", {opacity:1, scale:1},
-          { opacity:0,
-            ease:"power2.inOut",
-            duration:1,
-            scale:0.8,
-            scrollTrigger:{
-              trigger:".rightBox3",
-              start:"top top",
-              end:"bottom top",
-              scrub:true,
-            }
-          })
-        gsap.fromTo(".rightBox4", { scale:0.6, opacity:0 },
-          {
-            scale:1,
-            opacity:1,
-            ease:"power2.inOut",
-            duration:1,
-            scrollTrigger:{
-              trigger:".rightBox4",
-              start:"top bottom",
-              end:"botoom 50%",
-            }
-          })
-        gsap.fromTo(".rightBox4", {opacity:1, scale:1},
-          { opacity:0,
-            ease:"power2.inOut",
-            duration:1,
-            scale:0.8,
-            scrollTrigger:{
-              trigger:".rightBox4",
-              start:"top top",
-              end:"bottom top",
-              scrub:true,
-            }
-          })
         gsap.fromTo(".leftBox1", { scale:0.6, opacity:0 },
           {
             scale:1,
@@ -268,7 +215,7 @@ const Home = () => {
               end:"botoom 50%",
             }
           })
-        gsap.fromTo(".leftBox2", {opacity:1, scale:1},
+          gsap.fromTo(".leftBox2", {opacity:1, scale:1},
           { opacity:0,
             ease:"power2.inOut",
             duration:1,
@@ -280,52 +227,28 @@ const Home = () => {
               scrub:true,
             }
           })
-        gsap.fromTo(".leftBox3", { scale:0.6, opacity:0 },
-          {
+          gsap.fromTo(".quick", {opacity:0, scale:0.8},
+          { opacity:1,
+            ease:"power2.inOut",
+            duration:1,
             scale:1,
-            opacity:1,
-            ease:"power2.inOut",
-            duration:1,
             scrollTrigger:{
-              trigger:".leftBox3",
-              start:"top bottom",
-              end:"botoom 50%",
+              trigger:".quick",
+              start:"top 90%",
+              end:"bottom 70%",
+              // scrub:true,
             }
           })
-        gsap.fromTo(".leftBox3", {opacity:1, scale:1},
-          { opacity:0,
+          gsap.fromTo(".quick2", {opacity:0, scale:0.8},
+          { opacity:1,
             ease:"power2.inOut",
-            duration:1,
-            scale:0.8,
-            scrollTrigger:{
-              trigger:".leftBox3",
-              start:"top top",
-              end:"bottom top",
-              scrub:true,
-            }
-          })
-        gsap.fromTo(".leftBox4", { scale:0.6 , opacity:0 },
-          {
+            duration:0.9,
             scale:1,
-            opacity:1,
-            ease:"power2.inOut",
-            duration:1,
             scrollTrigger:{
-              trigger:".leftBox4",
-              start:"top bottom",
-              end:"botoom 50%",
-            }
-          })
-        gsap.fromTo(".leftBox4", {opacity:1 , scale:1},
-          { opacity:0,
-            scale:0.8,
-            ease:"power2.inOut",
-            duration:1,
-            scrollTrigger:{
-              trigger:".leftBox4",
-              start:"top top",
-              end:"bottom top",
-              scrub:true,
+              trigger:".quick2",
+              start:"top 90%",
+              end:"bottom 70%",
+              // scrub:true,
             }
           })
 
@@ -333,276 +256,166 @@ const Home = () => {
       setShowCursor((prev) => !prev);
     }, 400);
 
-        
-    const ball = ballRef.current;
-    if (!ball) return;
-    const { top, left, width, height } = ball.getBoundingClientRect();
-    const initialX = left + width / 2;
-    const initialY = top + height / 2;
-
-    function springToPointer() {
-      animate(
-        ball,
-        {
-          x: pointerX.get() - initialX,
-          y: pointerY.get() - initialY,
-        },
-        { type: "spring", stiffness: 100, damping: 10 }
-      );
-    }
-
-    function scheduleSpringToPointer() {
-      frame.postRender(springToPointer);
-    }
-
-    pointerX.on("change", scheduleSpringToPointer);
-    pointerY.on("change", scheduleSpringToPointer);
-
-    const handleMouseMove = (e) => {
-      pointerX.set(e.clientX);
-      pointerY.set(e.clientY);
-    };
-
-
-    window.addEventListener("pointermove", handleMouseMove)
-
-
     return () => {
       clearInterval(cursorBlink)
-      window.removeEventListener("pointermove", handleMouseMove)
     };
   }, []);
 
 
   return (
     <div>
-      <div className='h-[92vh] w-full relative overflow-hidden flex flex-col md:flex-row justify-center items-center gap-10 md:px-15 py-20'>
-      <div ref={ballRef} className='z-[-1] w-[50px] h-[50px] bg-blue-600 hidden md:block absolute rounded-[50%]'></div>
+      <div className='grid grid-cols-1 place-items-center'>
+
+      <div className='h-[92vh] w-full max-w-[1800px] relative overflow-hidden flex flex-col md:flex-row justify-center items-center gap-20 md:px-15 py-20 md:py-30 lg:py-40'>
       <div ref={blurDiv1} className="z-[-1] absolute -right-[200px] w-[500px] h-[500px] hidden md:block  bg-blue-600 rounded-full opacity-90 blur-[80px] shadow-[0_0_80px_200px_rgb(96, 165, 250)]"></div>
       <div ref={blurDiv2} className="z-[-1] absolute -left-[150px] w-[400px] h-[400px] hidden md:block bg-blue-600 rounded-full opacity-90 blur-[80px] shadow-[0_0_80px_200px_rgb(96, 165, 250)]"></div>
-      <div className='w-full h-full text-5xl md:text-8xl text-black flex flex-col md:justify-center text-center md:text-left'>
+      <div className='w-full h-full text-4xl md:text-6xl xl:text-8xl text-black flex flex-col md:justify-center text-center md:text-left'>
         <h1 className='font-bold'>One Place</h1>
         <h1 className='font-bold'>Solution for</h1>
         <h2 className='font-bold'>Image <span className={`text-blue-600 border-blue-500 ${showCursor ? "border-r-2" : "border-0"}`}>{text}</span></h2>
       </div>
 <div className='relative md:pr-10'>
-<div className="slider-border w-[280px] md:w-[300px] h-[280px] md:h-[350px] p-4 rotate-[-8deg] md:overflow-hidden ">
-  <ReactCompareImage
-    leftImage="/img/slider-image1.jpg"
-    rightImage="/img/slider-image2.jpg"
-    containerStyle={{ width: "100%", height: "70%" }} 
-    leftImageCss={{
-      width: "100%",
-      height: "70%",
-      objectFit: "cover", // Make sure it fills the container
-      borderRadius: "15px",
-    }}
-    rightImageCss={{
-      width: "100%",
-      height: "70%",
-      objectFit: "cover",
-      borderRadius: "15px",
-    }}
-  />
-</div>
-<div className="slider-border w-[280px] md:w-[300px] h-[280px] md:h-[350px] absolute z-[-1] bottom-5 p-4 rotate-[2deg] overflow-hidden">
-  <ReactCompareImage
-    righttImage="/img/slider-image1.jpg"
-    leftImage="/img/slider-image2.jpg"
-    containerStyle={{ width: "100%", height: "70%" }} 
-    leftImageCss={{
-      width: "100%",
-      height: "70%",
-      objectFit: "cover", // Make sure it fills the container
-      borderRadius: "15px",
-    }}
-    rightImageCss={{
-      width: "100%",
-      height: "70%",
-      objectFit: "cover",
-      borderRadius: "15px",
-    }}
-  />
-</div>
+  <Slider/>
 </div>
       </div>
 
-      
-      <div className='relative overflow-hidden h-[45vh] flex flex-col justify-center items-center font-tektur'>
-        <div className='w-max bg-blue-700 text-white whitespace-nowrap text-2xl md:text-5xl font-bold py-4 md:py-8 '>
-          <h1 ref={marText2} className='px-8 flex space-x-10'>
-           <p>Image Editor</p><p>*</p>
-           <p>PDF Maker </p><p>*</p>          
-           <p>BG Remover </p><p>*</p>
-           <p>Image Enhancer </p><p>*</p>
-           <p>Image Compressor</p><p>*</p>          
-       
-           </h1>
+
+        <div className='w-full text-center max-w-[1800px] text-lg text-white bg-gradient-to-br from-blue-500 to-purple-800 py-10 px-2 md:px-20 md:py-16'>
+          <p className='mb-10 font-bold text-4xl'>Quick Links</p>
+          <div className='flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 md:gap-8'>
+            <NavLink to='image-editor'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
+              <span><MdOutlineDraw size={40} className='group-hover:scale-110 transition-all duration-100ease-linear'/></span><p>Image Editor</p>
+            </div></NavLink>
+            <NavLink to='bg-remover'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
+              <span><TbBackground size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>BG Remover</p>
+            </div></NavLink>
+            <NavLink to='pdf-maker'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
+              <span><PiFilePdfLight size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>PDF Maker</p>
+            </div></NavLink>
+            <NavLink to='image-enhancer'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
+              <span><RiImageAiLine size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>Image Enhancer</p>
+            </div></NavLink>
+            <NavLink to='text-to-image'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
+              <span><RiAiGenerate2 size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>Image Generator</p>
+            </div></NavLink>
+            <NavLink to='image-convertor'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
+              <span><RiImageAiLine size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>Format Convertor</p>
+            </div></NavLink>
+            <NavLink to='image-compressor'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
+              <span><FaCompress size={36} className='group-hover:scale-80 transition-all duration-100 ease-linear'/></span><p>Image Compressor</p>
+            </div></NavLink>
+            <NavLink to='image-detector'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
+              <span><MdOutlineImageSearch size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>Image Analyzer</p>
+            </div></NavLink>
+          </div>
         </div>
-        <div className='w-max border-b-3 border-blue-700 bg-white whitespace-nowrap text-blue-700 text-2xl md:text-5xl font-bold py-4 md:py-8 '>
-          <h1 ref={marText1} className='px-8 flex space-x-10'>
-           <p>Image Compressor</p><p>*</p>       
-           <p>Image Enhancer</p><p>*</p>
-           <p>Image BG Remover</p><p>*</p>
-           <p>Image Convertor</p><p>*</p>
-           <p>Image Analyser</p><p>*</p>
-           </h1>
-        </div>
-      </div>
 
 
-      <div className='relative overflow-hidden h-max w-full py-20 flex flex-col gap-10 md:gap-20 justify-between items-center text-black px-5 md:px-20'
-      style={{background: "linear-gradient(173deg, rgba(256,256,253,0.7) 7%, rgba(255,255,76,0.7) 30%, rgba(255,66,105,0.7) 56%, rgba(255,54,241,0.7) 71%, rgba(255,256,256,1) 100%"}}>
+      <div className='relative overflow-hidden h-max w-full max-w-[1800px] py-20 flex flex-col gap-10 md:gap-30 justify-between items-center text-black px-5 md:px-20'
+      style={{background: "linear-gradient(170deg, rgba(26,156,253,0.4) 50%, rgba(255,255,76,0.8) 50%"}}>
         
-        <div ref={gradientText} className='text-5xl font-protest opacity-100'    
+        <div ref={gradientText} className='text-4xl md:text-5xl text-center font-bold opacity-100'    
         style={{
-          background: "linear-gradient(to right, blue,red )",
+          background: "linear-gradient(to right, blue,purple,red )",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
-        }}>What we serve </div>
+        }}>Popular Features </div>
 
-        <div className='flex w-full rightBox1 '>
-        <div className='w-[300px] md:w-[700px] lg:w-[900px] md:h-[400px] group md:flex justify-between items-center rounded-[20px] border-[12px] md:border-[20px] py-8 px-4 md:px-10 border-transparent backdrop-blur-3xl' 
-        style={{background: "linear-gradient(132deg, rgba(52,152,219,1) 6%, rgba(233,30,99,1) 65%) "}}
-        >
-        <div className='w-full md:w-[60%] flex flex-col gap-4 md:gap-8'>
-          <div className='text-white flex flex-col text-xl md:text-4xl font-ubuntu font-semibold md:font-bold'>
+        <div className='flex flex-col-reverse justify-center items-center lg:flex-row gap-5 lg:gap-20 w-full'>
+        <div className='md:w-2xl lg:w-3xl h-auto group md:flex justify-between items-center rounded-[20px] p-4 md:p-10'>
+        <div className='w-full flex flex-col gap-2 md:gap-6'>
+          <div className='flex flex-col text-2xl md:text-4xl lg:text-6xl font-semibold md:font-bold'>
           <p>Edit & Enhance</p>
           <p>Images with Ease!</p>
           </div>
-          <h1 className='tracking-wider text-gray-100 text-sm hyphens-auto'>Transform your photos with editing tools. Crop, rotate, apply stunning filters, adjust lighting, and add text effortlessly. Perfect your visuals in just a few clicks!</h1>
-          <button className='bg-pink-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-pink-400 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
+          <h1 className='tracking-wider text-sm'>Transform your photos with editing tools. Crop, rotate, apply stunning filters, adjust lighting, and add text effortlessly. Perfect your visuals in just a few clicks!</h1>
+          <button className='bg-blue-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
         </div>
-        <div className='w-[40%] hidden md:block'><MdOutlineDraw className='text-white text-[200px] transition-all duration-200 ease-out ml-20 group-hover:scale-130'/></div>
         </div>
-        <div></div>
-          </div>
-
-        <div className='flex flex-row-reverse w-full leftBox1'>
-        <div className='w-[300px] md:w-[700px] lg:w-[900px] md:h-[400px] group md:flex justify-between items-center rounded-[20px] border-[12px] md:border-[20px] py-8 px-4 md:px-10 border-transparent backdrop-blur-3xl' 
-        style={{background: "linear-gradient(132deg, rgba(255,126,0,1) 20%, rgba(255,235,59,1) 82%)"}}
-        >
-        <div className='w-full md:w-[60%] flex flex-col gap-4 md:gap-8'>
-          <div className='text-white flex flex-col text-xl md:text-4xl font-ubuntu font-semibold md:font-bold'>
+        <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm leftBox1 ' /></div>
+        </div>
+  
+        <div className='flex flex-col-reverse justify-center items-center lg:flex-row-reverse gap-5 lg:gap-20 w-full'>
+        <div className='md:w-2xl lg:w-3xl h-auto group md:flex justify-between items-center rounded-[20px] p-4 md:p-10'>
+        <div className='w-full flex flex-col gap-2 md:gap-6'>
+          <div className='flex flex-col text-2xl md:text-4xl lg:text-6xl font-semibold md:font-bold'>
           <p>Background Removal</p>
           <p>One Click Magic!</p>
           </div>
-          <h1 className='tracking-wider text-gray-100 text-sm '>Instantly remove backgrounds from any image. Whether for product photos, profile pictures, or creative designs, get a clean, transparent background in seconds!</h1>
-          <button className='bg-yellow-300 py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-yellow-200 hover:cursor-pointer'><NavLink to='bg-remover'>Try Now</NavLink></button>
+          <h1 className='tracking-wider text-sm'>Instantly remove backgrounds from any image. Whether for product photos, profile pictures, or creative designs, get a clean, transparent background in seconds!</h1>
+          <button className='bg-blue-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
         </div>
-        <div className='w-[40%] hidden md:block'><TbBackground className='text-white text-[200px] transition-all duration-200 ease-out ml-20 group-hover:scale-130'/></div>
         </div>
-        <div></div>
-        </div> 
+        <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm rightBox2 ' /></div>
+        </div>
  
-         <div className='flex w-full rightBox2'>
-        <div className='w-[300px] md:w-[700px] lg:w-[900px] md:h-[400px] group md:flex justify-between items-center rounded-[20px] border-[12px] md:border-[20px] py-8 px-4 md:px-10 border-transparent backdrop-blur-3xl' 
-        style={{background: "linear-gradient(132deg, rgba(30,50,156,1) 14%, rgba(33,150,243,1) 62%)"}}
-        >
-        <div className='w-full md:w-[60%] flex flex-col gap-4 md:gap-8'>
-          <div className='text-white flex flex-col text-xl md:text-4xl font-ubuntu font-semibold md:font-bold'>
+        <div className='flex flex-col-reverse justify-center items-center lg:flex-row gap-5 lg:gap-20 w-full'>
+        <div className='md:w-2xl lg:w-3xl h-auto group md:flex justify-between items-center rounded-[20px] p-4 md:p-10'>
+        <div className='w-full flex flex-col gap-2 md:gap-6'>
+          <div className='flex flex-col text-2xl md:text-4xl lg:text-6xl font-semibold md:font-bold'>
           <p>Image to PDF</p>
           <p>Convert in Seconds!</p>
           </div>
-          <h1 className='tracking-wider text-gray-100 text-sm hyphens-auto'>Create high-quality PDFs from images with just a click. Whether for documents, portfolios, or presentations, turn multiple images into a single, organized PDF effortlessly!</h1>
-          <button className='bg-blue-600 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded ring-blue-400 hover:ring-3'><NavLink to='pdf-maker'>Try Now</NavLink></button>
+          <h1 className='tracking-wider text-sm'>Create high-quality PDFs from images with just a click. Whether for documents, portfolios, or presentations, turn multiple images into a single, organized PDF effortlessly!</h1>
+          <button className='bg-amber-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 font-semibold ring-amber-300 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
         </div>
-        <div className='w-[40%] hidden md:block'><PiFilePdfLight className='text-white text-[200px] transition-all duration-200 ease-out ml-20 group-hover:scale-130'/></div>
         </div>
-        <div></div>
+        <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm leftBox2' /></div>
         </div>
-     
-       <div className='flex flex-row-reverse w-full leftBox2'>
-        <div className='w-[300px] md:w-[700px] lg:w-[900px] md:h-[400px] group md:flex justify-between items-center rounded-[20px] border-[12px] md:border-[20px] py-8 px-4 md:px-10 border-transparent backdrop-blur-3xl' 
-        style={{background: "linear-gradient(132deg, rgba(142,68,173,1) 14%, rgba(255,107,129,1) 62%)"}}
-        >
-        <div className='w-full md:w-[60%] flex flex-col gap-4 md:gap-8'>
-          <div className='text-white flex flex-col text-xl md:text-4xl font-ubuntu font-semibold md:font-bold'>
+
+        <div className='flex flex-col-reverse justify-center items-center lg:flex-row-reverse gap-5 lg:gap-20 w-full'>
+        <div className='md:w-2xl lg:w-3xl h-auto group md:flex justify-between items-center rounded-[20px] p-4 md:p-10'>
+        <div className='w-full flex flex-col gap-2 md:gap-6'>
+          <div className='flex flex-col text-2xl md:text-4xl lg:text-6xl font-semibold md:font-bold'>
           <p>AI-Image Generation</p>
           <p>Create Stunning Visuals!</p>
           </div>
-          <h1 className='tracking-wider text-gray-100 text-sm'>Turn your ideas into breathtaking images with AI. <p></p> Simply enter a prompt, and let the AI generate unique, <p></p> high-quality visuals for art, designs, or social media!</h1>
-          <button className='bg-pink-600 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-pink-400 hover:cursor-pointer'><NavLink to='text-to-image'>Try Now</NavLink></button>       
+          <h1 className='tracking-wider text-sm'>Turn your ideas into breathtaking images with AI. Simply enter a prompt, and let the AI generate unique, high-quality visuals for art, designs, or social media!</h1>
+          <button className='bg-amber-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-amber-300 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
         </div>
-        <div className='w-[40%] hidden md:block'><RiAiGenerate2 className='text-white text-[200px] transition-all duration-200 ease-out ml-20 group-hover:scale-130'/></div>
         </div>
-        <div></div>
+        <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm rightBox1 ' /></div>
         </div>
 
-        <div className='flex w-full rightBox3'>
-        <div className='w-[300px] md:w-[700px] lg:w-[900px] md:h-[400px] group md:flex justify-between items-center rounded-[20px] border-[12px] md:border-[20px] py-8 px-4 md:px-10 border-transparent backdrop-blur-3xl' 
-        style={{background: "linear-gradient(132deg, rgba(52,152,219,1) 16%, rgba(20,16,134,1) 65%)"}}
-        >
-        <div className='w-full md:w-[60%] flex flex-col gap-4 md:gap-8'>
-          <div className='text-white flex flex-col text-xl md:text-4xl font-ubuntu font-semibold md:font-bold'>
-          <p>Image Format Conversion</p>
-          <p>Fast & Reliable!</p>
+        </div>
+
+        <div className='relative w-full max-w-[1800px] text-white p-10 md:p-16 bg-purple-950'>
+          <p className='text-center text-3xl md:text-4xl font-semibold mb-10 md:mb-15'>How Pixelo Works ?</p>
+          <div className='flex flex-col md:flex-row flex-wrap justify-center items-center gap-4'>
+            <div className='absolute w-xs md:w-2xl h-[200px] overflow-hidden rounded-[50%] bg-white/30 opacity-90 blur-[80px] shadow-[0_0_80px_200px_rgb(96, 165, 250)]'></div>
+            <div className='quick2 max-w-[340px] z-[10] min-h-[180px] group flex flex-col gap-4 border border-white/70 bg-white/10 rounded-md p-4'>
+              <PiCursorClick size={30} className='transition-all duration-100 translate-x-1 group-hover:translate-x-0'/>
+              <div className='text-lg font-semibold'>
+                Select a Tool
+                <p className='mt-2 text-sm font-normal'>Choose a tool based on your need, Image Editor, BG Remover, and more.</p>
+              </div>
+            </div>
+            <div className='quick2 max-w-[340px] z-[10] min-h-[180px] group flex flex-col gap-4 border border-white/70 bg-white/10 rounded-md p-4'>
+              <LuUpload size={30} className='transition-all duration-100 translate-y-0 group-hover:-translate-y-1'/>
+              <div className='text-lg font-semibold'>
+                Upload an Image
+                <p className='mt-2 text-sm font-normal'>Upload an image from your device in various formats like PNG, JPG, etc.</p>
+              </div>
+            </div>
+            <div className='quick2 max-w-[340px] z-[10] min-h-[180px] group flex flex-col gap-4 border border-white/70 bg-white/10 rounded-md p-4'>
+              <RiImageAiLine size={30} className='transition-all duration-100 group-hover:scale-110'/>
+              <div className='text-lg font-semibold'>
+                Let Pixelo Work
+                <p className='mt-2 text-sm font-normal'>Pixelo processes the image, Real-time preview for manual editing</p>
+              </div>
+            </div>
+            <div className='quick2 max-w-[340px] z-[10] min-h-[180px] group flex flex-col gap-4 border border-white/70 bg-white/10 rounded-md p-4'>
+              <FiDownload size={30} className='transition-all duration-100 translate-y-0 group-hover:translate-y-1'/>
+              <div className='text-lg font-semibold'>
+                Download the Image
+                <p className='mt-2 text-sm font-normal'>Download your edited image in your preffered format.</p>
+              </div>
+            </div>
           </div>
-          <h1 className='tracking-wider text-gray-100 text-sm'>Convert images to the format you need without compromising quality. Whether you're switching between JPG, PNG, JPEG, get quick and efficient results every time!</h1>
-          <button className='bg-blue-400 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='image-convertor'>Try Now</NavLink></button>
         </div>
-        <div className='w-[40%] hidden md:block'><AiOutlineFileSync className='text-white text-[200px] transition-all duration-200 ease-out ml-20 group-hover:scale-130'/></div>
-        </div>
-        <div></div>
-        </div>
-
-        <div className='flex flex-row-reverse w-full leftBox3'>
-        <div className='w-[300px] md:w-[700px] lg:w-[900px] md:h-[400px] group md:flex justify-between items-center rounded-[20px] border-[12px] md:border-[20px] py-8 px-4 md:px-10 border-transparent backdrop-blur-3xl' 
-        style={{background: "linear-gradient(132deg, rgba(52,152,219,1) 16%, rgba(212,30,171,1) 65%)"}}
-        >
-        <div className='w-full md:w-[60%] flex flex-col gap-4 md:gap-8'>
-          <div className='text-white flex flex-col text-xl md:text-4xl font-ubuntu font-semibold md:font-bold'>
-          <p>Image Compression</p>
-          <p>Reduce Size, Keep Quality</p>
-          </div>
-          <h1 className='tracking-wider text-gray-100 text-sm hyphens-auto'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit omnis aliquam repellat vero ipsum ducimus iste enim assumenda unde reiciendis.</h1>
-          <button className='bg-pink-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-pink-300 hover:cursor-pointer'><NavLink to='image-compressor'>Try Now</NavLink></button>
-        </div>
-        <div className='w-[40%] hidden md:block'><FaCompress className='text-white text-[200px] transition-all duration-200 ease-out ml-20 group-hover:scale-80'/></div>
-        </div>
-        <div></div>
-        </div>
-
-        <div className='flex w-full rightBox4'>
-        <div className='w-[300px] md:w-[700px] lg:w-[900px] md:h-[400px] group md:flex justify-between items-center rounded-[20px] border-[12px] md:border-[20px] py-8 px-4 md:px-10 border-transparent backdrop-blur-3xl' 
-        style={{background: "linear-gradient(132deg, rgba(52,52,119,1) 16%, rgba(233,30,99,1) 65%)"}}
-        >
-        <div className='w-full md:w-[60%] flex flex-col gap-4 md:gap-8'>
-          <div className='text-white flex flex-col text-xl md:text-4xl font-ubuntu font-semibold md:font-bold'>
-          <p>AI Image Analyzer</p>
-          <p>Get Instant Description!</p>
-          </div>
-          <h1 className='tracking-wider text-gray-100 text-sm hyphens-auto'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit omnis aliquam repellat vero ipsum ducimus iste enim assumenda unde reiciendis.</h1>
-          <button className='bg-red-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-red-300 hover:cursor-pointer'><NavLink to='image-detector'>Try Now</NavLink></button>
-        </div>
-        <div className='w-[40%] hidden md:block'><MdOutlineImageSearch className='text-white text-[200px] transition-all duration-200 ease-out ml-20 group-hover:scale-130'/></div>
-        </div>
-        <div>
-        </div>
-        </div>
-
-        <div className='flex w-full flex-row-reverse leftBox4'>
-        <div className='w-[300px] md:w-[700px] lg:w-[900px] md:h-[400px] group md:flex justify-between items-center rounded-[20px] border-[12px] md:border-[20px] py-8 px-4 md:px-10 border-transparent backdrop-blur-3xl' 
-        style={{background: "linear-gradient(132deg, rgba(32,112,9,1) 30%, rgba(63,220,69,1) 80%)"}}
-        >
-        <div className='w-full md:w-[60%] flex flex-col gap-4 md:gap-8'>
-          <div className='text-white flex flex-col text-xl md:text-4xl font-ubuntu font-semibold md:font-bold'>
-          <p>Image Enhancer</p>
-          <p>Boost Quality Instantly! </p>
-          </div>
-          <h1 className='tracking-wider text-gray-100 text-sm hyphens-auto'>Improve resolution, sharpness, and colors to achieve high-quality visuals. Whether it's an old photo, a low-resolution image, or a blurry picture, restore details effortlessly!</h1>
-          <button className='bg-green-600 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-green-400 hover:cursor-pointer'><NavLink to='image-enhancer'>Try Now</NavLink></button>
-        </div>
-        <div className='w-[40%] hidden md:block'><RiImageAiLine className='text-white text-[200px] transition-all duration-200 ease-out ml-20 group-hover:scale-130'/></div>
-        </div>
-        <div>
-        </div>
-        </div>
-          
-
-      </div>
 
       <FAQ/>
+      </div>
     </div>
 
   )

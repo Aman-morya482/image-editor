@@ -41,15 +41,15 @@ export default function FAQ() {
   };
 
   return (
-    <section className="bg-gradient-to-r from-blue-900 to-indigo-500 text-white py-16 px-6">
-      <div className="max-w-2xl mx-auto text-center">
-        <span className="bg-purple-800 text-white px-3 py-1 rounded-full text-xs font-semibold uppercase">
+    <section className="w-full max-w-[1800px] bg-gradient-to-br from-orange-300 to-orange-600 text-white p-10 md:py-16 md:px-6">
+      <div className="w-full mx-auto text-center">
+        <span className="bg-orange-600 text-white px-3 py-1 rounded-full text-xs md:text-sm  font-semibold uppercase">
           Frequently Asked
         </span>
         <h2 className="text-3xl md:text-4xl font-bold mt-3">Do You Have a Question?</h2>
       </div>
 
-      <div className="max-w-2xl mx-auto mt-8">
+      <div className="max-w-4xl mx-auto mt-8">
         {faqs.map((faq, index) => (
           <div key={index} className="border-b border-white/40">
             <button
@@ -60,7 +60,7 @@ export default function FAQ() {
               {openIndex === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </button>
             {openIndex === index && (
-              <p className="text-gray-200 text-sm md:text-base pb-4 font-protest tracking-widest">{faq.answer}</p>
+              <p className="text-white/90 text-sm md:text-base pb-4 tracking-wide px-2">{faq.answer}</p>
             )}
           </div>
         ))}

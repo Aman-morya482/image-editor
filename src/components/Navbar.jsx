@@ -56,32 +56,32 @@ const Navbar = () => {
           ${open ? "opacity-100 scale-100 translate-y-0" : "opacity-0 invisible scale-95 -translate-y-5"}`}
       >
         <li>
-          <NavLink to="/pdf-maker" className="block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white">
+          <NavLink to="/pdf-maker" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             PDF Maker
           </NavLink>
         </li>
         <li>
-          <NavLink to="/image-convertor" className="block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white">
+          <NavLink to="/image-convertor" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             Image Convertor 
           </NavLink>
         </li>
         <li>
-          <NavLink to="/bg-remover" className="block lg:hidden px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white">
+          <NavLink to="/bg-remover" className={({isActive})=>`block md:hidden px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             BG Remover 
           </NavLink>
         </li>
         <li>
-          <NavLink to="/image-detector" className="block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white">
-            Image Detector
+          <NavLink to="/image-detector" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
+            Image Analyzer
           </NavLink>
         </li>
         <li>
-          <NavLink to="/image-enhancer" className="block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white">
+          <NavLink to="/image-enhancer" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             Image Enhancer
           </NavLink>
         </li>
         <li>
-          <NavLink to="/image-compressor" className="block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white">
+          <NavLink to="/image-compressor" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             Image Compressor
           </NavLink>
         </li>
@@ -106,6 +106,11 @@ const Navbar = () => {
           <ul className={`flex flex-col gap-4 bg-white text-right px-5 py-5 shadow-xl ${isOpen ? "opacity-100 scale-100 translate-y-0 transition-all duration-500" : "opacity-0 invisible -translate-y-15 transition-all duration-200"}`}>
             <li>
               <NavLink to="/" onClick={()=>setIsOpen(false)} className={({ isActive }) =>`hover:text-gray-400 ${isActive ? "text-blue-600 border-b-2 border-blue-600" : ""}`}>
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/image-editor" onClick={()=>setIsOpen(false)} className={({ isActive }) =>`hover:text-gray-400 ${isActive ? "text-blue-600 border-b-2 border-blue-600" : ""}`}>
                 Image editor
               </NavLink>
             </li>
@@ -136,7 +141,7 @@ const Navbar = () => {
             </li>
             <li>
               <NavLink to="/image-detector" onClick={()=>setIsOpen(false)} className={({ isActive }) =>`hover:text-gray-400 ${isActive ? "text-blue-600 border-b-2 border-blue-600" : ""}`}>
-                Image detector
+                Image Analyzer
               </NavLink>
             </li>
             <li>

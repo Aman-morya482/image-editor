@@ -11,6 +11,8 @@ import ImageConvertor from "./pages/ImageConvertor";
 import Signup from "./pages/Signup";
 import Editor from "./pages/Editor";
 import Login from "./pages/Login";
+import ImageDetector from "./pages/ImageDetector";
+import ImageEnhancer from "./pages/ImageEnhancer";
 
 function App() {
   return (
@@ -24,8 +26,8 @@ function App() {
           <Route path="/text-to-image" element={<TextToImage />} />
           <Route path="/image-compressor" element={<ImageCompressor />} />
           <Route path="/image-convertor" element={<ImageConvertor />} />
-          <Route path="/image-detector" element={<ImageConvertor />} />
-          <Route path="/image-enhancer" element={<ImageConvertor />} />
+          <Route path="/image-detector" element={<ImageDetector />} />
+          <Route path="/image-enhancer" element={<ImageEnhancer />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/image-editor" element={<Editor />} />
