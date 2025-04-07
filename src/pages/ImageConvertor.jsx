@@ -1,29 +1,20 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ConvertPreview from '../components/ConvertPreview';
 
 
 const ImageConvertor = () => {
 
   const [images,setImages] = useState([]);
+  const [type,setType] = useState("png");
   const [convert,setConvert] = useState([]);
   const [loading,setLoading] = useState(false)
 
   const handleImageChange = () =>{
     const files = Array.from(event.target.files);
-    const filesWithFormat = files.map((file) => ({
-    file: file,
-    format: 'png', // default format
-  }));
-    setImages(filesWithFormat);
+    setImages(files);
     setConvert([]);
   }
-
-    const handleFormatChange = (index, newFormat) => {
-    const updated = [...images];
-    updated[index].format = newFormat;
-    setImages(updated);
-  };
 
     const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -33,29 +24,29 @@ const ImageConvertor = () => {
       reader.readAsDataURL(file);
     });
   };
-
-
-    const sendToBackend = async () => {
-      setLoading(true);
+  
+  
+  const sendToBackend = async () => {
+    setLoading(true);
     try {
-      const imagePayload = await Promise.all(
-        images.map(async (imgObj) => ({
-          base64: await convertToBase64(imgObj.file),
-          format: imgObj.format,
-        }))
+      const base64List = await Promise.all(
+        images.map(async (imgObj) => await convertToBase64(imgObj))
       );
-
-      console.log(imagePayload);
-
+      
+      const imagePayload = {image: base64List.join(","),QualityorType:type,}
+      console.log(imagePayload)
+      
       const response = await fetch('http://localhost:8080/convert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ images: imagePayload }),
       });
-
+      
       if (!response.ok) throw new Error('Conversion failed');
       const data = await response.json();
-      setConvert(data.convertedImages);
+      const base64Images = await data.image.split(",");
+      base64Images.forEach((base64, index) => {console.log(`Image ${index + 1}:`, base64.substring(0, 30) + "...");})
+      setConvert(base64Images);
       setLoading(false);
     } catch (err) {
       console.error('Error:', err);
@@ -63,6 +54,10 @@ const ImageConvertor = () => {
       alert("failed");
     }
   };
+  
+      useEffect(()=>{
+        console.log("convert", convert)
+      },[convert])
 
     const handleRemoveImage = (index) => {
   setImages((prevImages) => prevImages.filter((_, i) => i !== index));
@@ -71,6 +66,19 @@ const ImageConvertor = () => {
     const handleBack = ()=>{
       setImages([]);
     }
+    const handleBackPre = ()=>{
+      setConvert([]);
+    }
+
+
+  const download = (base64String, fileName = "image") => {
+  const link = document.createElement("a");
+  link.href = base64String;
+  link.download = `${fileName}.${type}`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
 
   return (
@@ -82,14 +90,20 @@ const ImageConvertor = () => {
       <h2 className="text-4xl md:text-6xl font-bold text-center mb-20">Convert Images <p></p> to Another Format</h2>
       <div className="relative flex flex-wrap justify-center items-center p-2 gap-2">
       <div className='group'>
-      <p className='bg-blue-600 w-sm md:w-2xl text-white md:font-bold group-active:scale-95 hover:cursor-pointer ring-blue-300 group-hover:ring-3 text-lg md:text-xl rounded-2xl p-4 md:p-5 text-center'>Upload Image </p>
-      <input type="file" multiple accept="image/*" onChange={handleImageChange} name="" id="" className='absolute top-10 md:-top-0 bg-red-600 opacity-0 w-sm md:w-2xl text-white text-xl rounded-2xl p-2 md:p-5 text-center'/>
+      <p className='bg-blue-600 w-xs md:w-2xl text-white md:font-bold group-active:scale-95 hover:cursor-pointer ring-blue-300 group-hover:ring-3 text-lg md:text-xl rounded-2xl p-4 md:p-5 text-center'>Upload Image </p>
+      <input type="file" multiple accept="image/*" onChange={handleImageChange} name="" id="" className='absolute top-10 md:-top-0 bg-red-600 opacity-0 w-xs md:w-2xl text-white text-xl rounded-2xl p-2 md:p-5 text-center'/>
       </div>
+      <div className='z-10 right-40 flex justify-center items-center gap-2 md:text-lg '><select className=' bg-gray-200 p-5 rounded-md' value={type} onChange={(e)=>{setType(e.target.value)}}  >
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+              <option value="Wepb">WEBP</option>
+            </select>
+            </div>
       </div>
       </div>
     ) }
 
-    { images.length > 0  && <ConvertPreview images={images} remove={handleRemoveImage} back={handleBack} formatchange={handleFormatChange} convert={convert} sendreq={sendToBackend} loading={loading} /> }
+    { images.length > 0  && <ConvertPreview images={images} remove={handleRemoveImage} download={download} back={handleBack} back2={handleBackPre} convert={convert} sendreq={sendToBackend} loading={loading} /> }
     
     </div>
     

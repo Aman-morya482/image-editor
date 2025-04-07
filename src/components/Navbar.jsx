@@ -102,8 +102,8 @@ const Navbar = () => {
       </div>
 
       {(
-        <div className="md:hidden absolute top-18 left-0 w-full z-10">
-          <ul className={`flex flex-col gap-4 bg-white text-right px-5 py-5 shadow-xl ${isOpen ? "opacity-100 scale-100 translate-y-0 transition-all duration-500" : "opacity-0 invisible -translate-y-15 transition-all duration-200"}`}>
+        <div className="md:hidden absolute top-18 left-0 w-full z-50">
+          <ul className={`flex flex-col gap-4 bg-white text-right px-5 py-5 shadow-xl ${isOpen ? "opacity-100 scale-100 translate-y-0 transition-all duration-500 block" : "opacity-0 hidden -translate-y-15 transition-all duration-200"}`}>
             <li>
               <NavLink to="/" onClick={()=>setIsOpen(false)} className={({ isActive }) =>`hover:text-gray-400 ${isActive ? "text-blue-600 border-b-2 border-blue-600" : ""}`}>
                 Home
