@@ -26,34 +26,34 @@ const ImageConvertor = () => {
   };
   
   
-  const sendToBackend = async () => {
-    setLoading(true);
-    try {
-      const base64List = await Promise.all(
-        images.map(async (imgObj) => await convertToBase64(imgObj))
-      );
-      
-      const imagePayload = {image: base64List.join(","),QualityorType:type,}
-      console.log(imagePayload)
-      
-      const response = await fetch('http://localhost:8080/convert', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ images: imagePayload }),
-      });
-      
-      if (!response.ok) throw new Error('Conversion failed');
-      const data = await response.json();
-      const base64Images = await data.image.split(",");
-      base64Images.forEach((base64, index) => {console.log(`Image ${index + 1}:`, base64.substring(0, 30) + "...");})
-      setConvert(base64Images);
-      setLoading(false);
-    } catch (err) {
-      console.error('Error:', err);
-      setLoading(false);
-      alert("failed");
-    }
-  };
+     const sendToBackend = async () => {
+      setLoading(true);
+     try {
+          const base64Images = await Promise.all(
+          images.map((img) => convertToBase64(img))
+         );
+
+          const imagePayload = {
+          images : base64Images,
+          };
+
+           const response = await fetch('http://localhost:8080/image/get-compressed-quality', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify( imagePayload ),
+           });
+       console.log(JSON.stringify(imagePayload ))
+        
+        if (!response.ok) throw new Error('Conversion failed'+response.err);
+        const data = await response.json();
+        setConvert(data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error:', err);
+        setLoading(false);
+        alert("failed");
+      }
+    };
   
       useEffect(()=>{
         console.log("convert", convert)

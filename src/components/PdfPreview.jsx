@@ -39,20 +39,3 @@ const PdfPreview = (prop) => {
 
 export default PdfPreview
 
-
-        //   <div className="mt-4 grid grid-cols-3 gap-2">
-        //   {images.map((image, index) => (
-        //     <img
-        //     key={index}
-        //     src={URL.createObjectURL(image)}
-        //     alt={`Selected ${index + 1}`}
-        //     className="w-40 h-40 object-cover rounded"
-        //     onClick={()=>handleRemoveImage(index)}
-        //     />
-        //   ))}
-        // <div className="mt-4 p-2 bg-green-700 rounded">
-        //   <p className="text-sm">PDF Generated Successfully!</p>
-        //   <button onClick={generatePDF}>Download</button>
-        // </div>
-        //         </div>
-        //         )}

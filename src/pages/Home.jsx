@@ -1,29 +1,21 @@
 import React from 'react'
-import { useState, useRef ,useEffect } from 'react'
-import { animate, frame, motionValue } from "motion";
-import { NavLink } from "react-router-dom";
-import gsap from "gsap";
-import { ScrollTrigger } from 'gsap/all';
-import { TextPlugin } from "gsap/TextPlugin";
-import ReactCompareImage from "react-compare-image";
 import '../App.css';
-import FAQ from "../components/FAQ"
-import Slider from "../components/Slider"
+import { useState, useRef ,useEffect } from 'react'
+import { NavLink } from "react-router-dom";
 
+import gsap from "gsap";
+import { TextPlugin } from "gsap/TextPlugin";
+import { ScrollTrigger } from 'gsap/all';
 
+import { animatePixelo } from '../utils/gsap';
 import { RiImageAiLine } from "react-icons/ri";
-import { PiFilePdfLight } from "react-icons/pi";
-import { RiAiGenerate2 } from "react-icons/ri";
-import { AiOutlineFileSync } from "react-icons/ai";
-import { TbBackground } from "react-icons/tb";
-import { MdOutlineImageSearch } from "react-icons/md";
-import { MdOutlineDraw } from "react-icons/md";
-import { FaCompress } from "react-icons/fa";
 import { PiCursorClick } from "react-icons/pi";
 import { LuUpload } from "react-icons/lu";
 import { FiDownload } from "react-icons/fi";
 
-
+import QuickLinks from '../components/QuickLinks';
+import FAQ from "../components/FAQ"
+import Slider from "../components/Slider"
 
 
 const Home = () => {
@@ -71,193 +63,13 @@ const Home = () => {
 
  
     useEffect(() => {
-    gsap.to(blurDiv1.current, 
-      {
-      x: -150,
-      y: 30,
-      scale: 0.5,
-      duration: 5,
-      repeat: -1,
-      yoyo: true,
-      ease: "power1.inOut",
-      },
+    const cleanup = animatePixelo(
+      { blurDiv1, blurDiv2, marText1, marText2, gradientText },
+      setShowCursor
     );
-
-    gsap.to(blurDiv2.current, 
-      {
-      x: -150,
-      y: 30,
-      scale: 0.5,
-      duration: 3,
-      repeat: -1,
-      yoyo: true,
-      ease: "power1.inOut",
-      },
-    );
-    gsap.fromTo(marText2.current, { x: "30%" },
-      {
-        x:"-30%",
-        duration:15,
-        ease:"linear",
-        scrollTrigger:{
-          trigger:marText2.current,
-          start:"top bottom",
-          end:"bottom top",
-          scrub:true,
-        }
-      })
-      gsap.fromTo(marText1.current, {x:"-20%"},
-        {
-          x:"30%",
-          duration:15,
-          ease:"linear",
-          scrollTrigger:{
-            trigger:marText1.current,
-            start:"top bottom",
-            end:"bottom top",
-            scrub:true,
-          }
-        })
-        gsap.fromTo(gradientText.current, { y:"50%" , opacity:0 },
-          {
-            y:"0%",
-            opacity:1,
-            ease:"linear",
-            scrollTrigger:{
-              trigger:gradientText.current,
-              start:"top 90%",
-              end:"top 50%",
-              scrub:true,
-            }
-          })
-        gsap.fromTo(".rightBox1", { opacity:0 , scale:0.6 },
-          {
-            // x:"0%",
-            ease:"power2.inOut",
-            duration:1,
-            opacity:1,
-            scale:1,
-            scrollTrigger:{
-              trigger:".rightBox1",
-              start:"top bottom",
-              end:"botoom 50%",
-            }
-          })
-        gsap.fromTo(".rightBox1", {opacity:1, scale:1},
-          { opacity:0,
-            ease:"power2.inOut",
-            duration:1,
-            scale:0.8,
-            scrollTrigger:{
-              trigger:".rightBox1",
-              start:"top top",
-              end:"bottom top",
-              scrub:true,
-            }
-          })
-        gsap.fromTo(".rightBox2", {opacity:0, scale:0.6 },
-          {
-            opacity:1,
-            ease:"power2.inOut",
-            duration:1,
-            scale:1,
-            scrollTrigger:{
-              trigger:".rightBox2",
-              start:"top bottom",
-              end:"botoom 50%",
-            }
-          })
-        gsap.fromTo(".rightBox2", {opacity:1,  scale:1},
-          { opacity:0,
-            ease:"power2.inOut",
-            duration:1,
-            scale:0.8,
-            scrollTrigger:{
-              trigger:".rightBox2",
-              start:"top top",
-              end:"bottom top",
-              scrub:true,
-            }
-          })
-        gsap.fromTo(".leftBox1", { scale:0.6, opacity:0 },
-          {
-            scale:1,
-            ease:"power2.inOut",
-            duration:1,
-            opacity:1,
-            scrollTrigger:{
-              trigger:".leftBox1",
-              start:"top bottom",
-              end:"botoom 50%",
-            }
-          })
-        gsap.fromTo(".leftBox1", {opacity:1, scale:1},
-          { opacity:0,
-            ease:"power2.inOut",
-            duration:1,
-            scale:0.8,
-            scrollTrigger:{
-              trigger:".leftBox1",
-              start:"top top",
-              end:"bottom top",
-              scrub:true,
-            }
-          })
-        gsap.fromTo(".leftBox2", { scale:0.6, opacity:0 },
-          {
-            scale:1,
-            opacity:1,
-            ease:"power2.inOut",
-            duration:1,
-            scrollTrigger:{
-              trigger:".leftBox2",
-              start:"top bottom",
-              end:"botoom 50%",
-            }
-          })
-          gsap.fromTo(".leftBox2", {opacity:1, scale:1},
-          { opacity:0,
-            ease:"power2.inOut",
-            duration:1,
-            scale:0.8,
-            scrollTrigger:{
-              trigger:".leftBox2",
-              start:"top top",
-              end:"bottom top",
-              scrub:true,
-            }
-          })
-          gsap.fromTo(".quick", {opacity:0, scale:0.8},
-          { opacity:1,
-            ease:"power2.inOut",
-            duration:1,
-            scale:1,
-            scrollTrigger:{
-              trigger:".quick",
-              start:"top 90%",
-              end:"bottom 70%",
-              // scrub:true,
-            }
-          })
-          gsap.fromTo(".quick2", {opacity:0, scale:0.8},
-          { opacity:1,
-            ease:"power2.inOut",
-            duration:0.9,
-            scale:1,
-            scrollTrigger:{
-              trigger:".quick2",
-              start:"top 90%",
-              end:"bottom 70%",
-              // scrub:true,
-            }
-          })
-
-    const cursorBlink = setInterval(() => {
-      setShowCursor((prev) => !prev);
-    }, 400);
 
     return () => {
-      clearInterval(cursorBlink)
+      cleanup(); // clearInterval and any future cleanups
     };
   }, []);
 
@@ -280,35 +92,9 @@ const Home = () => {
       </div>
 
 
-        <div className='w-full text-center max-w-[1800px] text-lg text-white bg-gradient-to-br from-blue-500 to-purple-800 py-10 px-2 md:px-20 md:py-16'>
-          <p className='mb-10 font-bold text-4xl'>Quick Links</p>
-          <div className='flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 md:gap-8'>
-            <NavLink to='image-editor'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span><MdOutlineDraw size={40} className='group-hover:scale-110 transition-all duration-100ease-linear'/></span><p>Image Editor</p>
-            </div></NavLink>
-            <NavLink to='bg-remover'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span><TbBackground size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>BG Remover</p>
-            </div></NavLink>
-            <NavLink to='pdf-maker'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span><PiFilePdfLight size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>PDF Maker</p>
-            </div></NavLink>
-            <NavLink to='image-enhancer'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span><RiImageAiLine size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>Image Enhancer</p>
-            </div></NavLink>
-            <NavLink to='text-to-image'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span><RiAiGenerate2 size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>Image Generator</p>
-            </div></NavLink>
-            <NavLink to='image-convertor'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span><RiImageAiLine size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>Format Convertor</p>
-            </div></NavLink>
-            <NavLink to='image-compressor'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span><FaCompress size={36} className='group-hover:scale-80 transition-all duration-100 ease-linear'/></span><p>Image Compressor</p>
-            </div></NavLink>
-            <NavLink to='image-detector'> <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span><MdOutlineImageSearch size={40} className='group-hover:scale-110 transition-all duration-100 ease-linear'/></span><p>Image Analyzer</p>
-            </div></NavLink>
-          </div>
-        </div>
+      <div className='w-full text-center max-w-[1800px] text-lg text-white bg-gradient-to-br from-blue-500 to-purple-800 py-10 px-2 md:px-20 md:py-16'>
+        <QuickLinks/>
+      </div>
 
 
       <div className='relative overflow-hidden h-max w-full max-w-[1800px] py-20 flex flex-col gap-10 md:gap-30 justify-between items-center text-black px-5 md:px-20'

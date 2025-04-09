@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import "../App.css"
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Login = () => {
 
+  const navigate = useNavigate();
   const [hide,setHide] = useState(true);
+  const [result,setResult] = useState(false);
 
   const [data,setData] = useState({
-    email: "",
+    emailorNumber: "",
     password: "",
   })
 
@@ -21,6 +23,42 @@ const Login = () => {
       [name]: value,
     }))
   }
+
+  useEffect(()=>{
+      console.log("result: ", result);
+      
+      if (result) {
+        const timer = setTimeout(() => {
+          navigate("/");
+        }, 1000);
+  
+        return () => clearTimeout(timer); // cleanup
+      }
+    },[result])
+    
+    
+    const handleSubmit = async (e) => {
+      console.log(data);
+      e.preventDefault();
+      
+      console.log("data: ", data);
+      try{ 
+        const response = await fetch('http://localhost:8080/User/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        
+        if (!response.ok) throw new Error('Conversion failed'+ response.err);
+        const data2 = await response.json();
+          data2 && setResult(true);
+          data2 && alert("Login Successfull !!")
+          !data2 && alert("Invalid Email or Password !!")
+        } catch (err) {
+          console.error('Error:', err);
+          alert("Something went wrong !! Try again after some time.");
+        }
+      };
 
   return (
     <div className="h-[92vh] flex items-center justify-center p-4 ">
@@ -36,7 +74,7 @@ const Login = () => {
         <div className="w-full md:w-1/3 p-4 flex flex-col justify-center mb-40 md:mt-30">
           <h2 className="text-3xl font-bold text-blue-600 text-center mb-15 md:mb-6">Login</h2>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={(e)=>{handleSubmit(e)}}>
 
             <div>
               <input

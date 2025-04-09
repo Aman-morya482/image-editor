@@ -5,6 +5,7 @@ import PdfPreview from "../components/PdfPreview";
 
 const PDFmaker = () => {
   const [images, setImages] = useState([]); // Store selected images
+  const [pdf,setPdf] = useState([]);
 
   const handleRemoveImage = (index) => {
   setImages((prevImages) => prevImages.filter((_, i) => i !== index));
@@ -19,32 +20,60 @@ const handleBack = () =>{
     const files = Array.from(e.target.files);
     setImages(files);
   };
-  
 
-  const generatePDF = async () => {
-    if (!images.length) return;
 
-    const pdf = new jsPDF({unit:"pt"});
-
-    for (let i = 0; i < images.length; i++) {
-      const img = images[i];
-      const reader = new FileReader();
-
-      const dataUrl = await new Promise((resolve) => {
-        reader.onload = () => resolve(reader.result);
-        reader.readAsDataURL(img);
+    const convertToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
       });
+    };
 
-      const imgProps = pdf.getImageProperties(dataUrl);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+useEffect(()=>{
+    console.log(pdf)
+    },[pdf])
 
-      if (i !== 0) pdf.addPage();
-      pdf.addImage(dataUrl, "JPEG", 0, 0, pdfWidth, pdfHeight);
-    }
+   const sendToBackend = async () => {
+      try {
+               const base64Images = await Promise.all(
+                  images.map((img) => convertToBase64(img))
+                );
 
-    pdf.save("generated.pdf");
-  };
+                const imagePayload = {
+                  images : base64Images,
+                };
+
+        const response = await fetch('http://localhost:8080/pdf/make-pdf', {
+          method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify( imagePayload ),
+        });
+    console.log(JSON.stringify(imagePayload ))
+
+
+        if (!response.ok) throw new Error('Conversion failed');
+        const data = await response.blob();
+        const url = await URL.createObjectURL(data)
+        setPdf(url);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'converted.pdf'; // You can customize the file name here
+          document.body.appendChild(a);
+          a.click();
+
+          // Cleanup
+          a.remove();
+          URL.revokeObjectURL(url);
+
+      } catch (err) {
+        console.error('Error:', err);
+
+        alert("failed");
+      }
+    };
+
 
 
   return (
@@ -65,7 +94,7 @@ const handleBack = () =>{
     
     {images.length >0 && (
       <div className="w-full flex flex-col justify-center items-center"> 
-        <PdfPreview images={images} download={generatePDF} remove={handleRemoveImage} back={handleBack}/>
+        <PdfPreview images={images} download={sendToBackend} remove={handleRemoveImage} back={handleBack}/>
       </div>    
     )}
     
