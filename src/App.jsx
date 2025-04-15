@@ -13,6 +13,7 @@ import Editor from "./pages/Editor";
 import Login from "./pages/Login";
 import ImageDetector from "./pages/ImageDetector";
 import ImageEnhancer from "./pages/ImageEnhancer";
+import EditUser from "./components/EditUser";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/image-editor" element={<Editor />} />
           <Route path="/edit-image" element={<ImageEditor />} />
+          <Route path="/edit-user" element={<EditUser />} />
         </Route>
       </Routes>
     </Router>

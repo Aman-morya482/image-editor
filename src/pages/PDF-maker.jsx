@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { jsPDF } from "jspdf";
+import { useContext, useEffect, useState } from "react";
 import PdfPreview from "../components/PdfPreview";
-
+import {userContext} from "../utils/ContextProvider";
+import FirstLogin from "../components/FirstLogin";
 
 const PDFmaker = () => {
-  const [images, setImages] = useState([]); // Store selected images
+  const [images, setImages] = useState([]);
   const [pdf,setPdf] = useState([]);
+
+  const {user} = useContext(userContext);
 
   const handleRemoveImage = (index) => {
   setImages((prevImages) => prevImages.filter((_, i) => i !== index));
@@ -36,14 +38,16 @@ useEffect(()=>{
     },[pdf])
 
    const sendToBackend = async () => {
-      try {
-               const base64Images = await Promise.all(
-                  images.map((img) => convertToBase64(img))
-                );
 
-                const imagePayload = {
-                  images : base64Images,
-                };
+    if(user) return 
+
+      try {
+            const base64Images = await Promise.all(
+                images.map((img) => convertToBase64(img))
+              );
+              const imagePayload = {
+                images : base64Images,
+              };
 
         const response = await fetch('http://localhost:8080/pdf/make-pdf', {
           method: 'POST',
@@ -55,15 +59,14 @@ useEffect(()=>{
 
         if (!response.ok) throw new Error('Conversion failed');
         const data = await response.blob();
-        const url = await URL.createObjectURL(data)
+        const url = URL.createObjectURL(data)
         setPdf(url);
+        if(!user) return pendingImage();
           const a = document.createElement('a');
           a.href = url;
-          a.download = 'converted.pdf'; // You can customize the file name here
+          a.download = 'Pixelo-pdf';
           document.body.appendChild(a);
           a.click();
-
-          // Cleanup
           a.remove();
           URL.revokeObjectURL(url);
 
@@ -73,6 +76,12 @@ useEffect(()=>{
         alert("failed");
       }
     };
+
+    const item = {image: pdf, expiry: 86400000}
+    const pendingImage = ()=>{
+      setLogin(true);
+      localStorage.setItem("pendingImage",JSON.stringify(item))
+    }
 
 
 
@@ -106,72 +115,3 @@ useEffect(()=>{
 
 export default PDFmaker;
 
-
-
-
-// import React, { useState } from "react";
-// import { jsPDF } from "jspdf";
-
-// const PdfMaker = () => {
-//   const [images, setImages] = useState([]);
-
-//   const handleImageChange = (e) => {
-//     const files = Array.from(e.target.files);
-//     setImages(files);
-//   };
-
-//   const generatePDF = async () => {
-//     if (!images.length) return;
-
-//     const pdf = new jsPDF({unit:"pt"});
-
-//     for (let i = 0; i < images.length; i++) {
-//       const img = images[i];
-//       const reader = new FileReader();
-
-//       const dataUrl = await new Promise((resolve) => {
-//         reader.onload = () => resolve(reader.result);
-//         reader.readAsDataURL(img);
-//       });
-
-//       const imgProps = pdf.getImageProperties(dataUrl);
-//       const pdfWidth = pdf.internal.pageSize.getWidth();
-//       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-//       if (i !== 0) pdf.addPage();
-//       pdf.addImage(dataUrl, "JPEG", 0, 0, pdfWidth, pdfHeight);
-//     }
-
-//     pdf.save("generated.pdf");
-//   };
-
-//   return (
-//     <div>
-//       <h2>Upload Multiple Images</h2>
-//       <input
-//         type="file"
-//         accept="image/*"
-//         multiple
-//         onChange={handleImageChange}
-//       />
-//       <button onClick={generatePDF} disabled={!images.length}>
-//         Create PDF
-//       </button>       
-//         {images.length > 0 && (
-//            <div className="mt-4 grid grid-cols-3 gap-2">
-//            {images.map((image, index) => (
-//                <img
-//                  key={index}
-//                  src={URL.createObjectURL(image)}
-//                  alt={`Selected ${index + 1}`}
-//                  className="w-24 h-24 object-cover rounded"
-//                  onClick={()=>handleRemoveImage(index)}
-//                  />
-//                  ))}
-//                  </div>
-//                )}
-//     </div>
-//   );
-// };
-
-// export default PdfMaker;

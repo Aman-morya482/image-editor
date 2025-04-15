@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { userContext } from "../utils/ContextProvider";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import "../App.css"
@@ -9,6 +10,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [hide,setHide] = useState(true);
   const [result,setResult] = useState(false);
+
+  const {user,login} = useContext(userContext);
 
   const [data,setData] = useState({
     emailorNumber: "",
@@ -24,17 +27,10 @@ const Login = () => {
     }))
   }
 
-  useEffect(()=>{
-      console.log("result: ", result);
-      
-      if (result) {
-        const timer = setTimeout(() => {
-          navigate("/");
-        }, 1000);
-  
-        return () => clearTimeout(timer); // cleanup
-      }
-    },[result])
+     const item = {
+    value: "Aman",
+    expiry: 86400000,
+  };
     
     
     const handleSubmit = async (e) => {
@@ -51,14 +47,38 @@ const Login = () => {
         
         if (!response.ok) throw new Error('Conversion failed'+ response.err);
         const data2 = await response.json();
-          data2 && setResult(true);
+          data2 && setResult(data2);
           data2 && alert("Login Successfull !!")
           !data2 && alert("Invalid Email or Password !!")
         } catch (err) {
           console.error('Error:', err);
+          login(item);
+          setResult(true);
           alert("Something went wrong !! Try again after some time.");
         }
       };
+
+
+      const pending = JSON.parse(localStorage.getItem("pendingImage"));
+
+      const handleDownload = (pending) => {
+      console.log(pending)
+      if (pending){ 
+      const link = document.createElement("a");
+      link.href = pending.image;
+      link.download = "ai-image.jpeg";
+      document.body.appendChild(link); 
+      link.click();
+      document.body.removeChild(link);
+      localStorage.removeItem("pendingImage");
+    }
+    }
+
+    useEffect(()=>{
+      if(pending && user){
+        handleDownload(pending);
+      }
+    },[user])
 
   return (
     <div className="h-[92vh] flex items-center justify-center p-4 ">

@@ -1,16 +1,26 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState, useEffect } from 'react';
 import ConvertPreview from '../components/ConvertPreview';
+import { userContext } from '../utils/ContextProvider';
+import FirstLogin from '../components/FirstLogin';
 
 
 const ImageConvertor = () => {
 
+  const {user} = useContext(userContext);
+
   const [images,setImages] = useState([]);
   const [type,setType] = useState("png");
   const [convert,setConvert] = useState([]);
-  const [loading,setLoading] = useState(false)
+  const [loading,setLoading] = useState(false);
+  const [login,setLogin] = useState(false);
+
+  useEffect(()=>{
+    user && setLogin(true);
+  },[])
 
   const handleImageChange = () =>{
+    if(!user) return setLogin(true);
     const files = Array.from(event.target.files);
     setImages(files);
     setConvert([]);
@@ -32,10 +42,9 @@ const ImageConvertor = () => {
           const base64Images = await Promise.all(
           images.map((img) => convertToBase64(img))
          );
+         console.log("base:",base64Images)
 
-          const imagePayload = {
-          images : base64Images,
-          };
+          const imagePayload = {images : base64Images,};
 
            const response = await fetch('http://localhost:8080/image/get-compressed-quality', {
              method: 'POST',
@@ -51,7 +60,7 @@ const ImageConvertor = () => {
       } catch (err) {
         console.error('Error:', err);
         setLoading(false);
-        alert("failed");
+        alert("convertion failed");
       }
     };
   
@@ -103,9 +112,11 @@ const ImageConvertor = () => {
       </div>
     ) }
 
-    { images.length > 0  && <ConvertPreview images={images} remove={handleRemoveImage} download={download} back={handleBack} back2={handleBackPre} convert={convert} sendreq={sendToBackend} loading={loading} /> }
+    { images.length > 0  && <ConvertPreview images={images} type={type} remove={handleRemoveImage} download={download} back={handleBack} back2={handleBackPre} convert={convert} sendreq={sendToBackend} loading={loading} /> }
     
     </div>
+
+    {login && <FirstLogin open={setLogin} />}
     
     </div>
   )

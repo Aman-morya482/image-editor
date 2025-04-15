@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { userContext } from "../utils/ContextProvider";
 import { NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { RiArrowDownSLine } from "react-icons/ri";
+import { FaCircleUser } from "react-icons/fa6";
+import { IoIosLogOut } from "react-icons/io";
+import { FaRegEdit } from "react-icons/fa";
 import '../App.css'
+import { use } from "react";
+import EditUser from "./EditUser";
+import LogoutConfirm from "./LogoutConfirm";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
    const [open, setOpen] = useState(false);
+   const [confirm,setConfirm] = useState(false);
+   const[click,setClick] = useState(false);
+   const[edit,setEdit] = useState(false);
+
+   const {user,logout} = useContext(userContext);
 
   return (
-    <nav className="w-full text-black px-6 md:px-10 py-4 shadow-md font-semibold bg-transparent">
-      <div className="w-full flex justify-between items-center relative z-20">
+    <nav className="w-full text-black px-2 md:px-10 py-4 shadow-sm font-semibold bg-transparent">
+      <div className="w-full flex justify-between items-center relative">
        <div>
         <NavLink to="/" className="text-2xl font-bold">
         <img src="/img/logo.png" className="w-[120px]" alt="" />
@@ -45,7 +57,7 @@ const Navbar = () => {
       onMouseLeave={() => setOpen(false)}
     >
       {/* 🔘 Dropdown Trigger Button */}
-      <button className="hover:text-gray-400 flex justify-center items-center gap-1 bg-white">
+      <button className="hover:text-gray-400 flex justify-center items-center gap-1">
         More Tools 
         <RiArrowDownSLine size={18} />
       </button>
@@ -89,12 +101,27 @@ const Navbar = () => {
     </div>
         </li>
         </ul>
-
-        <div>
-        <NavLink to="/signup" className="hidden md:block bg-blue-500 text-white px-2 md:px-4 py-2 rounded-lg hover:bg-blue-600">
-          Sign up
-        </NavLink>
+  <div>
+{
+        !user ? 
+        (<NavLink to="/login" className="hidden md:block bg-blue-500 text-white px-2 md:px-4 py-2 rounded-lg hover:bg-blue-600">
+          Login
+        </NavLink>) :  
+        (<div>
+        <FaCircleUser size={34} className="ml-22 md:ml-0 relative text-slate-800 hover:cursor-pointer hover:ring-3 ring-gray-300 rounded-[50%]" onClick={()=>setClick(!click)}/>
+        <div className={`absolute top-12 right-2 z-100 bg-white border border-gray-300 rounded-md w-[150px]  ${click ? "block" : "hidden"}  `}>
+          <ul className="flex flex-col gap-1 font-normal">
+            <li className="p-2">{user.value}</li>
+            <li className="flex items-center gap-2 hover:bg-gray-200 hover:cursor-pointer p-2" onClick={()=>{setEdit(true)}}>Edit<FaRegEdit size={18} className="mb-1"/></li>
+            <li className="text-red-500 font-semibold hover:bg-red-500 hover:text-white hover:cursor-pointer p-2 flex items-center gap-2" onClick={()=>setConfirm(true)}>Logout<IoIosLogOut size={20}/></li>
+          </ul>
         </div>
+        {edit && <EditUser open={edit} setClick={setClick} setOpen={setEdit}/>}
+        {confirm && <LogoutConfirm logout={logout} setClick={setClick} setConfirm={setConfirm}/>}
+        </div> 
+        )
+}
+  </div>
 
         <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
           {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -151,11 +178,20 @@ const Navbar = () => {
             </li>
             <li>
           <NavLink
-            to="/signin"
+            to="/signup"
+            onClick={() => setIsOpen(false)}
+            className="bg-gray-300 px-4 py-2 rounded-lg w-full text-center hover:bg-blue-600 block"
+            >
+            Sign up
+          </NavLink>
+          </li>
+            <li>
+          <NavLink
+            to="/login"
             onClick={() => setIsOpen(false)}
             className="bg-blue-500 px-4 py-2 rounded-lg w-full text-white text-center hover:bg-blue-600 block"
             >
-            Sign In
+            Login
           </NavLink>
           </li>
             </ul>

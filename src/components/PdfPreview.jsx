@@ -1,7 +1,7 @@
 import React from 'react'
 import { TiDeleteOutline } from "react-icons/ti";
 import { IoIosArrowBack } from "react-icons/io";
-
+import FirstLogin from './FirstLogin';
 
 
 const PdfPreview = (prop) => {
@@ -33,6 +33,8 @@ const PdfPreview = (prop) => {
         </div>
         </div>
       
+
+      <FirstLogin/>
     </div>
   )
 }
