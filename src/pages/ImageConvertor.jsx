@@ -16,7 +16,7 @@ const ImageConvertor = () => {
   const [login,setLogin] = useState(false);
 
   useEffect(()=>{
-    user && setLogin(true);
+    user && setLogin(false);
   },[])
 
   const handleImageChange = () =>{
@@ -44,18 +44,18 @@ const ImageConvertor = () => {
          );
          console.log("base:",base64Images)
 
-          const imagePayload = {images : base64Images,};
+          const imagePayload = {images : base64Images, qualityOrType: type};
 
-           const response = await fetch('http://localhost:8080/image/get-compressed-quality', {
+           const response = await fetch('http://localhost:8080/image/get-convert', {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify( imagePayload ),
            });
-       console.log(JSON.stringify(imagePayload ))
         
         if (!response.ok) throw new Error('Conversion failed'+response.err);
         const data = await response.json();
-        setConvert(data);
+        console.log(data.Images);
+        setConvert(data.Images);
         setLoading(false);
       } catch (err) {
         console.error('Error:', err);
@@ -105,7 +105,7 @@ const ImageConvertor = () => {
       <div className='z-10 right-40 flex justify-center items-center gap-2 md:text-lg '><select className=' bg-gray-200 p-5 rounded-md' value={type} onChange={(e)=>{setType(e.target.value)}}  >
               <option value="png">PNG</option>
               <option value="jpg">JPG</option>
-              <option value="Wepb">WEBP</option>
+              <option value="wepb">WEBP</option>
             </select>
             </div>
       </div>
