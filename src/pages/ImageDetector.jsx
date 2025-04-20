@@ -1,33 +1,35 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
+import FirstLogin from '../components/FirstLogin';
+import { userContext } from '../utils/ContextProvider';
 
 const ImageDetector = () => {
   const [img, setImg] = useState(null);
   const [description, setDescription] = useState('');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [login,setLogin] = useState(false);
+
+  const {user} = useContext(userContext);
 
   const handleFileChange = async (e) => {
+    if(!user) setLogin(true);
     const file = e.target.files[0];
     if (!file) return;
 
     const base64 = await convertToBase64(file);
     setImg(base64);
-    // geturl(base64); // use base64 directly instead of relying on state
   };
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result.split(',')[1]); // remove the data:image/...;base64,
+      reader.onloadend = () => resolve(reader.result.split(',')[1]);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   };
 
-  // const geturl = async (base64Img) => {
- 
-  // };
 
   const sendToBackend = async () => {
     setLoading(true);
@@ -37,7 +39,7 @@ const ImageDetector = () => {
       const formData = new URLSearchParams();
       formData.append("key", "c566d8a130fb6cc14f4fa26b568e003f");
       formData.append("image", img);
-      formData.append("expiration", 300); // Optional
+      formData.append("expiration", 300);
 
       const response = await axios.post("https://api.imgbb.com/1/upload", formData.toString(), {
         headers: {
@@ -46,9 +48,7 @@ const ImageDetector = () => {
       });
 
       imageUrl = response.data?.data?.url;
-      console.log(response.data)
-      setUrl(()=>imageUrl);
-      console.log("Image URL:", url);
+      setUrl(imageUrl);
     } catch (error) {
       console.error("Upload failed:", error);
       alert("Image upload failed: " + error.message);
@@ -57,9 +57,10 @@ const ImageDetector = () => {
 
 
     const payload = {imageData : imageUrl , message: "" };
-    console.log(payload)
+    console.log("payload",payload)
+    console.log("url",imageUrl);
     try {
-      const response = await fetch("http://localhost:8080/api/imagereader", {
+      const response = await fetch("http://localhost:8080/api/imageReader", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -69,7 +70,7 @@ const ImageDetector = () => {
 
       const data = await response.json();
       console.log(data);
-      setDescription(data[0] || "No description found.");
+      setDescription(data[0]);
     } catch (err) {
       console.error(err);
       alert("Something went wrong! Try again later.");
@@ -78,6 +79,11 @@ const ImageDetector = () => {
       setLoading(false);
     }
   };
+
+  const cancelLogin = ()=>{
+  setLogin(false);
+  setImg(null)
+}
 
   return (
     <div className="grid grid-cols-1 place-items-center bg-gray-100 min-h-screen">
@@ -120,6 +126,8 @@ const ImageDetector = () => {
           )}
         </div>
       )}
+
+      {login && <FirstLogin open={cancelLogin}/>}
     </div>
   );
 };

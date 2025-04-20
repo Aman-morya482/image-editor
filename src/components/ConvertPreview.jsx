@@ -43,7 +43,7 @@ const ConvertPreview = (prop) => {
             <div key={index} className='relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
             <p className=' left-0 bg-gray-300 px-4 py-4'>{index + 1}</p>
             <div className='w-full flex justify-between items-center px-2 md:px-5'>
-            <p>{prop.images[index].name}</p>
+            <p>{prop.images[index].name.split('.')[0]+'.'+prop.type}</p>
             </div>
             <button onClick={() => prop.download(image, `image-${index + 1}.${prop.type}`)} className='cursor-pointer bg-green-500 text-white px-3 py-4'>Download</button>
             </div> 

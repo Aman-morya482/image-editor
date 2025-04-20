@@ -134,8 +134,8 @@ const updateFilter = useCallback((newFilters) => {
     img.onload = function () {
       imgWidth = img.width;
       imgHeight = img.height;
-      const scaleWidth = Math.min(canvasSize.width / imgWidth, 1); // Ensures max width 600px
-      const scaleHeight = Math.min(canvasSize.height / imgHeight, 1); // Ensures max height 1200px
+      const scaleWidth = Math.min(canvasSize.width / imgWidth, 1);
+      const scaleHeight = Math.min(canvasSize.height / imgHeight, 1);
       const scale = Math.min(scaleWidth, scaleHeight);
       imgWidth *= scale;
       imgHeight *= scale;

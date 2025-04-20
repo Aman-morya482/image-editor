@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
-import ImagePreview from "../components/ConvertPreview";
+import { useContext, useState } from "react";
 import CompressPreview from "../components/CompressPreview";
+import { userContext } from "../utils/ContextProvider";
+import FirstLogin from "../components/FirstLogin";
 
 const ImageCompressor = () => {
 
     const [images,setImages] = useState([]);
-    const [quality,setQuality] = useState("0.3");
+    const [quality,setQuality] = useState("0.3F");
     const [compress,setCompress] = useState([]);
     const [loading,setLoading] = useState(false);
+    const [login,setLogin] = useState(false);
   
+    const {user} = useContext(userContext);
+
     const handleImageChange = () =>{
+      if(!user) setLogin(true);
       const files = Array.from(event.target.files);
       setImages(files);
       setCompress([]);
@@ -28,25 +33,24 @@ const ImageCompressor = () => {
     const sendToBackend = async () => {
       setLoading(true);
      try {
-                  const base64Images = await Promise.all(
-                     images.map((img) => convertToBase64(img))
-                   );
+        const base64Images = await Promise.all(
+        images.map((img) => convertToBase64(img))
+        );
 
-                   const imagePayload = {
-                     images : base64Images,
-                     qualityOrType : quality,
-                   };
+        const imagePayload = {
+        images : base64Images,
+        qualityOrType : quality,
+        };
 
-           const response = await fetch('http://localhost:8080/image/get-compressed-quality', {
-             method: 'POST',
-                 headers: { 'Content-Type': 'application/json' },
+        const response = await fetch('http://localhost:8080/image/get-compressed-quality', {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify( imagePayload ),
            });
-       console.log(JSON.stringify(imagePayload ))
         
         if (!response.ok) throw new Error('Conversion failed'+response.err);
         const data = await response.json();
-        setCompress(data);
+        setCompress(data.Images);
         setLoading(false);
       } catch (err) {
         console.error('Error:', err);
@@ -54,12 +58,8 @@ const ImageCompressor = () => {
         alert("failed");
       }
     };
-
-    useEffect(()=>{
-      console.log("compress", compress)
-    },[compress])
   
-      const handleRemoveImage = (index) => {
+    const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
   
@@ -89,6 +89,11 @@ const download = (base64String, fileName = "image") => {
   document.body.removeChild(link);
 };
 
+  const cancelLogin = ()=>{
+    setLogin(false);
+    setImages([]);
+  }
+
   return (
     <div className='gird grid-cols-1 place-items-center'>
 
@@ -107,6 +112,8 @@ const download = (base64String, fileName = "image") => {
     }
     </div>
     
+    { login && <FirstLogin open={cancelLogin}/>}
+
     </div>
   )
 };

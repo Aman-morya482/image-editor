@@ -7,12 +7,13 @@ import FirstLogin from './FirstLogin';
 const PdfPreview = (prop) => {
 
     return (
+
     <div className='w-full md:w-3/4 mx-auto'>
         
         <div className='relative flex md:justify-between md:items-center bg-white p-10 md:p-30 py-50 overflow-hidden'>
         <div className="flex gap-6 w-full overflow-x-scroll">
            {prop.images.map((image, index) => (
-            <div key={index} className='relative border border-gray-200 w-[220px] md:w-[300px] shrink-0 overflow-hidden rounded-xl'>
+             <div key={index} className='relative border border-gray-200 w-[220px] md:w-[300px] shrink-0 overflow-hidden rounded-xl'>
             <img
             key={index}
             src={URL.createObjectURL(image)}
@@ -34,7 +35,7 @@ const PdfPreview = (prop) => {
         </div>
       
 
-      <FirstLogin/>
+        {prop.login && <FirstLogin open={prop.cancelLogin}/>}
     </div>
   )
 }

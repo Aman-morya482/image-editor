@@ -36,6 +36,9 @@ const Login = () => {
     const handleSubmit = async (e) => {
       console.log(data);
       e.preventDefault();
+
+      if(data.emailorNumber == ""){return alert("Enter Email Address")}
+      if(data.password == ""){return alert("Enter Password")}
       
       console.log("data: ", data);
       try{ 
@@ -50,33 +53,50 @@ const Login = () => {
           data2 && setResult(data2);
           data2 && alert("Login Successfull !!")
           !data2 && alert("Invalid Email or Password !!")
-        } catch (err) {
-          console.error('Error:', err);
-          login(item);
           setResult(true);
+          setData({
+            emailorNumber:"",
+            password:"",
+          })
+        } catch (err) {
+          login(item);
+          console.error('Error:', err);
           alert("Something went wrong !! Try again after some time.");
         }
       };
 
 
-      const pending = JSON.parse(localStorage.getItem("pendingImage"));
-
-      const handleDownload = (pending) => {
-      console.log(pending)
-      if (pending){ 
-      const link = document.createElement("a");
-      link.href = pending.image;
-      link.download = "ai-image.jpeg";
-      document.body.appendChild(link); 
-      link.click();
-      document.body.removeChild(link);
-      localStorage.removeItem("pendingImage");
-    }
-    }
+      const pendingImage = JSON.parse(localStorage.getItem("pendingImage"));
+      
+      const handleImageDownload = (pending) => {
+        if (pending){ 
+          const link = document.createElement("a");
+          link.href = pending.image;
+          link.download = `${pending.name}.${pending.format}`;
+          document.body.appendChild(link); 
+          link.click();
+          document.body.removeChild(link);
+          localStorage.removeItem("pendingImage");
+        }
+      }
+      
+      const pendingPdf = JSON.parse(localStorage.getItem("pendingPdf"));
+      const handlepdfDownload = (pending)=>{
+        const a = document.createElement('a');
+        a.href = pending.pdf;
+        a.download = 'Pixelo-pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        localStorage.removeItem("pendingPdf")
+      }
 
     useEffect(()=>{
-      if(pending && user){
-        handleDownload(pending);
+      if(pendingImage && user){
+        handleImageDownload(pendingImage);
+      }
+      if(pendingPdf && user){
+        handlepdfDownload(pendingPdf)
       }
     },[user])
 
@@ -99,9 +119,9 @@ const Login = () => {
             <div>
               <input
                 type="email"
-                name="email"
+                name="emailorNumber"
                 onChange={handleChange}
-                value={data.email}
+                value={data.emailorNumber}
                 placeholder="Email"
                 className="w-full py-2 px-1 border-b outline-none focus:border-blue-600"
               />

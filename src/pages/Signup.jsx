@@ -60,13 +60,13 @@ const Signup = () => {
     
     console.log("data: ", data);
     try{ 
-      const response = await fetch('http://localhost:8080/User/register', {
+      const response = await fetch('http://localhost:8080/signup/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
       
-      if (!response.ok) throw new Error('Conversion failed'+ response.err);
+      if (!response.ok) throw new Error('Signup Failed'+ response.err);
       const data2 = await response.json();
         data2 && setResult(true);
         data2 && alert("Account Created Successfully !!")

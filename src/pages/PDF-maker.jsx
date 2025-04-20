@@ -6,83 +6,78 @@ import FirstLogin from "../components/FirstLogin";
 const PDFmaker = () => {
   const [images, setImages] = useState([]);
   const [pdf,setPdf] = useState([]);
+  const [login,setLogin] = useState(false);
 
   const {user} = useContext(userContext);
-
+  
   const handleRemoveImage = (index) => {
-  setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-};
-
-const handleBack = () =>{
-  setImages([]);
-}
-
-  // Handle image selection
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+  
+  const handleBack = () =>{
+    setImages([]);
+  }
+  
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     setImages(files);
   };
-
-
-    const convertToBase64 = (file) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+  
+  
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+  
+  
+  const sendToBackend = async () => {
+    
+    !user && setLogin(true);
+    
+    try {
+      const base64Images = await Promise.all(
+        images.map((img) => convertToBase64(img))
+      );
+      const imagePayload = {
+        images : base64Images,
+      };
+      
+      const response = await fetch('http://localhost:8080/pdf/make-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify( imagePayload ),
       });
-    };
-
-useEffect(()=>{
-    console.log(pdf)
-    },[pdf])
-
-   const sendToBackend = async () => {
-
-    if(user) return 
-
-      try {
-            const base64Images = await Promise.all(
-                images.map((img) => convertToBase64(img))
-              );
-              const imagePayload = {
-                images : base64Images,
-              };
-
-        const response = await fetch('http://localhost:8080/pdf/make-pdf', {
-          method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify( imagePayload ),
-        });
-    console.log(JSON.stringify(imagePayload ))
-
-
-        if (!response.ok) throw new Error('Conversion failed');
-        const data = await response.blob();
-        const url = URL.createObjectURL(data)
+      
+      const data = await response.blob();
+      const url = URL.createObjectURL(data);
         setPdf(url);
-        if(!user) return pendingImage();
+        if(!user) return pendingPdf(url);
           const a = document.createElement('a');
           a.href = url;
           a.download = 'Pixelo-pdf';
           document.body.appendChild(a);
           a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
+          document.body.removeChild(a);
 
       } catch (err) {
         console.error('Error:', err);
-
         alert("failed");
       }
     };
 
-    const item = {image: pdf, expiry: 86400000}
-    const pendingImage = ()=>{
+    const pendingPdf = (url)=>{
+      const item = {pdf: url, expiry: 86400000}
       setLogin(true);
-      localStorage.setItem("pendingImage",JSON.stringify(item))
+      localStorage.setItem("pendingPdf",JSON.stringify(item))
     }
 
+    const cancelLogin = ()=>{
+      setLogin(false);
+    }
 
 
   return (
@@ -103,7 +98,7 @@ useEffect(()=>{
     
     {images.length >0 && (
       <div className="w-full flex flex-col justify-center items-center"> 
-        <PdfPreview images={images} download={sendToBackend} remove={handleRemoveImage} back={handleBack}/>
+        <PdfPreview images={images} login={login} cancelLogin={cancelLogin} download={sendToBackend} remove={handleRemoveImage} back={handleBack}/>
       </div>    
     )}
     

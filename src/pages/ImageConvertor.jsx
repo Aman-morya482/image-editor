@@ -15,10 +15,6 @@ const ImageConvertor = () => {
   const [loading,setLoading] = useState(false);
   const [login,setLogin] = useState(false);
 
-  useEffect(()=>{
-    user && setLogin(false);
-  },[])
-
   const handleImageChange = () =>{
     if(!user) return setLogin(true);
     const files = Array.from(event.target.files);
@@ -54,8 +50,8 @@ const ImageConvertor = () => {
         
         if (!response.ok) throw new Error('Conversion failed'+response.err);
         const data = await response.json();
-        console.log(data.Images);
-        setConvert(data.Images);
+        console.log(data);
+        setConvert(data);
         setLoading(false);
       } catch (err) {
         console.error('Error:', err);
@@ -83,12 +79,15 @@ const ImageConvertor = () => {
   const download = (base64String, fileName = "image") => {
   const link = document.createElement("a");
   link.href = base64String;
-  link.download = `${fileName}.${type}`;
+  link.download = `${fileName}`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 };
 
+const cancelLogin = ()=>{
+  setLogin(false);
+}
 
   return (
     <div className='grid grid-cols-1 place-items-center'>
@@ -104,7 +103,7 @@ const ImageConvertor = () => {
       </div>
       <div className='z-10 right-40 flex justify-center items-center gap-2 md:text-lg '><select className=' bg-gray-200 p-5 rounded-md' value={type} onChange={(e)=>{setType(e.target.value)}}  >
               <option value="png">PNG</option>
-              <option value="jpg">JPG</option>
+              <option value="jpeg">JPEG</option>
               <option value="wepb">WEBP</option>
             </select>
             </div>
@@ -116,7 +115,7 @@ const ImageConvertor = () => {
     
     </div>
 
-    {login && <FirstLogin open={setLogin} />}
+    {login && <FirstLogin open={cancelLogin} />}
     
     </div>
   )

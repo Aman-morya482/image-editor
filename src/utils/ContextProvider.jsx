@@ -3,33 +3,28 @@ import { createContext, useEffect, useState } from "react";
 export const userContext = createContext();
 
 const ContextProvider = ({children}) => {
-   const [user, setUser] = useState()
-   const [download,setDownload] = useState(false);
+   const [user, setUser] = useState("")
 
    useEffect(()=>{
     const storedUser = localStorage.getItem("User");
-    setUser(JSON.parse(storedUser));
+    if (storedUser) setUser(JSON.parse(storedUser));
    },[])
-
-   useEffect(()=>{
-    user && setDownload(true);
-   },[user])
-
-   const login = (userData)=>{
-    localStorage.setItem("User",JSON.stringify(userData));
-    setUser(userData);
-   }
-
-   const logout = (setClick,setConfirm)=>{
-    setClick(false);
-    setConfirm(false);
-    localStorage.removeItem("User");
-    localStorage.removeItem("pendingImage");
-    setUser(null);
+    
+    const login = (userData)=>{
+      localStorage.setItem("User",JSON.stringify(userData));
+      setUser(userData);
+    }
+    
+    const logout = (setClick,setConfirm)=>{
+      setClick(false);
+      setConfirm(false);
+      localStorage.removeItem("User");
+      localStorage.removeItem("pendingImage");
+      setUser("");
    }
 
     return (
-    <userContext.Provider value={{user,setUser,setUser,login,logout,download,setDownload}}>
+    <userContext.Provider value={{user,setUser,login,logout}}>
         {children}
     </userContext.Provider>
   )
