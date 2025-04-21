@@ -9,69 +9,74 @@ import { LuUpload } from "react-icons/lu";
 const BgRemover = () => {
 
   const [result,setResult] = useState(null);
+  const [base64,setBase64] = useState(null);
   const [loading,setLoading] = useState(false);
   const canvasRef = useRef(null);
   const [image,setImage] = useState(null);
 
 
-  const handleImageUpload = (e) => {
+   const handleImageUpload = (e) =>{
     const file = e.target.files[0];
-    if (!file) return;
     setImage(file);
-    setResult(null);
+    setResult([]);
+    sendToBackend(file);
+    console.log("upload");
+    
+  }
+
+    const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result) ;
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+      console.log("convert");
+    });
   };
-
-      const convertToBase64 = (file) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    };
-
-    const sendToBackend = async () => {
+  
+  
+     const sendToBackend = async (file) => {
       setLoading(true);
      try {
-        const base64Images = await Promise.all(
-        image.map((img) => convertToBase64(img))
-        );
-
-        const imagePayload = {
-        images : base64Images,
-        };
-
-        const response = await fetch('http://localhost:8080/get-bgRemoved', {
-        method: 'POST',
+          const base64Images = await convertToBase64(file)
+          console.log("base:",base64Images)
+          const imagePayload = {images : base64Images};
+          
+          const response = await fetch('http://localhost:8080/get-bgRemoved', {
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify( imagePayload ),
-           });
-        
-        if (!response.ok) throw new Error('Conversion failed'+response.err);
-        const data = await response.json();
-        setResult(data.data);
+            body: JSON.stringify( imagePayload ),
+          });
+          
+          if (!response.ok) throw new Error('Conversion failed'+response.err);
+          const data = await response.json();
+          console.log(data);
+          setResult(data.Data);
+          setBase64(data.Data);
         setLoading(false);
       } catch (err) {
         console.error('Error:', err);
         setLoading(false);
-        alert("failed");
+        alert("convertion failed");
       }
     };
+  
 
 
-
-  const downloadImage = () => {
-    const canvas = canvasRef.current;
-    const link = document.createElement('a');
-    link.download = 'bg-removed.png';
-    link.href = canvas.toDataURL();
-    link.click();
-  };
+const downloadImage = (base64Image, fileName = "bgremoved-image.png") => {
+  const link = document.createElement("a");
+  link.href = base64Image;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
   return (
     <div className='grid grid-cols-1 place-items-center'>
     
-    <div className='h-[92vh] w-full max-w-[1800px] flex flex-col-reverse md:flex-row justify-center items-center gap-10 md:gap-5 lg:gap-20 xl:gap-40 p-20 overflow-hidden'>
+    {!result &&
+      <div className='h-[92vh] w-full max-w-[1800px] flex flex-col-reverse md:flex-row justify-center items-center gap-10 md:gap-5 lg:gap-20 xl:gap-40 p-20 overflow-hidden'>
      <div className='w-sm min-w-xs md:w-lg xl:w-xl rounded-2xl overflow-hidden'>
      <video src="/img/bg-video.mp4" autoPlay loop className=''></video>
      </div>
@@ -86,33 +91,21 @@ const BgRemover = () => {
       </div>
      </div>
      </div>
+     </div>
+    }
 
      {result && (
-        <>
-          <img id="input-image" src={result} alt="input" hidden crossOrigin="anonymous" />
+    <div className='h-[92vh] w-full max-w-[1800px] flex flex-col-reverse md:flex-row justify-center items-center gap-10 md:gap-5 lg:gap-20 xl:gap-40 p-20 overflow-hidden'>
+          <img id="input-image" src={base64} width={400} alt="input" crossOrigin="anonymous" />
           <button
-            onClick={processImage}
-            disabled={!ready}
-            className="bg-blue-600 text-white px-4 py-2 rounded mr-2"
-          >
-            {loading ? 'Remove Background' : 'Loading...'}
-          </button>
-          <button
-            onClick={downloadImage}
+            onClick={()=>downloadImage(base64)}
             className="bg-green-600 text-white px-4 py-2 rounded"
           >
-            Download PNG
+            Download
           </button>
-        </>
+        </div>
       )}
      
-     </div>
-
-     {
-      result && 
-      <div className='h-[50vh]'>djfns
-      </div>
-     }
     
     </div>
   )

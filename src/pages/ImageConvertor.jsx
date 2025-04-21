@@ -104,7 +104,7 @@ const cancelLogin = ()=>{
       <div className='z-10 right-40 flex justify-center items-center gap-2 md:text-lg '><select className=' bg-gray-200 p-5 rounded-md' value={type} onChange={(e)=>{setType(e.target.value)}}  >
               <option value="png">PNG</option>
               <option value="jpeg">JPEG</option>
-              <option value="wepb">WEBP</option>
+              <option value="webp">WEBP</option>
             </select>
             </div>
       </div>
