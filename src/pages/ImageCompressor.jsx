@@ -18,6 +18,7 @@ const ImageCompressor = () => {
       const files = Array.from(event.target.files);
       setImages(files);
       setCompress([]);
+      
     }
     
     const convertToBase64 = (file) => {
