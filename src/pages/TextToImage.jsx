@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import { PiMagicWandDuotone } from "react-icons/pi";
 import { IoIosArrowRoundDown } from "react-icons/io";
@@ -32,17 +34,16 @@ const TextToImage = () => {
 
         const sendToBackend = async () => {
         if (prompt.length <= 0) return alert("Write some prompt");
-        !user && login(true);
-
+        setLoading(true);
+        
         const style_prompt = "a photo of";
         const negative = "";
         const imp = ["tiger"];
         const scene = ["forest","mountain"];
-
+        
         const imagePayload = {prompt,imp,style_prompt,scene,negative};
 
         try{
-          setLoading(true);
           
           const response = await fetch('http://localhost:8080/api/getImage', {
             method: 'POST',
@@ -56,15 +57,16 @@ const TextToImage = () => {
           setImage(data);
           console.log(data);
           setLoading(false);
-      } catch (err) {
-        console.error('Error:', err);
-        setLoading(false);
-        alert("Something went wrong ! Try again after some time.");
-      }
-    };
-
-    const handleDownload = () => {
-      if(!user) return pendingImage(); 
+        } catch (err) {
+          console.error('Error:', err);
+          setLoading(false);
+          alert("Something went wrong ! Try again after some time.");
+        }
+      };
+      
+      const handleDownload = () => {
+        if(!user) return pendingImage(); 
+        !user && setLogin(true);
       const link = document.createElement("a");
       link.href = `data:image/jpeg;base64,${image}`;
       link.download = "ai-image.jpeg";
@@ -104,6 +106,10 @@ const TextToImage = () => {
         
     
       <div className='w-full flex flex-col justify-center items-center pt-5 pb-10 md:p-5'>
+      {
+        loading && 
+        <Skeleton height={600} width={600} />
+      }
       { image && 
       <div className='relative'>
       <img className='w-2xs md:w-xl h-[300px] md:h-[600px] rounded-xl' src={`data:image/jpeg;base64,${image}`} ></img>

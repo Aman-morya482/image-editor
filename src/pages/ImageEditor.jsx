@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Navigate,useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import { FaArrowLeft } from "react-icons/fa6";
 import { GrUndo } from "react-icons/gr";
 import { GrRedo } from "react-icons/gr";
@@ -20,45 +22,63 @@ import { Tooltip } from "react-tooltip";
 
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../components/cropImage";
+import DraftConfirm from "../components/DraftConfirm";
 
 
 const ImageEditor = () => {
-  const navigat = useNavigate();
-
+  const location = useLocation();  
+  const navigate = useNavigate();
+  
   const [canvasSize,setCanvasSize] = useState({width:600,height:400})
-
+  
   const canvasRef = useRef(null);
   const [image, setImage] = useState(null); 
   const [ogImage,setOgImage] = useState(null);
   const [lastImage,setLastImage] = useState(null);
   const [croppedImage,setCroppedImage] = useState(null);
-
+  const [back,setBack] = useState(false);
+  
   const [crop,setCrop] = useState({x:0,y:0})
   const [aspect,setAspect] = useState(1);
   const [zoom,setZoom] = useState(null)
   const [croppedAreaPixels,setCroppedAreaPixels] = useState(null)
   const [isCropping, setIsCropping] = useState(false)
-
+  
   const [rotation, setRotation] = useState(0);
   const [flipX, setFlipX] = useState(1);
   const [flipY, setFlipY] = useState(1);
-
+  
   const [filters, setFilters] = useState({
-  brightness: 100,
-  contrast: 100,
-  saturation: 100,
-  grayscale: 0,
-  blur: 0,
-  opacity: 100,
-  sepia: 0,
-  hue: 0,
-  invert: 0
-});
-
-const updateFilter = useCallback((newFilters) => {
-  setFilters({
     brightness: 100,
     contrast: 100,
+    saturation: 100,
+    grayscale: 0,
+    blur: 0,
+    opacity: 100,
+    sepia: 0,
+    hue: 0,
+    invert: 0
+  });
+  
+  useEffect(() => {
+    updateCanvasSize();
+       window.addEventListener("resize", updateCanvasSize);
+       const storedImage = localStorage.getItem("uploadedImage");
+       if (storedImage) {
+         setImage(storedImage);
+         setOgImage(storedImage);
+        }else {
+          const newImage = location.state?.newImage;
+          setImage(newImage);
+          setOgImage(newImage);
+        }
+    return () => window.removeEventListener("resize", updateCanvasSize);
+  }, []);
+
+  const updateFilter = useCallback((newFilters) => {
+    setFilters({
+      brightness: 100,
+      contrast: 100,
     saturation: 100,
     grayscale: 0,
     blur: 0,
@@ -84,18 +104,6 @@ const updateFilter = useCallback((newFilters) => {
   const [history,setHistory] = useState([]);
   const [historyIndex,setHistoryIndex] = useState(-1);
 
-  // Handle image file selection
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        localStorage.setItem("uploadedImage", reader.result);
-        setImage(reader.result);
-      }
-      reader.readAsDataURL(file);
-    }
-  };
 
     const updateCanvasSize = () => {
     const screenWidth = window.innerWidth;
@@ -108,17 +116,6 @@ const updateFilter = useCallback((newFilters) => {
     }
   };
 
-    useEffect(() => {
-      updateCanvasSize();
-         window.addEventListener("resize", updateCanvasSize);
-         const storedImage = localStorage.getItem("uploadedImage");
-         if (storedImage) {
-           setImage(storedImage);
-           setOgImage(storedImage);
-           // console.log("Image Data:", storedImage);
-      return () => window.removeEventListener("resize", updateCanvasSize);
-    }
-  }, []);
 
   let imgWidth;
   let imgHeight;
@@ -139,8 +136,8 @@ const updateFilter = useCallback((newFilters) => {
       const scale = Math.min(scaleWidth, scaleHeight);
       imgWidth *= scale;
       imgHeight *= scale;
-      canvasWidth = Math.max(imgWidth, canvasSize.width == 600 ? 500 : 100);
-      canvasHeight = Math.max(imgHeight, canvasSize.height == 400 ? 500 : 300);
+      canvasWidth = Math.max(imgWidth, canvasSize.width == 600 ? 600 : 100);
+      canvasHeight = Math.max(imgHeight, canvasSize.height == 400 ? 600 : 300);
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -194,7 +191,9 @@ const updateFilter = useCallback((newFilters) => {
      
   // };
 
-
+  //  const handleBack = ()=>{
+     
+  //  }
 
 
 
@@ -424,7 +423,7 @@ const handleDoubleClick = () => {
     <nav className="bg-gray-900 text-white px-3 py-3  md:px-6 md:py-4 flex justify-between items-center">
       <ul className="w-full flex space-x-4 justify-between items-center">
         <div>
-        <li onClick={()=>{navigat(-1); localStorage.setItem("uploadedImage","")}}><a className="hover:text-gray-400 text-lg md:text-2xl"><FaArrowLeft/></a></li>
+        <li onClick={()=>{setBack(true)}}><a className="hover:text-gray-400 text-lg md:text-2xl"><FaArrowLeft/></a></li>
         </div>
         <div className="flex gap-2 md:gap-5">
         <button onClick={handleUndo} className={`border-2 p-[6px] cursor-pointer rounded-lg text-lg md:text-2xl ${historyIndex >= 1 ? 'text-white' : 'text-gray-400'} hover:text-gray-400`} title="Undo (ctrl + Z)"><div><GrUndo /></div></button>
@@ -437,22 +436,10 @@ const handleDoubleClick = () => {
       </ul>
     </nav>
 
-
     {
-      !image &&  (  
-    <div className="flex flex-col items-center justify-center gap-4 bg-white min-h-[80vh]">
-     <h1 className="text-2xl font-bold">Image Editor</h1>
-      <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
-        Upload Image
-        <input
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleImageUpload}
-        />
-      </label> 
-      </div>
-)}
+      back && <DraftConfirm cancel={setBack}/>
+    }
+
 
       { image &&
       <div className="h-[90vh] w-full flex flex-col-reverse md:flex-row justify-between gap-2 overflow-y-hidden">

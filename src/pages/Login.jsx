@@ -27,7 +27,7 @@ const Login = () => {
     }))
   }
 
-     const item = {
+    const item = {
     value: "Aman",
     expiry: 86400000,
   };
@@ -54,12 +54,12 @@ const Login = () => {
           data2 && alert("Login Successfull !!")
           !data2 && alert("Invalid Email or Password !!")
           setResult(true);
+          login(data2);
           setData({
             emailorNumber:"",
             password:"",
           })
         } catch (err) {
-          login(item);
           console.error('Error:', err);
           alert("Something went wrong !! Try again after some time.");
         }
