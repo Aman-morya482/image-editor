@@ -121,22 +121,6 @@ input[type="range"]::-moz-range-thumb {
 }
 
 
-/* 
-
-@keyframes marquee {
-  from {
-    transform: translateX(100%);
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-.animate-marquee {
-  display: flex;
-  animation: marquee 15s linear infinite;
-} */
-
-
 .swiper {
   width: 280px;
   height: 380px;
@@ -169,4 +153,26 @@ input[type="range"]::-moz-range-thumb {
     width:260px;
     height: 360px;
   }
+}
+
+.animated-gradient-text {
+  background: linear-gradient(50deg, #1e99fd, #0902d0, #fb5abb,#fb3838, #ffe11a, #ff7b00  ,#af06e2, #008cff );
+  background-size: 800% 800%;
+  background-clip: text;
+  line-height: 90px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientAnimation 8s linear infinite reverse;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+  /* 100% {
+    background-position: 50% 0%;
+  } */
 }

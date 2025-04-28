@@ -95,3 +95,4 @@ export const animatePixelo = (refs, setShowCursor) => {
 
   return () => clearInterval(cursorBlink);
 };
+

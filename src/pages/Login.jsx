@@ -14,7 +14,7 @@ const Login = () => {
   const {user,login} = useContext(userContext);
 
   const [data,setData] = useState({
-    emailorNumber: "",
+    emailOrNumber: "",
     password: "",
   })
 
@@ -37,12 +37,12 @@ const Login = () => {
       console.log(data);
       e.preventDefault();
 
-      if(data.emailorNumber == ""){return alert("Enter Email Address")}
+      if(data.emailOrNumber == ""){return alert("Enter Email Address")}
       if(data.password == ""){return alert("Enter Password")}
       
-      console.log("data: ", data);
+      console.log("LoginReq: ", data);
       try{ 
-        const response = await fetch('http://localhost:8080/User/login', {
+        const response = await fetch('http://localhost:8080/login/getLogin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
@@ -50,16 +50,19 @@ const Login = () => {
         
         if (!response.ok) throw new Error('Conversion failed'+ response.err);
         const data2 = await response.json();
+        console.log("LoginRes:", data2)
           data2 && setResult(data2);
           data2 && alert("Login Successfull !!")
           !data2 && alert("Invalid Email or Password !!")
           setResult(true);
           login(data2);
           setData({
-            emailorNumber:"",
+            emailOrNumber:"",
             password:"",
           })
         } catch (err) {
+          setResult(true);
+          login(item)
           console.error('Error:', err);
           alert("Something went wrong !! Try again after some time.");
         }
@@ -119,9 +122,9 @@ const Login = () => {
             <div>
               <input
                 type="email"
-                name="emailorNumber"
+                name="emailOrNumber"
                 onChange={handleChange}
-                value={data.emailorNumber}
+                value={data.emailOrNumber}
                 placeholder="Email"
                 className="w-full py-2 px-1 border-b outline-none focus:border-blue-600"
               />

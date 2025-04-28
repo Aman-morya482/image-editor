@@ -1,14 +1,8 @@
 import React from 'react'
-import { TiDeleteOutline } from "react-icons/ti";
-import { IoIosArrowBack } from "react-icons/io";
-import FirstLogin from './FirstLogin';
 
-
-const PdfPreview = (prop) => {
-
-    return (
-
-    <div className='w-full md:w-3/4 mx-auto'>
+const PdfPreview = () => {
+  return (
+       <div className='w-full md:w-3/4 mx-auto'>
         
         <div className='relative flex md:justify-between md:items-center bg-white p-10 md:p-30 py-50 overflow-hidden'>
         <div className="flex gap-6 w-full overflow-x-scroll">
@@ -41,4 +35,3 @@ const PdfPreview = (prop) => {
 }
 
 export default PdfPreview
-

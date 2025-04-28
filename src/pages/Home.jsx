@@ -63,10 +63,7 @@ const Home = () => {
 
  
     useEffect(() => {
-    const cleanup = animatePixelo(
-      { blurDiv1, blurDiv2, marText1, marText2, gradientText },
-      setShowCursor
-    );
+    const cleanup = animatePixelo({ blurDiv1, blurDiv2, marText1, marText2, gradientText }, setShowCursor);
 
     return () => {
       cleanup(); // clearInterval and any future cleanups

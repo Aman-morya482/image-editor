@@ -39,7 +39,7 @@ const BgRemover = () => {
       setLoading(true);
      try {
           const base64Images = await convertToBase64(file)
-          console.log("base:",base64Images)
+          console.log("BGReq:",base64Images.slice(0,100))
           const imagePayload = {images : base64Images};
           
           const response = await fetch('http://localhost:8080/get-bgRemoved', {
@@ -50,7 +50,7 @@ const BgRemover = () => {
           
           if (!response.ok) throw new Error('Conversion failed'+response.err);
           const data = await response.json();
-          console.log(data);
+          console.log("BGres",data);
           setResult(data.Data);
           setBase64(data.Data);
         setLoading(false);

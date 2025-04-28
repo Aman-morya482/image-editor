@@ -13,17 +13,14 @@ const Signup = () => {
 
   const [data,setData] = useState({
     username: "",
-    number: "",
     email: "",
+    number: 41341,
     password: "",
   })
 
 
   const handleChange = (e) => {
     const {name,value} = e.target;
-
-    if (name === "number" && !/^\d*$/.test(value)) {
-    return;}
 
     setData((prev)=>({
       ...prev,
@@ -53,12 +50,12 @@ const Signup = () => {
       return;
     }; 
     
-    if(data.password.length < 5){
+    if(data.password.length < 6){
       alert("Please enter a password with at least 6 characters.");
       return;
     }
     
-    console.log("data: ", data);
+    console.log("signupReq: ", data);
     try{ 
       const response = await fetch('http://localhost:8080/signup/register', {
         method: 'POST',
@@ -68,8 +65,9 @@ const Signup = () => {
       
       if (!response.ok) throw new Error('Signup Failed'+ response.err);
       const data2 = await response.json();
+      console.log("signupRes: ",data2);
         data2 && setResult(true);
-        data2 && alert("Account Created Successfully !!")
+        data2 && alert("Signup Successfull !!")
         !data2 && alert("User Already Exists !!")
       } catch (err) {
         console.error('Error:', err);
@@ -100,18 +98,6 @@ const Signup = () => {
                 value={data.username}
                 placeholder="User name"
                 className="w-full py-2 px-1 border-b outline-none focus:border-blue-600 capitalize"
-              />
-            </div>
-
-            <div>
-              <input
-                type="tel"
-                maxLength={10}
-                name="number"
-                onChange={handleChange}
-                value={data.number}
-                placeholder="Mobile number"
-                className="w-full py-2 px-1 border-b outline-none focus:border-blue-600"
               />
             </div>
 
