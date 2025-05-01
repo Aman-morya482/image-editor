@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState ,useEffect} from "react";
+import { gsap } from "gsap/gsap-core";
 import CompressPreview from "../components/CompressPreview";
 import { userContext } from "../utils/ContextProvider";
 import FirstLogin from "../components/FirstLogin";
@@ -10,8 +11,18 @@ const ImageCompressor = () => {
     const [compress,setCompress] = useState([]);
     const [loading,setLoading] = useState(false);
     const [login,setLogin] = useState(false);
-  
+    const compressRef = useRef(null);
+
     const {user} = useContext(userContext);
+
+    useEffect(()=>{
+     gsap.fromTo(compressRef.current, { y: "20%", opacity: 0}, {
+     y: "0%",
+     opacity: 1,
+     duration:1,
+     ease: "power1.inOut"
+    });
+    },[])
 
     const handleImageChange = () =>{
       if(!user) setLogin(true);
@@ -98,14 +109,16 @@ const download = (base64String, fileName = "image") => {
   return (
     <div className='gird grid-cols-1 place-items-center'>
 
-   <div className="max-w-[1800px] w-full min-h-[92vh] flex justify-centerce items-center bg-gray-100">
+   <div className="max-w-[1800px] w-full min-h-[92vh] flex justify-centerce items-center bg-gradient-to-br from-emerald-300 to-emerald-600">
     { images.length <= 0 && (  
       <div className="w-full flex flex-col justify-center items-center">
-      <h2 className="text-4xl md:text-6xl font-bold text-center mb-20">Image Compressor</h2>
-      <div className="relative group flex">
-       <p className='bg-blue-600 w-xs md:w-2xl text-white md:font-bold group-active:scale-95 hover:cursor-pointer ring-blue-300 hover:ring-2 text-lg md:text-xl rounded-2xl p-5 text-center'>Upload Image </p>
-      <input type="file" multiple accept="image/*" onChange={handleImageChange} name="" id="" className='absolute top-10 md:-top-0 bg-red-600 opacity-0 w-xs md:w-2xl text-white text-xl rounded-2xl p-2 md:p-5 text-center'/>
-     </div>
+      <h2 className="text-4xl md:text-6xl font-bold text-center mb-20 text-white" ref={compressRef}>Image Compressor</h2>
+      <div className="group flex justify-center">
+        <label className="bg-white text-black md:font-bold w-xs md:w-2xl ring-green-300 ring-3 text-lg md:text-xl rounded-2xl py-2 md:p-5 text-center cursor-pointer active:scale-95">
+          Upload Image
+        <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+        </label>
+      </div>
       </div>
     )}
     {

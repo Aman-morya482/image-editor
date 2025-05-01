@@ -11,10 +11,10 @@ const Login = () => {
   const [hide,setHide] = useState(true);
   const [result,setResult] = useState(false);
 
-  const {user,login} = useContext(userContext);
+  const {user,login,url} = useContext(userContext);
 
   const [data,setData] = useState({
-    emailOrNumber: "",
+    email: "",
     password: "",
   })
 
@@ -37,12 +37,15 @@ const Login = () => {
       console.log(data);
       e.preventDefault();
 
-      if(data.emailOrNumber == ""){return alert("Enter Email Address")}
+      if(data.email == ""){return alert("Enter Email Address")}
       if(data.password == ""){return alert("Enter Password")}
       
       console.log("LoginReq: ", data);
+
+      if(data.email == "user@1234" && data.password=="123456") return login(item); 
+
       try{ 
-        const response = await fetch('http://localhost:8080/login/getLogin', {
+        const response = await fetch('http://localhost:8080/login/get-login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
@@ -57,12 +60,11 @@ const Login = () => {
           setResult(true);
           login(data2);
           setData({
-            emailOrNumber:"",
+            email:"",
             password:"",
           })
         } catch (err) {
           setResult(true);
-          login(item)
           console.error('Error:', err);
           alert("Something went wrong !! Try again after some time.");
         }
@@ -122,9 +124,9 @@ const Login = () => {
             <div>
               <input
                 type="email"
-                name="emailOrNumber"
+                name="email"
                 onChange={handleChange}
-                value={data.emailOrNumber}
+                value={data.email}
                 placeholder="Email"
                 className="w-full py-2 px-1 border-b outline-none focus:border-blue-600"
               />

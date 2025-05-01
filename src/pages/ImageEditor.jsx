@@ -45,8 +45,6 @@ const ImageEditor = () => {
   const [isCropping, setIsCropping] = useState(false)
   
   const [rotation, setRotation] = useState(0);
-  const [flipX, setFlipX] = useState(1);
-  const [flipY, setFlipY] = useState(1);
   
   const [filters, setFilters] = useState({
     brightness: 100,
@@ -57,7 +55,7 @@ const ImageEditor = () => {
     opacity: 100,
     sepia: 0,
     hue: 0,
-    invert: 0
+    invert: 0,
   });
   
   useEffect(() => {
@@ -67,13 +65,15 @@ const ImageEditor = () => {
        if (storedImage) {
          setImage(storedImage);
          setOgImage(storedImage);
-        }else {
-          const newImage = location.state?.newImage;
+        }
+        else {
+          let newImage = location.state?.newImage;
+          localStorage.setItem("uploadedImage",newImage);
           setImage(newImage);
           setOgImage(newImage);
         }
     return () => window.removeEventListener("resize", updateCanvasSize);
-  }, []);
+  }, [image]);
 
   const updateFilter = useCallback((newFilters) => {
     setFilters({
@@ -183,18 +183,43 @@ const ImageEditor = () => {
 
    return () => clearInterval(timeout);
 
-  }, [image,croppedImage, texts,selectedTextIndex, color, rotation,flipX,flipY,filters]);
+  }, [image,croppedImage, texts,selectedTextIndex, color, rotation,filters]);
 
-  // const drawTexts = () => {
-  //   const canvas = canvasRef.current;
-  //   const ctx = canvas.getContext("2d");
-     
-  // };
+   
+  const handleClearAll = ()=>{
+    setImage(ogImage);
+    setFilters({
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      grayscale: 0,
+      hue: 0,
+      sepia: 0,
+      blur: 0,
+      opacity: 100,
+      invert: 0,
+      temperature: 0,
+      shadow: 0,
+      noise: 0,
+      exposure: 100
+    });
+    setCrop({x:0,y:0});
+    setRotation(0);
+    setTexts([]);
+    setHistory([]);
+  }
 
-  //  const handleBack = ()=>{
-     
-  //  }
-
+  const handleImageChange = (e)=>{
+    handleClearAll();
+    const file = e.target.files[0];
+    if(!file) return;
+     const reader = new FileReader();
+      reader.onload = () => {
+        localStorage.setItem("uploadedImage", reader.result);
+        setImage(reader.result);
+    }
+    reader.readAsDataURL(file);
+    }
 
 
     const saveToHistory = () => {
@@ -395,7 +420,7 @@ const handleDoubleClick = () => {
   };
 
 
-  const [togCrop,setTogCrop] = useState(false)
+  const [togCrop,setTogCrop] = useState(true)
   const [togRotate,setTogRotate] = useState(false)
   const [togFilter,setTogFilter] = useState(false)
   const [togLight,setTogLight] = useState(false)
@@ -420,7 +445,7 @@ const handleDoubleClick = () => {
 
   return (
     <div>
-    <nav className="bg-gray-900 text-white px-3 py-3  md:px-6 md:py-4 flex justify-between items-center">
+    <nav className="bg-gray-600 text-white px-3 py-3  md:px-6 md:py-4 flex justify-between items-center">
       <ul className="w-full flex space-x-4 justify-between items-center">
         <div>
         <li onClick={()=>{setBack(true)}}><a className="hover:text-gray-400 text-lg md:text-2xl"><FaArrowLeft/></a></li>
@@ -428,6 +453,14 @@ const handleDoubleClick = () => {
         <div className="flex gap-2 md:gap-5">
         <button onClick={handleUndo} className={`border-2 p-[6px] cursor-pointer rounded-lg text-lg md:text-2xl ${historyIndex >= 1 ? 'text-white' : 'text-gray-400'} hover:text-gray-400`} title="Undo (ctrl + Z)"><div><GrUndo /></div></button>
         <button onClick={handleRedo} className={`border-2 p-[6px] cursor-pointer rounded-lg text-lg md:text-2xl ${historyIndex < history.length - 1 ? 'text-white' : 'text-gray-400'} hover:text-gray-400`} title="Undo (ctrl + Y)"><div><GrRedo /></div></button>
+        </div>
+        <div className="flex gap-10">
+          <button className="bg-red-500 py-2 px-3 rounded-md" onClick={()=>handleClearAll()}>Clear All</button>
+          <div className="flex justify-center">
+          <label className="bg-green-500 py-2 px-3 rounded-md" onChange={(e)=>handleImageChange(e)}>Change File
+          <input type="file" accept="image/*" className="hidden" ></input>
+          </label>
+          </div>
         </div>
         <div className="flex gap-2 md:gap-12 font-bold">
         <li onClick={downloadImage}><a href="#crop" className="border-2 border-black bg-yellow-400 hover:text-white text-sm md:text-lg px-2 md:px-3 py-2 rounded-lg text-black">Download</a></li>
@@ -498,19 +531,26 @@ const handleDoubleClick = () => {
           </ul>
         </div>
         <div className={`md:h-[500px] w-full md:w-[400px] bg-white absolute shadow-lg rounded-lg px-3 md:px-6 py-3 md:py-6 left-0 md:top-5 overflow-x-scroll md:overflow-x-hidden ${togFilter ? "-top-16 md:left-22" : "top-50 md:-left-120"}`}>
-          <ul className="flex md:flex-col gap-6">
-            <li onClick={()=>{updateFilter({brightness:110,constrast:80,saturation:120})}}><p>filter1</p></li>
-            <li onClick={()=>{updateFilter({brightness:90,constrast:120,saturation:120})}}><p>filter2</p></li>
-            <li onClick={() => updateFilter({ grayscale: 100 })}><p>B&W</p></li>
-            <li onClick={() => updateFilter({ invert: 100 })}><p>Invert</p></li>
-            <li onClick={() => updateFilter({ sepia: 80, contrast: 110, brightness: 90 })}><p>Vintage</p></li>
-            <li onClick={() => updateFilter({ hue: 220, contrast: 120, saturation: 150 })}><p>Cool Tone</p></li>
-            <li onClick={() => updateFilter({ hue: -20, contrast: 120, saturation: 140 })}><p>Warm Tone</p></li>
-            <li onClick={() => updateFilter({ brightness: 130, contrast: 110, blur: 2 })}><p>Soft Glow</p></li>
-            <li onClick={() => updateFilter({ contrast: 200, brightness: 80, saturate: 150 })}><p>Cinematic</p></li>
-            <li onClick={() => updateFilter({ brightness: 80, saturation: 50, sepia: 60 })}><p>Retro</p></li>
-            <li onClick={() => updateFilter({ contrast: 130, invert: 20, hue: 180 })}><p>Cyberpunk</p></li>
-            <li onClick={() => updateFilter({ blur: 4, opacity: 70 })}><p>Dreamy</p></li>
+          <ul className="flex gap-6 flex-wrap">
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={()=>{updateFilter({brightness:110,constrast:80,saturation:120})}}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px]"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Original</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={()=>{updateFilter({brightness:100,constrast:120,saturation:140})}}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] brightness-100 contrast-120 saturate-140"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Vivid</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={()=>{updateFilter({brightness:100,constrast:140,saturation:110})}}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] brightness-100 contrast-140 saturate-110"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Pixi 1</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={()=>{updateFilter({brightness:110,constrast:130,saturation:140, sepia:50})}}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] brightness-110 contrast-130 saturate-140 sepia-50"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Pixi 2</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ grayscale: 100 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] grayscale-100"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">B&W</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ grayscale: 50 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] grayscale-50"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Grayscale</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ sepia: 80, contrast: 110, brightness: 90 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] sepia-80 contrast-110 brightness-90"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Vintage</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ hue: 180, contrast: 110, saturation: 120 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] hue-rotate-180 contrast-110 saturate-120"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Cool Tone</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ blur: 3, opacity: 70 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] blue-[2px] opacity-70"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Dreamy</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ brightness: 120, contrast: 110, blur: 2 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] brightness-120 contrast-110 blur-[1px]"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Soft Glow</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ hue: -20, contrast: 120, saturation: 140 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] -hue-rotate-20 contrast-120 saturate-140"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Warm Tone</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ contrast: 200, brightness: 80, saturation: 150 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] contrast-200 brightness-80 saturate-150"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Cinematic</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ invert: 100 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] invert-100"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Invert</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ brightness: 80, saturation: 50, sepia: 60 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] brightness-80 saturate-50 sepia-180 "></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Retro</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ contrast: 130, invert: 20, hue: 180 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:w-[140px] md:h-[140px] contrast-130 invert-20 hue-rotate-180"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Cyberpunk</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ brightness: 110, sepia: 30, hue: 30, saturation: 140 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:h-[140px] md:w-[140px] brightness-110 sepia-30 hue-rotate-30 saturate-140"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Golden</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ hue: 90, brightness: 105, saturation: 160 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:h-[140px] md:w-[140px] hue-rotate-90 brightness-105 saturate-160"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Toxic Green</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ hue: 90, brightness: 130, contrast: 80 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:h-[140px] md:w-[140px] hue-rotate-90 brightness-120 contrast-80"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">Night Vision</p></li>
+            <li className="border-2 border-gray-400 bg-gray-200 md:p-1 rounded-md hover:ring-2 ring-blue-300 active:bg-gray-300" onClick={() => updateFilter({ invert: 100, brightness: 140, saturation: 30 })}><img src={ogImage} className="object-center overflow-hidden h-[70px] w-[70px] md:h-[140px] md:w-[140px] invert brightness-140 saturate-30"></img><p className="text-center tracking-wider text-sm md:pt-[3px]">X-Ray</p></li>
           </ul>
         </div>
         <div className={`h-[200px] md:h-[500px] w-full md:w-[400px] bg-white absolute shadow-lg rounded-lg px-3 md:px-6 py-3 md:py-6 overflow-y-scroll md:overflow-y-hidden left-0 md:top-5 ${togLight ? "-top-48 md:left-22" : "top-50 md:-left-120"}`}>
@@ -530,6 +570,10 @@ const handleDoubleClick = () => {
             <li><p>Hue</p>
             <input type="range" min="20" max="200" value={filters.hue} onChange={(e) => setFilters({...filters, hue: Number(e.target.value)})}/>
             </li>
+            <li><p>Blur</p>
+            <input type="range" min="0" max="10" value={filters.blur} onChange={(e) => setFilters({...filters, blur: Number(e.target.value)})}/>
+            </li>
+
         </ul>
         </div>
         <div className={`h-full w-[400px] bg-white absolute shadow-lg rounded-lg px-3 py-3 top-5 ${togText ? "left-20" : "-left-120"}`}>

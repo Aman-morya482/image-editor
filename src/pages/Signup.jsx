@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import "../App.css"
 import { NavLink, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { userContext } from "../utils/ContextProvider";
 
 const Signup = () => {
 
@@ -11,10 +12,12 @@ const Signup = () => {
   const [hide,setHide] = useState(true);
   const [result,setResult] = useState(false);
 
+  const {url} = useContext(userContext);
+
   const [data,setData] = useState({
-    username: "",
+    userName: "",
     email: "",
-    number: 41341,
+    number: 411,
     password: "",
   })
 
@@ -45,8 +48,8 @@ const Signup = () => {
     console.log(data);
     e.preventDefault();
     
-    if(data.username === ''){
-      alert("Oops! You forgot to enter your username.");
+    if(data.userName === ''){
+      alert("Oops! You forgot to enter your userName.");
       return;
     }; 
     
@@ -94,8 +97,8 @@ const Signup = () => {
               <input
                 type="text"
                 onChange={handleChange}
-                name="username"
-                value={data.username}
+                name="userName"
+                value={data.userName}
                 placeholder="User name"
                 className="w-full py-2 px-1 border-b outline-none focus:border-blue-600 capitalize"
               />

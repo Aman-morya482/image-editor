@@ -130,18 +130,31 @@ const ImageEnhancer = () => {
   return (
     <div className='gird grid-cols-1 place-items-center'>
 
-   <div className="max-w-[1800px] w-full min-h-[92vh] flex flex-col justify-center items-center bg-gray-100">
     {!enhancedImage && (
-      <div className="w-full flex flex-col justify-center items-center">
-      <h2 className="text-4xl md:text-6xl font-bold text-center mb-20">Image Enhancer</h2>
-      <div className="relative group flex">
-       <p className='bg-blue-600 w-xs md:w-2xl text-white md:font-bold group-active:scale-95 hover:cursor-pointer ring-blue-300 hover:ring-2 text-lg md:text-xl rounded-2xl p-5 text-center'>Upload Image </p>
-      <input onChange={handleUpload} type="file" name="" id="" className='absolute top-10 md:-top-0 bg-red-600 opacity-0 w-xs md:w-2xl text-white text-xl rounded-2xl p-2 md:p-5 text-center'/>
-     </div>
+   <div className="max-w-[1800px] w-full min-h-[92vh] flex flex-col justify-center items-center relative" 
+   style={{background: "repeating-linear-gradient(45deg,rgb(255,69,115) 0%,rgb(255,69,115) 10%,rgb(255,119,125) 10%,rgb(255,119,125) 20%)"}}>
+     <span><img src="/png/014-filter.png" alt="" width={120} className='absolute top-20 right-30 float-svg'/></span>
+     <span><img src="/png/025-ai-art.png" alt="" width={100} className='absolute bottom-30 left-30 scale-svg'/></span>
+      <div className="w-full flex flex-col justify-center items-center relative">
+      <h2 className="text-4xl md:text-6xl font-bold text-center mb-20 text-white"
+      style={{
+        // background: "linear-gradient(to right, rgb(255,69,115),rgb(225,15,40)  ,rgb(255,89,125))",
+        // WebkitBackgroundClip: "text",
+        // WebkitTextFillColor: "transparent",
+        // lineHeight:"1.3",
+      }}>Image Enhancer</h2>
+          <div className="group flex justify-center">
+            <label className="bg-rose-500 text-white md:font-bold w-xs md:w-2xl ring-red-300 ring-3 text-lg md:text-xl rounded-2xl py-2 md:p-5 text-center cursor-pointer active:scale-95">
+              Upload Image
+              <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
+            </label>
+          </div>
       </div>
+    </div>
     )}
 
        {enhancedImage && (
+   <div className="max-w-[1800px] w-full min-h-[92vh] flex flex-col justify-center items-center relative">
         <div className='w-full flex flex-col gap-20 md:gap-10 justify-center items-center py-10 mb-20 md:mb-0'>
         <div className='relative flex justify-between w-4/5'>
           <button onClick={handleBack} className='flex items-center border border-gray-400 gap-1 rounded-md px-3 py-2 cursor-pointer active:scale-95'><IoIosArrowBack size={14}/>Back</button>
@@ -163,8 +176,8 @@ const ImageEnhancer = () => {
           
         { login && <FirstLogin open={cancelLogin}/>}  
         </div>
-      )}
     </div>
+      )}
     
     </div>
   )

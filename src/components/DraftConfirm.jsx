@@ -15,7 +15,7 @@ const DraftConfirm = ({cancel}) => {
     },[open])
 
     const handleDiscard = ()=>{
-        localStorage.removeItem("UploadedImage");
+        localStorage.removeItem("uploadedImage");
         navigate("/image-editor");
     }
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import '../App.css';
 import { useState, useRef ,useEffect } from 'react'
 import { NavLink } from "react-router-dom";
@@ -16,9 +16,12 @@ import { FiDownload } from "react-icons/fi";
 import QuickLinks from '../components/QuickLinks';
 import FAQ from "../components/FAQ"
 import Slider from "../components/Slider"
+import SavedDrafts from '../components/SavedDrafts';
+import { userContext } from '../utils/ContextProvider';
 
 
 const Home = () => {
+
 
   gsap.registerPlugin(ScrollTrigger);
   gsap.registerPlugin(TextPlugin);
@@ -35,6 +38,7 @@ const Home = () => {
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
+  const [draftOpen,setDraftOpen] = useState(false);
   const typingSpeed = isDeleting ? 50 : 100; // Faster deleting
 
   useEffect(() => {
@@ -87,7 +91,6 @@ const Home = () => {
   <Slider/>
 </div>
       </div>
-
 
       <div className='w-full text-center max-w-[1800px] text-lg text-white bg-gradient-to-br from-blue-500 to-purple-800 py-10 px-2 md:px-20 md:py-16'>
         <QuickLinks/>
@@ -198,6 +201,7 @@ const Home = () => {
         </div>
 
       <FAQ/>
+
       </div>
     </div>
 

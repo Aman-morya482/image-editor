@@ -97,11 +97,13 @@ const cancelLogin = ()=>{
     <div className="w-full flex flex-col justify-center items-center">
       <h2 className="text-4xl md:text-6xl font-bold text-center mb-20">Convert Images <p></p> to Another Format</h2>
       <div className="relative flex flex-wrap justify-center items-center p-2 gap-2">
-      <div className='group'>
-      <p className='bg-blue-600 w-xs md:w-2xl text-white md:font-bold group-active:scale-95 hover:cursor-pointer ring-blue-300 group-hover:ring-3 text-lg md:text-xl rounded-2xl p-4 md:p-5 text-center'>Upload Image </p>
-      <input type="file" multiple accept="image/*" onChange={handleImageChange} name="" id="" className='absolute top-10 md:-top-0 bg-red-600 opacity-0 w-xs md:w-2xl text-white text-xl rounded-2xl p-2 md:p-5 text-center'/>
-      </div>
-      <div className='z-10 right-40 flex justify-center items-center gap-2 md:text-lg '><select className=' bg-gray-200 p-5 rounded-md' value={type} onChange={(e)=>{setType(e.target.value)}}  >
+          <div className="group flex justify-center">
+            <label className="bg-blue-700 text-white md:font-bold w-xs md:w-2xl ring-blue-300 hover:ring-3 text-lg md:text-xl rounded-2xl py-2 md:p-5 text-center cursor-pointer active:scale-95">
+              Upload Image
+              <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+            </label>
+          </div>
+      <div className='z-10 right-40 flex justify-center items-center gap-2 md:text-lg borde'><select className=' bg-gray-200 p-5 rounded-md border-2 border-gray-400' value={type} onChange={(e)=>{setType(e.target.value)}}  >
               <option value="png">PNG</option>
               <option value="jpeg">JPEG</option>
               <option value="webp">WEBP</option>

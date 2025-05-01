@@ -12,7 +12,7 @@ import FirstLogin from "../components/FirstLogin";
 
 const TextToImage = () => {
 
-  const {user} = useContext(userContext);
+  const {user,url} = useContext(userContext);
 
   const [prompt,setPrompt] = useState("");
   const [loading,setLoading] = useState(false);
@@ -52,21 +52,12 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
         if (prompt.length <= 0) return alert("Write some prompt");
         setLoading(true);
         
-        const style_prompt = "a photo of";
-        const negative = "";
-        const imp = ["tiger"];
-        const scene = ["forest","mountain"];
-        
-        const imagePayload = {prompt,imp,style_prompt,scene,negative};
-
         try{
           
-          const response = await fetch('http://localhost:8080/api/getImage', {
+          const response = await fetch(`${url}/api/getImage?prompt=${prompt}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(imagePayload),
           });
-          console.log(imagePayload)
           
           if (!response.ok) throw new Error('Generation failed');
           const data = await response.json();
@@ -109,7 +100,7 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
         <p ref={aiText} className='text-7xl font-bold tracking-wide text-center animated-gradient-text '>AI Image Generator</p>
         <p className='mb-4 font-semibold text-gray-600 tracking-wide'>Turn your imagination into stunning images powered by AI.</p>
       <div className='flex flex-wrap justify-center items-center gap-2'>
-        <input type="text" value={prompt} onChange={(e)=>setPrompt(e.target.value)} placeholder='What do you want to see?' className='border border-gray-400 rounded-md w-xs sm:w-lg md:w-xl p-3 focus:outline-blue-400 ' />
+        <input type="text" value={prompt} onChange={(e)=>setPrompt(e.target.value)} placeholder='What do you want to see?' className='border-2 border-gray-500 rounded-md w-xs sm:w-lg md:w-xl p-3 focus:outline-blue-400 ' />
         <button onClick={sendToBackend} ref={buttonRef} className='p-3 bg-gradient-to-r from-blue-600 via-purple-800 to-red-500 rounded-md text-white ring-blue-300 active:scale-95 hover:ring-2 hover:cursor-pointer flex gap-2 items-center'><PiMagicWandDuotone size={24}/>{loading ? "Processing..." : "Generate Image"}</button>
       </div>
       {!image && (

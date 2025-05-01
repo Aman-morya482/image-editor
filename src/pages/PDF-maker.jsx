@@ -102,7 +102,7 @@ const PDFmaker = () => {
       <h2 ref={pdfRef} className="text-4xl md:text-6xl font-bold text-center mb-4">Convert Image to PDF</h2>
       <h4 className="mb-8 text-gray-500 font-semibold">Upload your images and instantly generate high-quality PDFs.</h4>
       <div className="relative group">
-      <p className='bg-blue-600 w-xs md:w-2xl text-white md:font-bold group-active:scale-95  ring-blue-300 hover:ring-2 text-lg md:text-xl rounded-2xl p-5 text-center '>Upload Image</p>
+      <p className='bg-amber-500 tracking-wider w-xs md:w-2xl text-white md:font-bold group-active:scale-95  ring-yellow-200 group-hover:ring-3 text-lg md:text-xl rounded-2xl p-5 text-center '>Upload Image</p>
       <input type="file" name="" id="" multiple accept="image/*" onChange={handleImageChange} className='absolute top-10 md:-top-0 cursor-pointer bg-red-600 opacity-0 w-xs md:w-2xl text-white text-xl rounded-2xl p-2 md:p-5 text-center'/>
       </div>
       <div className="flex gap-10 list-none uppercase font-semibold text-lg text-gray-500 pt-5">

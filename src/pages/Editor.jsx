@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import SavedDrafts from '../components/SavedDrafts'
 
 const Editor = () => {
   
@@ -14,7 +15,7 @@ const Editor = () => {
       const reader = new FileReader();
       reader.onload = () => {
         localStorage.setItem("uploadedImage", reader.result);
-        // console.log("donw");
+        console.log(reader.result);
         navigate("/edit-image", { state: { newImage: reader.result}});
     }
     reader.readAsDataURL(file);
@@ -35,6 +36,8 @@ const Editor = () => {
         />
       </label> 
       </div>
+
+      {/* <SavedDrafts/> */}
 
     </div>
   )

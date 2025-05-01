@@ -94,7 +94,7 @@ const ImageDetector = () => {
               background: "linear-gradient(to right, blue, purple, red)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              lineHeight: "1.2"
+              lineHeight: "1.3"
             }}>
             AI Image Description<br />Generator
           </h2>

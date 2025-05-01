@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { userContext } from "../utils/ContextProvider";
+import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, Save, X } from "lucide-react";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { FaCircleUser } from "react-icons/fa6";
 import { IoIosLogOut } from "react-icons/io";
@@ -10,18 +11,22 @@ import '../App.css'
 import { use } from "react";
 import EditUser from "./EditUser";
 import LogoutConfirm from "./LogoutConfirm";
+import SavedDrafts from "./SavedDrafts";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
    const [open, setOpen] = useState(false);
+   const [draftOpen,setDraftOpen] = useState(false);
    const [confirm,setConfirm] = useState(false);
    const[click,setClick] = useState(false);
    const[edit,setEdit] = useState(false);
 
    const {user,logout} = useContext(userContext);
+   const location = useLocation();
+   const showDraft = location.pathname === "/" || location.pathname === "/image-editor" || location.pathname === "/edit-image";
 
   return (
-    <nav className="w-full text-black px-2 md:px-10 py-4 shadow-sm font-semibold bg-transparent">
+    <nav className="w-full text-black px-2 md:px-10 py-4 border-2 border-gray-300 font-semibold bg-transparent nav">
       <div className="w-full flex justify-between items-center relative">
        <div>
         <NavLink to="/" className="text-2xl font-bold">
@@ -56,13 +61,11 @@ const Navbar = () => {
       onMouseEnter={() => setOpen(true)} 
       onMouseLeave={() => setOpen(false)}
     >
-      {/* 🔘 Dropdown Trigger Button */}
       <button className="hover:text-gray-400 flex justify-center items-center gap-1">
         More Tools 
         <RiArrowDownSLine size={18} />
       </button>
 
-      {/* 📜 Dropdown Menu */}
       <ul
         className={`absolute left-0 mt-2 w-52 p-1 bg-white text-gray-800 shadow-xl border border-gray-300 rounded-md transition-all duration-300 ease transform z-50
           ${open ? "opacity-100 scale-100 translate-y-0" : "opacity-0 invisible scale-95 -translate-y-5"}`}
@@ -110,17 +113,20 @@ const Navbar = () => {
         (<div>
         <FaCircleUser size={34} className="ml-22 md:ml-0 relative text-slate-800 hover:cursor-pointer hover:ring-3 ring-gray-300 rounded-[50%]" onClick={()=>setClick(!click)}/>
         <div className={`absolute top-12 right-2 z-100 bg-white border border-gray-300 rounded-md w-[150px]  ${click ? "block" : "hidden"}  `}>
-          <ul className="flex flex-col gap-1 font-normal">
-            <li className="p-2">{user.value}</li>
-            <li className="flex items-center gap-2 hover:bg-gray-200 hover:cursor-pointer p-2" onClick={()=>{setEdit(true)}}>Edit<FaRegEdit size={18} className="mb-1"/></li>
+          <ul className="flex flex-col font-normal">
+            <li className="p-2 text-violet-700 font-semibold">{user.value.name}</li>
+            <li className="flex items-center gap-2 hover:bg-gray-200 hover:cursor-pointer p-2" onClick={()=>{setEdit(true); setClick(false)}}>Edit<FaRegEdit size={18} className="mb-1"/></li>
+            {showDraft && <li className="p-2 hover:bg-gray-200" onClick={()=>{setDraftOpen(true); setClick(true)}}>Drafts</li>}
             <li className="text-red-500 font-semibold hover:bg-red-500 hover:text-white hover:cursor-pointer p-2 flex items-center gap-2" onClick={()=>setConfirm(true)}>Logout<IoIosLogOut size={20}/></li>
           </ul>
         </div>
-        {edit && <EditUser open={edit} setClick={setClick} setOpen={setEdit}/>}
+        {edit && <EditUser open={edit} setOpen={setEdit}/>}
         {confirm && <LogoutConfirm logout={logout} setClick={setClick} setConfirm={setConfirm}/>}
         </div> 
         )
 }
+        {draftOpen && <SavedDrafts open={setDraftOpen}/> }
+ 
   </div>
 
         <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
