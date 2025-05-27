@@ -39,7 +39,7 @@ export const animatePixelo = (refs, setShowCursor) => {
 
   const sections = ["rightBox1", "rightBox2", "leftBox1", "leftBox2"];
   sections.forEach((cls) => {
-    gsap.fromTo(`.${cls}`, { opacity: 0, scale: 0.6 }, {
+    gsap.fromTo(`.${cls}`, { opacity: 0, scale: 0.7 }, {
       opacity: 1,
       scale: 1,
       ease: "power2.inOut",
@@ -48,19 +48,6 @@ export const animatePixelo = (refs, setShowCursor) => {
         trigger: `.${cls}`,
         start: "top bottom",
         end: "bottom 50%",
-      }
-    });
-
-    gsap.fromTo(`.${cls}`, { opacity: 1, scale: 1 }, {
-      opacity: 0,
-      scale: 0.8,
-      ease: "power2.inOut",
-      duration: 1,
-      scrollTrigger: {
-        trigger: `.${cls}`,
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
       }
     });
   });

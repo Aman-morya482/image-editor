@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { TiDeleteOutline } from "react-icons/ti";
 import { IoIosArrowBack } from "react-icons/io";
+import { GoArrowDown } from "react-icons/go";
 
 
 
@@ -21,11 +22,11 @@ const ConvertPreview = (prop) => {
               <div className="w-full flex flex-col gap-6 px-2 md:px-10 h-auto">
                {prop.images.map((image, index) => (
                  <div key={index} className='relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
-                <p className=' left-0 bg-gray-300 px-4 py-4'>{index + 1}</p>
+                <p className=' left-0 bg-blue-400 text-white px-4 py-5'>{index + 1}</p>
                 <div className='w-full flex justify-between items-center px-2 md:px-5'>
                 <p key={index}>{image.name}</p>
                 </div>
-                <p className='cursor-pointer bg-gray-300 px-3 py-4' onClick={()=>{prop.remove((index))}}><TiDeleteOutline size={25}/></p>
+                <p className='cursor-pointer bg-red-400 hover:bg-red-500 text-white px-3 py-5' onClick={()=>{prop.remove((index))}}><TiDeleteOutline size={25}/></p>
                 </div>
               ))}
     
@@ -41,11 +42,11 @@ const ConvertPreview = (prop) => {
           <div className="w-full flex flex-col gap-6 px-2 md:px-10 h-auto">
            {prop.convert.map((image, index) => (
             <div key={index} className='relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
-            <p className=' left-0 bg-gray-300 px-4 py-4'>{index + 1}</p>
+            <p className=' left-0 bg-blue-500 text-white px-4 py-5'>{index + 1}</p>
             <div className='w-full flex justify-between items-center px-2 md:px-5'>
             <p>{prop.images[index].name.split('.')[0]+'.'+prop.type}</p>
             </div>
-            <button onClick={() => prop.download(image, `image-${index + 1}.${prop.type}`)} className='cursor-pointer bg-green-500 text-white px-3 py-4'>Download</button>
+            <button onClick={() => prop.download(image, `image-${index + 1}.${prop.type}`)} className='cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-3 py-5'><p className='hidden md:block'>Download</p><p className='md:hidden'><GoArrowDown size={22}/></p></button>
             </div> 
           ))}
 

@@ -115,7 +115,7 @@ const Home = () => {
           <p>Images with Ease!</p>
           </div>
           <h1 className='tracking-wider text-sm'>Transform your photos with editing tools. Crop, rotate, apply stunning filters, adjust lighting, and add text effortlessly. Perfect your visuals in just a few clicks!</h1>
-          <button className='bg-blue-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
+          <button className='bg-blue-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='/edit-image'>Try Now</NavLink></button>
         </div>
         </div>
         <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm leftBox1 ' /></div>
@@ -129,7 +129,7 @@ const Home = () => {
           <p>One Click Magic!</p>
           </div>
           <h1 className='tracking-wider text-sm'>Instantly remove backgrounds from any image. Whether for product photos, profile pictures, or creative designs, get a clean, transparent background in seconds!</h1>
-          <button className='bg-blue-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
+          <button className='bg-blue-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='/bg-remover'>Try Now</NavLink></button>
         </div>
         </div>
         <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm rightBox2 ' /></div>
@@ -143,7 +143,7 @@ const Home = () => {
           <p>Convert in Seconds!</p>
           </div>
           <h1 className='tracking-wider text-sm'>Create high-quality PDFs from images with just a click. Whether for documents, portfolios, or presentations, turn multiple images into a single, organized PDF effortlessly!</h1>
-          <button className='bg-amber-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 font-semibold ring-amber-300 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
+          <button className='bg-amber-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 font-semibold ring-amber-300 hover:cursor-pointer'><NavLink to='/pdf-maker'>Try Now</NavLink></button>
         </div>
         </div>
         <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm leftBox2' /></div>
@@ -157,7 +157,7 @@ const Home = () => {
           <p>Create Stunning Visuals!</p>
           </div>
           <h1 className='tracking-wider text-sm'>Turn your ideas into breathtaking images with AI. Simply enter a prompt, and let the AI generate unique, high-quality visuals for art, designs, or social media!</h1>
-          <button className='bg-amber-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-amber-300 hover:cursor-pointer'><NavLink to='edit-image'>Try Now</NavLink></button>
+          <button className='bg-amber-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-amber-300 hover:cursor-pointer'><NavLink to='/text-to-image'>Try Now</NavLink></button>
         </div>
         </div>
         <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm rightBox1 ' /></div>

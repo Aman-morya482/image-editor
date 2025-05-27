@@ -13,7 +13,7 @@ const PDFmaker = () => {
   const {user} = useContext(userContext);
 
   useEffect(()=>{
-  gsap.fromTo(pdfRef.current, { y: "20%", opacity: 0}, {
+  gsap.fromTo(pdfRef.current, { y: "15%", opacity: 0}, {
     y: "0%",
     opacity: 1,
     duration:1,
@@ -94,18 +94,21 @@ const PDFmaker = () => {
   return (
     <div className="grid grid-cols-1 place-items-center ">
 
-    <div className="max-w-[1800px] w-full min-h-[92vh] flex justify-centerce items-center bg-gray-100">
+    <div className="max-w-[1800px] w-full min-h-[92vh] bg-yellow-100 flex justify-centerce items-center">
     
     
     {images.length <= 0 && (
-      <div className="w-full flex flex-col justify-center items-center">
-      <h2 ref={pdfRef} className="text-4xl md:text-6xl font-bold text-center mb-4">Convert Image to PDF</h2>
-      <h4 className="mb-8 text-gray-500 font-semibold">Upload your images and instantly generate high-quality PDFs.</h4>
+      <div className="relative w-full flex flex-col justify-center items-center">
+     <span className='hidden md:block'><img src="/png/011-pdf.png" alt="" width={100} className='absolute -top-25 right-40 float-svg'/></span>
+     <span className='hidden md:block'><img src="/png/007-image-file.png" alt="" width={100} className='absolute -bottom-10 left-50 scale-svg'/></span>
+      <h2 ref={pdfRef} className="text-4xl md:text-7xl font-bold text-center mb-4">Convert Images to PDF</h2>
+      <h4 className="mb-8 text-amber-600 font-semibold text-lg text-center">Upload your images and instantly generate high-quality PDFs.</h4>
       <div className="relative group">
-      <p className='bg-amber-500 tracking-wider w-xs md:w-2xl text-white md:font-bold group-active:scale-95  ring-yellow-200 group-hover:ring-3 text-lg md:text-xl rounded-2xl p-5 text-center '>Upload Image</p>
-      <input type="file" name="" id="" multiple accept="image/*" onChange={handleImageChange} className='absolute top-10 md:-top-0 cursor-pointer bg-red-600 opacity-0 w-xs md:w-2xl text-white text-xl rounded-2xl p-2 md:p-5 text-center'/>
+      <p className='bg-amber-500 tracking-wider w-xs md:w-3xl text-white md:font-bold group-active:scale-95  ring-yellow-400 group-hover:ring-4 text-lg md:text-xl rounded-full p-5 text-center '>Upload Image</p>
+      <input type="file" name="" id="" multiple accept="image/*" onChange={handleImageChange} className='absolute top-10 md:-top-0 cursor-pointer bg-red-600 opacity-0 w-xs md:w-3xl text-white text-xl rounded-2xl p-2 md:p-5 text-center'/>
       </div>
-      <div className="flex gap-10 list-none uppercase font-semibold text-lg text-gray-500 pt-5">
+      <h1 className='font-semibold text-xl md:text-3xl text-gray-600 mt-6'>-- How it Works -- </h1>
+      <div className="flex flex-col md:flex-row gap-6 md:gap-10 list-none uppercase font-semibold text-lg text-gray-700 mt-5">
       <li>📩 Upload Images ➡</li>
       <li>🔁 Convert ➡</li>
       <li>✅ Download PDF</li>

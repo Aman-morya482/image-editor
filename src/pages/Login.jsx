@@ -11,7 +11,7 @@ const Login = () => {
   const [hide,setHide] = useState(true);
   const [result,setResult] = useState(false);
 
-  const {user,login,url} = useContext(userContext);
+  const {user,login,url,download} = useContext(userContext);
 
   const [data,setData] = useState({
     email: "",
@@ -28,8 +28,9 @@ const Login = () => {
   }
 
     const item = {
-    value: "Aman",
+    name: "Aman",
     expiry: 86400000,
+    token:"hfu38ur8hwqd2$L3fewgv8df32",
   };
     
     
@@ -54,10 +55,9 @@ const Login = () => {
         if (!response.ok) throw new Error('Conversion failed'+ response.err);
         const data2 = await response.json();
         console.log("LoginRes:", data2)
-          data2 && setResult(data2);
+          data2 && setResult(true);
           data2 && alert("Login Successfull !!")
           !data2 && alert("Invalid Email or Password !!")
-          setResult(true);
           login(data2);
           setData({
             email:"",

@@ -16,7 +16,7 @@ const ImageCompressor = () => {
     const {user} = useContext(userContext);
 
     useEffect(()=>{
-     gsap.fromTo(compressRef.current, { y: "20%", opacity: 0}, {
+     gsap.fromTo(compressRef.current, { y: "15%", opacity: 0}, {
      y: "0%",
      opacity: 1,
      duration:1,
@@ -109,15 +109,21 @@ const download = (base64String, fileName = "image") => {
   return (
     <div className='gird grid-cols-1 place-items-center'>
 
-   <div className="max-w-[1800px] w-full min-h-[92vh] flex justify-centerce items-center bg-gradient-to-br from-emerald-300 to-emerald-600">
+   <div className="max-w-[1800px] w-full min-h-[92vh] bg-green-200 flex justify-centerce items-center">
     { images.length <= 0 && (  
-      <div className="w-full flex flex-col justify-center items-center">
-      <h2 className="text-4xl md:text-6xl font-bold text-center mb-20 text-white" ref={compressRef}>Image Compressor</h2>
+      <div className="relative w-full flex flex-col justify-center items-center">
+      <span className='hidden md:block'><img src="/png/022-minimize-1.png" alt="" width={100} className='absolute -top-20 right-60 scale-svg'/></span>
+      <span className='hidden md:block'><img src="/png/021-minimize.png" alt="" width={130} className='absolute -bottom-20 left-50 scale-svg'/></span>
+      <h2 className="text-4xl md:text-7xl text-gray-800 font-bold text-center mb-4" ref={compressRef}>Image Compressor</h2>
+      <h3 className="mb-8 text-green-700 text-center px-2 font-semibold text-lg">Instantly reduce file size for faster uploads and sharing.</h3>
       <div className="group flex justify-center">
-        <label className="bg-white text-black md:font-bold w-xs md:w-2xl ring-green-300 ring-3 text-lg md:text-xl rounded-2xl py-2 md:p-5 text-center cursor-pointer active:scale-95">
+        <label className="bg-green-500 md:font-bold text-white w-xs md:w-2xl ring-green-300 hover:ring-4 text-lg md:text-xl rounded-full py-2 md:p-5 text-center cursor-pointer active:scale-95">
           Upload Image
-        <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+        <input type="file" multiple accept="image/*" onChange={handleImageChange} className="hidden" />
         </label>
+      </div>
+      <div>
+       <p className="text-lg text-gray-600 mt-6 font-semibold text-center"> 💡 Tip: Compression helps reduce upload times and storage space. </p>
       </div>
       </div>
     )}

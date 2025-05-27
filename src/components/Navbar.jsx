@@ -26,11 +26,11 @@ const Navbar = () => {
    const showDraft = location.pathname === "/" || location.pathname === "/image-editor" || location.pathname === "/edit-image";
 
   return (
-    <nav className="w-full text-black px-2 md:px-10 py-4 border-2 border-gray-300 font-semibold bg-transparent nav">
+    <nav className="w-full text-black px-2 md:px-10 py-4 border-2 border-gray-200 bg-white font-semibold z-50 nav">
       <div className="w-full flex justify-between items-center relative">
        <div>
         <NavLink to="/" className="text-2xl font-bold">
-        <img src="/img/logo.png" className="w-[120px]" alt="" />
+        <img src="/img/logo.png" className="w-[100px] md:w-[120px]" alt="" />
         </NavLink>
        </div>
 
@@ -61,7 +61,7 @@ const Navbar = () => {
       onMouseEnter={() => setOpen(true)} 
       onMouseLeave={() => setOpen(false)}
     >
-      <button className="hover:text-gray-400 flex justify-center items-center gap-1">
+      <button className="hover:text-gray-400 flex justify-center items-center gap-1 cursor-pointer">
         More Tools 
         <RiArrowDownSLine size={18} />
       </button>
@@ -71,32 +71,32 @@ const Navbar = () => {
           ${open ? "opacity-100 scale-100 translate-y-0" : "opacity-0 invisible scale-95 -translate-y-5"}`}
       >
         <li>
-          <NavLink to="/pdf-maker" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
+          <NavLink to="/pdf-maker" onClick={()=>setOpen(false)} className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             PDF Maker
           </NavLink>
         </li>
         <li>
-          <NavLink to="/image-convertor" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
-            Image Convertor 
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/bg-remover" className={({isActive})=>`block md:hidden px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
+          <NavLink to="/bg-remover" onClick={()=>setOpen(false)} className={({isActive})=>`block lg:hidden px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             BG Remover 
           </NavLink>
         </li>
         <li>
-          <NavLink to="/image-detector" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
+          <NavLink to="/image-detector" onClick={()=>setOpen(false)} className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             Image Analyzer
           </NavLink>
         </li>
         <li>
-          <NavLink to="/image-enhancer" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
+          <NavLink to="/image-enhancer" onClick={()=>setOpen(false)} className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             Image Enhancer
           </NavLink>
         </li>
         <li>
-          <NavLink to="/image-compressor" className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
+          <NavLink to="/image-convertor" onClick={()=>setOpen(false)} className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
+            Image Convertor 
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/image-compressor" onClick={()=>setOpen(false)} className={({isActive})=>`block px-4 py-2 hover:bg-blue-500 transition-all duration-100 rounded-sm hover:text-white ${isActive ? "bg-blue-600 text-white" : ""}`}>
             Image Compressor
           </NavLink>
         </li>
@@ -115,8 +115,8 @@ const Navbar = () => {
         <div className={`absolute top-12 right-2 z-100 bg-white border border-gray-300 rounded-md w-[150px]  ${click ? "block" : "hidden"}  `}>
           <ul className="flex flex-col font-normal">
             <li className="p-2 text-violet-700 font-semibold">{user.value.name}</li>
-            <li className="flex items-center gap-2 hover:bg-gray-200 hover:cursor-pointer p-2" onClick={()=>{setEdit(true); setClick(false)}}>Edit<FaRegEdit size={18} className="mb-1"/></li>
-            {showDraft && <li className="p-2 hover:bg-gray-200" onClick={()=>{setDraftOpen(true); setClick(true)}}>Drafts</li>}
+            <li className="flex items-center gap-2 hover:bg-gray-100 hover:cursor-pointer p-2" onClick={()=>{setEdit(true); setClick(false)}}>Edit<FaRegEdit size={18} className="mb-1"/></li>
+            {showDraft && <li className="p-2 hover:bg-gray-100 cursor-pointer" onClick={()=>{setDraftOpen(true); setClick(true)}}>Drafts</li>}
             <li className="text-red-500 font-semibold hover:bg-red-500 hover:text-white hover:cursor-pointer p-2 flex items-center gap-2" onClick={()=>setConfirm(true)}>Logout<IoIosLogOut size={20}/></li>
           </ul>
         </div>
@@ -186,7 +186,7 @@ const Navbar = () => {
           <NavLink
             to="/signup"
             onClick={() => setIsOpen(false)}
-            className="bg-gray-300 px-4 py-2 rounded-lg w-full text-center hover:bg-blue-600 block"
+            className="bg-gray-200 px-4 py-2 rounded-lg w-full text-center block"
             >
             Sign up
           </NavLink>
