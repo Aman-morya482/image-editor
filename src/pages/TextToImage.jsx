@@ -58,12 +58,12 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
 
         const sendToBackend = async () => {
         if (prompt.length <= 0) return alert("Write some prompt");
+        setImage("");
         setLoading(true);
         
         try{
-          
           const response = await fetch(`${url}/api/getImage?prompt=${prompt}`, {
-            method: 'POST',
+            method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           });
           
@@ -116,7 +116,7 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
         <input type="text" value={prompt} onChange={(e)=>setPrompt(e.target.value)} placeholder='What do you want to see?' className='border-2 border-gray-500 rounded-md w-xs sm:w-lg md:w-xl p-3 focus:outline-blue-400 ' />
         <button onClick={sendToBackend} ref={buttonRef} className='p-3 bg-gradient-to-r from-blue-600 via-purple-800 to-red-500 rounded-md text-white ring-blue-300 active:scale-95 hover:ring-2 hover:cursor-pointer flex gap-2 items-center'><PiMagicWandDuotone size={24}/>{loading ? "Processing..." : "Generate Image"}</button>
       </div>
-      {!image && (
+      {!image && !loading && (
       <div className="flex flex-wrap justify-center items-center md:justify-start md:items-start gap-3 w-full md:w-3xl mb-20">
       {randomPrompts.map((prompt, idx) => (
         <div key={idx} className='boxRef bg-gradient-to-br rounded-full from-red-400 via-purple-500 to-blue-400 p-[1px] active:scale-95'>
@@ -127,13 +127,21 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
         </div>))}
       </div>
        )}
+      { !image && loading && (
+        <div className='w-2xs md:w-xl h-[300px] md:h-[600px] rounded-xl'>
+        <Skeleton variant="text" className='w-full h-full'
+        style={{ margin: "10px", backgroundColor: "lightgray" }}
+        animation="wave"
+        />
+        </div>
+      )}
       </div>
 
       {login && <FirstLogin open={setLogin}/> }
-        
+
     
       <div className='w-full flex flex-col justify-center items-center pt-5 pb-10 md:p-5'>
-      { image && 
+      { image && !loading &&
       <div className='relative'>
       <img className='w-2xs md:w-xl h-[300px] md:h-[600px] rounded-xl' src={`data:image/jpeg;base64,${image}`} ></img>
       <button onClick={()=>handleDownload()} title='Download image' className='absolute top-4 right-4 bg-white/10 text-white py-2 px-3 rounded-md '><FaArrowDownLong size={20}/></button>

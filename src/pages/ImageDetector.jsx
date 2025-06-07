@@ -1,27 +1,31 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import FirstLogin from '../components/FirstLogin';
 import { userContext } from '../utils/ContextProvider';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoCopyOutline } from "react-icons/io5";
 import { LuCopyCheck } from "react-icons/lu";
+import { useRef } from 'react';
 
 
 
 const ImageDetector = () => {
   const [img, setImg] = useState(null);
+  const [message,setmessage] = useState(null);
   const [description, setDescription] = useState(``);
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [login,setLogin] = useState(false);
   const [text,setText] = useState(``);
   const [copy,setCopy] = useState(false);
+  const buttonRef = useRef(null)
 
   const {user} = useContext(userContext);
 
   const handleFileChange = async (e) => {
     if(!user) setLogin(true);
     setLoading(true);
+    setmessage(null);
     const file = e.target.files[0];
     if (!file) return;
     const base64 = await convertToBase64(file);
@@ -64,10 +68,10 @@ const ImageDetector = () => {
       console.error("Upload failed:", error);
       alert("Image upload failed: " + error.message);
       return;
-    }finally{setLoading(false)}
+    }
 
 
-    const payload = {imageData : imageUrl , message: "" };
+    const payload = {imageData : imageUrl , message: message };
     console.log("payload",payload)
     console.log("url",imageUrl);
     try {
@@ -103,6 +107,14 @@ const ImageDetector = () => {
   setImg(null)
 }
 
+const handleEnter = (e)=>{
+  if (e.key == "Enter") {buttonRef.current.click() }
+}
+useEffect(()=>{
+  window.addEventListener("keydown",handleEnter)
+  return ()=> { window.removeEventListener("keydown",handleEnter)}
+})
+
   return (
     <div className="grid grid-cols-1 place-items-center bg-green-200 min-h-screen">
       {!img &&(
@@ -128,23 +140,32 @@ const ImageDetector = () => {
       )}
 
       {img && (
-        <div className="w-3/4 bg-white flex flex-col md:flex-row justify-center items-center my-10 px-4 py-10 md:px-20">
-          <div className="w-full flex flex-col items-center justify-center gap-3">
+        <div className="w-3/4 bg-white flex flex-col md:flex-row my-10 px-4 py-10 md:px-20">
+          <div className="w-full flex flex-col gap-3">
             <div className='flex justify-between w-full'>
-              <button onClick={()=>{setImg(null);setDescription(``)}} className='text-black rounded-md hover:cursor-pointer active:scale-95 border p-1 pr-2 md:text-lg flex gap-1 items-center'><IoIosArrowBack />Back</button>
+              <button onClick={()=>{description ? setDescription(``) : setImg(null)}} className='text-black rounded-md hover:cursor-pointer active:scale-95 border p-1 pr-2 md:text-lg flex gap-1 items-center'><IoIosArrowBack />Back</button>
             {!description &&(
               <button
+              ref={buttonRef}
               onClick={sendToBackend}
               className={`bg-green-600 active:scale-95 text-white hover:cursor-pointer ring-green-300 hover:ring-2 rounded-md py-2 px-5 text-center`}>
               {loading ? "Processing..." : "Analyze Image"}
             </button>
             )}
             </div>
-            <img src={`data:image/jpeg;base64,${img}`} alt="Uploaded" className={`${description ? "w-[250px] h-[250px] md:w-[400px] md:h-[400px]" : "w-[250px] h-[250px] md:w-[500px] md:h-[450px]"} border  mt-6 rounded-md shadow-lg object-cover`} />
+            <div className='flex flex-col lg:flex-row gap-5 mt-6'>
+            <img src={`data:image/jpeg;base64,${img}`} alt="Uploaded" className={`${description ? "w-[250px] h-[250px] md:w-[400px] md:h-[400px]" : "w-[250px] h-[250px] md:w-[500px] md:h-[450px]"} border rounded-md shadow-lg object-cover`} />
+            {!description && img &&
+            <div className='w-full '>
+            <p className='mb-2 text-lg font-semibold '>Do you want any specific description?</p>
+            <textarea type="text" value={message} onChange={(e)=>{setmessage(e.target.value)}} className='w-full border max-h-[100px] min-h-[100px] px-3 py-2' />
+            </div>
+            }
+            </div>
           </div>
 
           {description && !loading && (
-            <div className="md:w-3xl w-full m-4 min-h-[300px] tracking-wider bg-white rounded shadow-xl mt-5 md:mt-17 overflow-hidden">
+            <div className="md:w-5xl w-full m-4 min-h-[300px] tracking-wider bg-white rounded shadow-xl mt-5 md:mt-17 overflow-hidden">
               <div onClick={()=>handleCopy()} className="cursor-pointer w-full bg-yellow-400 px-2 flex justify-between items-center"><p className='px-4 py-2 md:text-xl font-semibold'>Description </p> <p className='flex items-center gap-1 flex-row-reverse p-2 px-4'>{!copy ? <>Copy<IoCopyOutline/></> : <>copied<LuCopyCheck/></> }</p></div>
               <p className="text-sm md:text-base py-6 pb-10 px-6 md:px-8 tracking-wider">{description}</p>
             </div>

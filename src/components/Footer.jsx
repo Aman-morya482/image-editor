@@ -11,7 +11,7 @@ const Footer = () => {
 
         <div className="col-span-1 md:col-span-2">
         <h3 className="text-lg font-semibold mb-3">App Tools</h3>
-        <div className="grid md:grid-cols-2 grid-rows-2 gap-2">
+        <div className="grid md:grid-cols-2 gap-2">
           <ul className="space-y-2">
             <li><NavLink to='edit-image' className="text-gray-600 hover:text-blue-700 hover:underline">Image Editor</NavLink></li>
             <li><NavLink to='image-enhancer' href="#" className="text-gray-700 hover:text-blue-700 hover:underline">Image Enhancer</NavLink></li>
@@ -47,7 +47,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className="col-span-1 md:col-span-3 flex justify-center md:justify-start space-x-4">
+        <div className="col-span-1 flex justify-center mt-6 md:justify-center space-x-4">
           <a href="#" className="text-gray-700 hover:text-blue-700">
             <Facebook size={24} />
           </a>

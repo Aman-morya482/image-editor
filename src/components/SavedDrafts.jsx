@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { userContext } from '../utils/ContextProvider';
 
+import { AiOutlineDelete } from "react-icons/ai";
+
+
 const SavedDrafts = ({open,setImage,sideMenu}) => {
   
   const {drafts,setDrafts,user,url} = useContext(userContext);
@@ -18,20 +21,20 @@ const SavedDrafts = ({open,setImage,sideMenu}) => {
   },[open])
 
   
+  const fetchDraft = async() =>{
+  try{const response = await fetch(`${url}/draft/image?email=${user.value.email}` ,{
+    method: 'GET',
+    headers: {"Authorization" : `Bearer ${user.value.token}`,}
+  })
+  console.log("res", response);
+  const data = await response.json();
+  setDrafts(data);
+ }catch(error){
+  console.log("err",error);
+  alert("Something went wrong !!");
+ }
+}
   useEffect( ()=>{
-    const fetchDraft = async() =>{
-    try{const response = await fetch(`${url}/draft/image?email=${user.value.email}` ,{
-      method: 'GET',
-      headers: {"Authorization" : `Bearer ${user.value.token}`,}
-    })
-    console.log("res", response);
-    const data = await response.json();
-    setDrafts(data);
-   }catch(error){
-    console.log("err",error);
-    alert("Something went wrong !!");
-   }
-  }
   fetchDraft();
   },[])
 
@@ -45,18 +48,31 @@ const SavedDrafts = ({open,setImage,sideMenu}) => {
       await navigate("/edit-image", { state: { newImage: img}});
       open(false)
     }
-    const response = await fetch(`${url}/draft/delete?email=${user.value.email}&id=${id}`, {
-      method: 'DELETE',
-      headers: {"Authorization": `Bearer ${user.value.token}`}
-    } )
-    console.log(response);
+    deleteDraft(id)
+  }
+  
+  const deleteDraft = async(id)=>{
+    try{
+      const response = await fetch(`${url}/draft/delete?email=${user.value.email}&id=${id}`, {
+        method: 'DELETE',
+        headers: {"Authorization": `Bearer ${user.value.token}`}
+      } )
+      fetchDraft();
+      setSelect(null);
+      console.log("delete res", response);
+    }catch(error){
+      console.log("deletion erro", error)
+    }
   }
 
   return (
     <div className='fixed inset-0 z-100 flex justify-center items-center bg-black/40'>
       
       <div className='w-[90%] max-w-xl h-[600px] bg-white rounded-xl py-4 p-8 flex flex-col justify-center gap-4 text-md md:text-xl shadow-xl'>
+        <div className='w-full flex justify-between items-center'>
         <p className='md:text-3xl font-semibold text-gray-600 font-ubuntu'>Saved Drafts</p>
+        <div onClick={()=>deleteDraft(select)} className={`${select==null ? "text-gray-400 cursor-not-allowed" : "text-red-600 cursor-pointer"}`} disabled={select == null}><AiOutlineDelete size={30}/></div>
+        </div>
         <div className='border border-gray-400 rounded-md h-[400px] flex flex-col items-center gap-5 overflow-y-auto p-5'>
           <ul className='grid grid-cols-2 gap-5'>
             {(Object.keys(drafts).length > 0) && Object.entries(drafts).map(([id, image], ind) => (
