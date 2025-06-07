@@ -17,7 +17,6 @@ const Signup = () => {
   const [data,setData] = useState({
     userName: "",
     email: "",
-    number: 411,
     password: "",
   })
 
@@ -60,7 +59,7 @@ const Signup = () => {
     
     console.log("signupReq: ", data);
     try{ 
-      const response = await fetch('http://localhost:8080/signup/register', {
+      const response = await fetch(`${url}/signup/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

@@ -32,6 +32,14 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
     duration:0.6,
     ease: "power1.inOut"
   });
+  gsap.fromTo(".boxRef", { y: "5%", opacity: 0 , scale:0.93}, {
+    y: "0%",
+    scale:1,
+    opacity: 1,
+    duration:0.6,
+    ease: "power1.inOut",
+    stagger:0.4
+  });
   },[])
 
   useEffect(()=>{
@@ -71,15 +79,19 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
         }
       };
       
-      const handleDownload = () => {
+      const handleDownload = async() => {
         if(!user) return pendingImage(); 
         !user && setLogin(true);
+        const result = await download();
+        console.log(result)
+      if(result.status == 200){
       const link = document.createElement("a");
       link.href = `data:image/jpeg;base64,${image}`;
       link.download = "ai-image.jpeg";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      }
     }
 
     const pendingImage = ()=>{
@@ -107,8 +119,8 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
       {!image && (
       <div className="flex flex-wrap justify-center items-center md:justify-start md:items-start gap-3 w-full md:w-3xl mb-20">
       {randomPrompts.map((prompt, idx) => (
-        <div className='bg-gradient-to-br rounded-full from-red-400 via-purple-500 to-blue-400 p-[1px] active:scale-95'>
-        <div key={idx} onClick={(e)=>setPrompt(e.target.innerText)}
+        <div key={idx} className='boxRef bg-gradient-to-br rounded-full from-red-400 via-purple-500 to-blue-400 p-[1px] active:scale-95'>
+        <div onClick={(e)=>setPrompt(e.target.innerText)}
         className="md:px-4 py-2 px-2 rounded-full border-2 text-gray-500  hover:text-black border-gray-400 hover:border-blue-500 bg-gray-50 text-xs md:text-sm cursor-pointer transition">
           {prompt} 
         </div>
@@ -124,7 +136,7 @@ const samplePrompts = [  "Neon tiger in jungle 🐯",  "Retro car on beach 🚗"
       { image && 
       <div className='relative'>
       <img className='w-2xs md:w-xl h-[300px] md:h-[600px] rounded-xl' src={`data:image/jpeg;base64,${image}`} ></img>
-      <button onClick={()=>download()} title='Download image' className='absolute top-4 right-4 bg-white/10 text-white py-2 px-3 rounded-md '><FaArrowDownLong size={20}/></button>
+      <button onClick={()=>handleDownload()} title='Download image' className='absolute top-4 right-4 bg-white/10 text-white py-2 px-3 rounded-md '><FaArrowDownLong size={20}/></button>
       </div>
       }
       </div>

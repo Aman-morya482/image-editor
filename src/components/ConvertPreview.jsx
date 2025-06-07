@@ -1,17 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { TiDeleteOutline } from "react-icons/ti";
 import { IoIosArrowBack } from "react-icons/io";
 import { GoArrowDown } from "react-icons/go";
-
+import gsap from 'gsap';
 
 
 const ConvertPreview = (prop) => {
+
+  useEffect(()=>{
+    gsap.fromTo(".boxRef1", { y: "8%", opacity: 0}, {
+      y: "0%",
+      opacity: 1,
+      duration:1,
+      ease: "power1.inOut",
+      stagger:0.2,
+    });
+    },[])
+  useEffect(()=>{
+    gsap.fromTo(".boxRef2", { y: "8%", opacity: 0}, {
+      y: "0%",
+      opacity: 1,
+      duration:1,
+      ease: "power1.inOut",
+      stagger:0.2,
+    });
+    },[prop.convert])
 
 
     return (
     <div className='w-full md:w-3/4 mx-auto'>
             
-            <div className='relative min-h-[60vh] flex flex-col bg-white overflow-hidden px-2 py-10 md:px-10 md:py-20 gap-20'>
+            <div className='relative min-h-[60vh] flex flex-col bg-white overflow-hidden px-2 py-10 md:px-10 md:py-20 my-10 gap-20'>
             
             {prop.images && prop.convert.length <= 0 && (
             <div className='flex flex-col gap-20'>
@@ -21,7 +40,7 @@ const ConvertPreview = (prop) => {
             </div>
               <div className="w-full flex flex-col gap-6 px-2 md:px-10 h-auto">
                {prop.images.map((image, index) => (
-                 <div key={index} className='relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
+                 <div key={index} className='boxRef1 relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
                 <p className=' left-0 bg-blue-400 text-white px-4 py-5'>{index + 1}</p>
                 <div className='w-full flex justify-between items-center px-2 md:px-5'>
                 <p key={index}>{image.name}</p>
@@ -41,7 +60,7 @@ const ConvertPreview = (prop) => {
         </div>
           <div className="w-full flex flex-col gap-6 px-2 md:px-10 h-auto">
            {prop.convert.map((image, index) => (
-            <div key={index} className='relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
+            <div key={index} className='boxRef2 relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
             <p className=' left-0 bg-blue-500 text-white px-4 py-5'>{index + 1}</p>
             <div className='w-full flex justify-between items-center px-2 md:px-5'>
             <p>{prop.images[index].name.split('.')[0]+'.'+prop.type}</p>

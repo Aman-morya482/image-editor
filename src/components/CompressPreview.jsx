@@ -1,13 +1,33 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TiDeleteOutline } from "react-icons/ti";
 import { IoIosArrowBack } from "react-icons/io";
 import { GoArrowDown } from "react-icons/go";
-
+import gsap from 'gsap';
 
 
 const CompressPreview = (prop) => {
 
-    function formatSize(bytes) {
+
+  useEffect(()=>{
+    gsap.fromTo(".boxRef1", { y: "8%", opacity: 0}, {
+      y: "0%",
+      opacity: 1,
+      duration:1,
+      ease: "power1.inOut",
+      stagger:0.2,
+    });
+    },[])
+  useEffect(()=>{
+    gsap.fromTo(".boxRef2", { y: "8%", opacity: 0}, {
+      y: "0%",
+      opacity: 1,
+      duration:1,
+      ease: "power1.inOut",
+      stagger:0.2,
+    });
+    },[prop.compress])
+
+  function formatSize(bytes) {
   const kb = bytes / 1024;
   const mb = kb / 1024;
   return kb < 1024
@@ -49,7 +69,7 @@ const calculateImageSize = (base64String)=> {
         </div>
           <div className="w-full flex flex-col gap-6 px-2 md:px-20 h-auto">
            {prop.images.map((image, index) => (
-            <div key={index} className='relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
+            <div key={index} className='boxRef1 relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
             <p className=' left-0 bg-green-400 text-white px-4 py-5'>{index + 1}</p>
             <div className='w-full flex justify-between items-center px-2 md:px-5'>
             <p key={index}>{image.name}</p>
@@ -70,7 +90,7 @@ const calculateImageSize = (base64String)=> {
         </div>
           <div className="w-full flex flex-col gap-6 px-2 md:px-10 h-auto">
            {prop.compress.map((image, index) => (
-            <div key={index} className='relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
+            <div key={index} className='boxRef2 relative flex justify-evenly items-center border border-gray-200 shrink-0 overflow-hidden rounded-xl'>
             <p className=' left-0 bg-green-500 text-white px-3 md:px-4 py-5'>{index + 1}</p>
             <div className='w-full flex justify-between items-center px-2 md:px-5'>
             <p>{prop.images[index].name}</p>

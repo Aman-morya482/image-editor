@@ -1,10 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { RxCross2 } from "react-icons/rx";
+import { userContext } from '../utils/ContextProvider';
 
 
 
-const DraftConfirm = ({cancel}) => {
+const DraftConfirm = ({cancel,image}) => {
+
+    const {user,url} = useContext(userContext);
+
     const navigate = useNavigate();
 
     useEffect(() =>{
@@ -19,6 +23,23 @@ const DraftConfirm = ({cancel}) => {
         navigate("/image-editor");
     }
 
+    const saveDraft = async(image)=>{
+      try{
+      const response = await fetch(`${url}/draft/save?email=${user.value.email}` , {
+        method: 'POST',
+        headers: {
+          "Authorization" : `Bearer ${user.value.token}`,
+          "Content-Type" : 'application/json',
+        },
+        body: JSON.stringify(image),
+      }) 
+      console.log("res", response);
+    }catch(error){
+      console.log("err", error);
+      alert("Something went wrong");
+    }
+    }
+
 
 
   return (
@@ -28,7 +49,7 @@ const DraftConfirm = ({cancel}) => {
         <p className='text-2xl font-semibold'>Discard Editing? </p>
         <p className='text-sm mt-2'>Are you sure you want to discard editing?</p>
         <div className='w-full flex justify-center items-center gap-4 mt-10'>
-            <button onClick={()=>logout(setConfirm,setClick)} className='bg-blue-500 text-white py-2 px-3 rounded-md hover:cursor-pointer ring-blue-300 hover:ring-3'>Save Draft</button>
+            <button onClick={()=>saveDraft(image)} className='bg-blue-500 text-white py-2 px-3 rounded-md hover:cursor-pointer ring-blue-300 hover:ring-3'>Save Draft</button>
             <button onClick={()=>handleDiscard()} className='bg-red-500 text-white py-2 px-3 rounded-md hover:cursor-pointer ring-red-300 hover:ring-3'>Discard</button>
         </div>
       </div>

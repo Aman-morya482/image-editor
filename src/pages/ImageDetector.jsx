@@ -21,19 +21,23 @@ const ImageDetector = () => {
 
   const handleFileChange = async (e) => {
     if(!user) setLogin(true);
+    setLoading(true);
     const file = e.target.files[0];
     if (!file) return;
-
     const base64 = await convertToBase64(file);
-    setImg(base64);
+    setTimeout(()=>{
+      setImg(base64);
+      setLoading(false);
+    }, 1200)
   };
+
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
     });
   };
 
@@ -60,7 +64,7 @@ const ImageDetector = () => {
       console.error("Upload failed:", error);
       alert("Image upload failed: " + error.message);
       return;
-    }
+    }finally{setLoading(false)}
 
 
     const payload = {imageData : imageUrl , message: "" };
@@ -100,7 +104,7 @@ const ImageDetector = () => {
 }
 
   return (
-    <div className="grid grid-cols-1 place-items-center bg-gray-100 min-h-screen">
+    <div className="grid grid-cols-1 place-items-center bg-green-200 min-h-screen">
       {!img &&(
         <div className={`${!img ? "min-h-[92vh]" : "h-[50vh]"} max-w-[1800px] w-full flex justify-center items-center`}>
         <div className="w-full flex flex-col justify-center items-center px-4">
@@ -114,8 +118,8 @@ const ImageDetector = () => {
             AI Image Describer
           </h2>
           <div className="relative group flex justify-center mb-20">
-            <label className="bg-blue-600 text-white md:font-bold w-2xs md:w-xl ring-blue-300 hover:ring-2 text-lg md:text-xl rounded-2xl py-2 md:p-5 text-center cursor-pointer">
-              Upload Image
+            <label className="bg-blue-600 active:scale-95 text-white md:font-bold w-2xs md:w-xl ring-blue-300 hover:ring-2 text-lg md:text-xl rounded-2xl py-2 md:p-5 text-center cursor-pointer">
+              {loading ? "Uploading..." : "Upload Image"}
               <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
             </label>
           </div>
@@ -124,19 +128,19 @@ const ImageDetector = () => {
       )}
 
       {img && (
-        <div className="w-full flex flex-col md:flex-row justify-center items-center mb-20 px-4 md:px-8">
-          <div className="flex flex-col items-center justify-center gap-3 m-5">
-              <div className='flex justify-between w-full'>
+        <div className="w-3/4 bg-white flex flex-col md:flex-row justify-center items-center my-10 px-4 py-10 md:px-20">
+          <div className="w-full flex flex-col items-center justify-center gap-3">
+            <div className='flex justify-between w-full'>
               <button onClick={()=>{setImg(null);setDescription(``)}} className='text-black rounded-md hover:cursor-pointer active:scale-95 border p-1 pr-2 md:text-lg flex gap-1 items-center'><IoIosArrowBack />Back</button>
             {!description &&(
               <button
               onClick={sendToBackend}
-              className={`bg-green-600 text-white hover:cursor-pointer ring-green-300 hover:ring-2 rounded-md py-2 px-5 text-center`}>
+              className={`bg-green-600 active:scale-95 text-white hover:cursor-pointer ring-green-300 hover:ring-2 rounded-md py-2 px-5 text-center`}>
               {loading ? "Processing..." : "Analyze Image"}
             </button>
             )}
             </div>
-            <img src={`data:image/jpeg;base64,${img}`} alt="Uploaded" className={`${description ? "w-[300px] h-[300px] md:w-[400px] md:h-[400px]" : "w-[250px] h-[250px] md:w-[500px] md:h-[450px]"} rounded-md shadow-lg object-cover`} />
+            <img src={`data:image/jpeg;base64,${img}`} alt="Uploaded" className={`${description ? "w-[250px] h-[250px] md:w-[400px] md:h-[400px]" : "w-[250px] h-[250px] md:w-[500px] md:h-[450px]"} border  mt-6 rounded-md shadow-lg object-cover`} />
           </div>
 
           {description && !loading && (

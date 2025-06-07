@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 
 const MovingBall = () => {
 
-      const ballRef = useRef(null);
+    const ballRef = useRef(null);
        
     useEffect(()=>{
     const ball = ballRef.current;

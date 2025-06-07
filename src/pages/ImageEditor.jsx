@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback, useContext } from "react";
 import SavedDrafts from "../components/SavedDrafts";
 import { Navigate,useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -38,9 +38,12 @@ import { Tooltip } from "react-tooltip";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../components/cropImage";
 import DraftConfirm from "../components/DraftConfirm";
+import { userContext } from "../utils/ContextProvider";
 
 
 const ImageEditor = () => {
+
+  const {url,user} = useContext(userContext);
   const location = useLocation();  
   const navigate = useNavigate();
   
@@ -475,8 +478,25 @@ const handleInputBlur = () => {
     link.click();
 };
 
-  const saveDraft = ()=>{
-    alert("Draft saved successfully !!")
+  const saveDraft = async()=>{
+    const canvas = canvasRef.current;
+    const lastImageUrl = canvas.toDataURL();
+    console.log(lastImageUrl);
+    try{
+      const response = await fetch(`${url}/draft/save?email=${user.value.email}` , {
+        method: 'POST',
+        headers: {
+          "Authorization" : `Bearer ${user.value.token}`,
+          "Content-Type" : 'application/json',
+        },
+        body: JSON.stringify({image:lastImageUrl}),
+      }) 
+      console.log("res", response);
+      if(response.ok) alert("Draft saved successfully !!")
+      }catch(error){
+      console.log("err", error);
+      alert("Something went wrong");
+    }
   }
 
 
@@ -532,7 +552,7 @@ const handleInputBlur = () => {
     }
 
     {
-      back && <DraftConfirm cancel={setBack}/>
+      back && <DraftConfirm cancel={setBack} image={image}/>
     }
 
 

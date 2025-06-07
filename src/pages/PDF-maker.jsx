@@ -8,6 +8,7 @@ const PDFmaker = () => {
   const [images, setImages] = useState([]);
   const [pdf,setPdf] = useState(null);
   const [login,setLogin] = useState(false);
+  const [loading,setLoading] = useState(false);
   const pdfRef = useRef(null);
 
   const {user} = useContext(userContext);
@@ -45,27 +46,32 @@ const PDFmaker = () => {
   const sendToBackend = async () => {
     
     !user && setLogin(true);
+    setLoading(true);
     
     try {
       const base64Images = await Promise.all(
         images.map((img) => convertToBase64(img))
       );
       const imagePayload = {
-        images : base64Images,
-      };
-      
-      const response = await fetch('http://localhost:8080/pdf/make-pdf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( imagePayload ),
-      });
-      
-      const data = await response.blob();
-      const url = URL.createObjectURL(data);
-      setPdf(url);
+          images : base64Images,
+        };
+        
+        const response = await fetch('http://localhost:8080/pdf/make-pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify( imagePayload ),
+        });
+        
+        const data = await response.blob();
+        const url = URL.createObjectURL(data);
+        setTimeout(() => {
+          setPdf(url);
+          setLoading(false);
+        }, 2000);
       } catch (err) {
         console.error('Error:', err);
         alert("failed");
+        setLoading(false);
       }
     };
 
@@ -99,8 +105,8 @@ const PDFmaker = () => {
     
     {images.length <= 0 && (
       <div className="relative w-full flex flex-col justify-center items-center">
-     <span className='hidden md:block'><img src="/png/011-pdf.png" alt="" width={100} className='absolute -top-25 right-40 float-svg'/></span>
-     <span className='hidden md:block'><img src="/png/007-image-file.png" alt="" width={100} className='absolute -bottom-10 left-50 scale-svg'/></span>
+     <span className='hidden xl:block'><img src="/png/011-pdf.png" alt="" width={100} className='absolute -top-25 right-40 float-svg'/></span>
+     <span className='hidden xl:block'><img src="/png/007-image-file.png" alt="" width={100} className='absolute -bottom-10 left-50 scale-svg'/></span>
       <h2 ref={pdfRef} className="text-4xl md:text-7xl font-bold text-center mb-4">Convert Images to PDF</h2>
       <h4 className="mb-8 text-amber-600 font-semibold text-lg text-center">Upload your images and instantly generate high-quality PDFs.</h4>
       <div className="relative group">
@@ -118,7 +124,7 @@ const PDFmaker = () => {
     
     {images.length >0 && (
       <div className="w-full flex flex-col justify-center items-center"> 
-        <PdfPreview images={images} setImages={setImages} login={login} pdf={pdf} setPdf={setPdf} cancelLogin={cancelLogin} createPdf={sendToBackend} downloadPdf={downloadPdf} remove={handleRemoveImage}/>
+        <PdfPreview images={images} setImages={setImages} login={login} pdf={pdf} loading={loading} setPdf={setPdf} cancelLogin={cancelLogin} createPdf={sendToBackend} downloadPdf={downloadPdf} remove={handleRemoveImage}/>
       </div>    
     )}
 

@@ -29,9 +29,13 @@ const ImageConvertor = () => {
 
   const handleImageChange = () =>{
     if(!user) return setLogin(true);
+    setLoading(true);
     const files = Array.from(event.target.files);
-    setImages(files);
-    setConvert([]);
+    setTimeout(() => {
+      setImages(files);
+      setLoading(false);
+      setConvert([]);
+    }, 1200);
   }
 
     const convertToBase64 = (file) => {
@@ -107,14 +111,14 @@ const cancelLogin = ()=>{
    <div className="max-w-[1800px] w-full min-h-[92vh] bg-blue-200 flex justify-centerce items-center">
     { images.length <= 0  && ( 
     <div className="relative w-full flex flex-col justify-center items-center">
-      <span className='svg hidden md:block'><img src="/png/045-abstract-shape-2.png" alt="" width={120} className='absolute -top-20 right-70 float-svg'/></span>
-      <span className='svg hidden md:block'><img src="/png/005-phone.png" alt="" width={110} className='absolute bottom-0 left-50 rotate-svg'/></span>
+      <span className='svg hidden xl:block'><img src="/png/045-abstract-shape-2.png" alt="" width={120} className='absolute -top-20 right-70 float-svg'/></span>
+      <span className='svg hidden xl:block'><img src="/png/005-phone.png" alt="" width={110} className='absolute bottom-0 left-50 rotate-svg'/></span>
       <h2 ref={convertRef} className="text-4xl md:text-7xl font-bold mb-2 text-center text-gray-800 px-2">Convert Images <p></p> to Another Format</h2>
       <h3 className='mb-8 font-semibold text-blue-700 text-center text-lg px-2'>Convert your images in seconds — fast, easy, and high-quality.</h3>
       <div className="relative flex flex-wrap justify-center items-center p-2 gap-2">
           <div className="group flex justify-center">
-            <label className="bg-blue-600 text-white md:font-bold w-xs md:w-2xl ring-blue-300 hover:ring-4 text-lg md:text-xl rounded-full py-2 md:p-5 text-center cursor-pointer active:scale-95">
-              Upload Image
+            <label title='Uploade your image' className="bg-blue-600 text-white md:font-bold w-xs md:w-2xl ring-blue-300 hover:ring-4 text-lg md:text-xl rounded-full py-2 md:p-5 text-center cursor-pointer active:scale-95">
+              {loading ? "Uploading..." : "Upload Image"}
               <input type="file" multiple accept="image/*" onChange={handleImageChange} className="hidden" />
             </label>
           </div>

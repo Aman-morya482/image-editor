@@ -7,16 +7,20 @@ const ContextProvider = ({children}) => {
 
    const [url,serUrl] = useState("http://localhost:8080");
 
+   const [drafts,setDrafts] = useState({});
+
    const download = async()=>{
-    setUser(localStorage.getItem("User"));
-    console.log(user);
+    // setUser(localStorage.getItem("User"));
+    // console.log(user);
     if (user) {
       console.log(user.value.name);
       console.log(user.value.email);
-      const result = await fetch(`url/get/download?email=${user.value.email}`, {
-        method: 'POST',
+      const result = await fetch(`${url}/get/download?email=${user.value.email}`, {
+        method: 'GET',
         headers: {Authorization: `Bearer ${user.value.token}`}
       });
+      console.log("download executed")
+      return result;
    }
   }
 
@@ -31,6 +35,10 @@ const ContextProvider = ({children}) => {
       localStorage.setItem("User",JSON.stringify(setData));
       setUser(setData);
     }
+
+    useEffect(()=>{
+      console.log("user",user)
+    },[user])
     
     const logout = (setClick,setConfirm)=>{
       setClick(false);
@@ -41,7 +49,7 @@ const ContextProvider = ({children}) => {
    }
 
     return (
-    <userContext.Provider value={{user,setUser,login,logout,url,download}}>
+    <userContext.Provider value={{user,setUser,login,logout,url,download,drafts,setDrafts}}>
         {children}
     </userContext.Provider>
   )

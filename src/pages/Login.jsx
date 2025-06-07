@@ -71,12 +71,12 @@ const Login = () => {
       };
 
 
-      const pendingImage = JSON.parse(localStorage.getItem("pendingImage"));
       
       const handleImageDownload = (pending) => {
         if (pending){ 
+          const imgurl = `data:image/${pending.format};base64,${pending.image}`
           const link = document.createElement("a");
-          link.href = pending.image;
+          link.href = imgurl;
           link.download = `${pending.name}.${pending.format}`;
           document.body.appendChild(link); 
           link.click();
@@ -85,7 +85,6 @@ const Login = () => {
         }
       }
       
-      const pendingPdf = JSON.parse(localStorage.getItem("pendingPdf"));
       const handlepdfDownload = (pending)=>{
         const a = document.createElement('a');
         a.href = pending.pdf;
@@ -95,8 +94,11 @@ const Login = () => {
         document.body.removeChild(a);
         localStorage.removeItem("pendingPdf")
       }
-
-    useEffect(()=>{
+      
+      
+      useEffect(()=>{
+      const pendingImage = JSON.parse(localStorage.getItem("pendingImage"));
+      const pendingPdf = JSON.parse(localStorage.getItem("pendingPdf"));
       if(pendingImage && user){
         handleImageDownload(pendingImage);
       }

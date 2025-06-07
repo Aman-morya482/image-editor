@@ -1,9 +1,11 @@
-import React, {useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
+import { userContext } from '../utils/ContextProvider';
 
 const FirstLogin = ({open}) => {
 
     const navigate = useNavigate();
+    const {url} = useContext(userContext);
 
     useEffect(() =>{
         if(open){document.body.style.overflow = "hidden"}
@@ -13,7 +15,7 @@ const FirstLogin = ({open}) => {
     },[open])
 
     const handleLogin = ()=>{
-        navigate('/login')
+      navigate('/login');
     }
     const handleSignup = ()=>{
         navigate('/signup');

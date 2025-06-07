@@ -34,6 +34,13 @@ const BgRemover = () => {
       duration:1,
       ease: "power1.inOut"
     });
+    gsap.fromTo(".boxRef", { scale: 0.95, opacity: 0}, {
+      y: "0%",
+      scale:1,
+      opacity: 1,
+      duration:1,
+      ease: "power1.inOut"
+    });
     },[])
     
    const handleImageUpload = (e) =>{
@@ -98,8 +105,8 @@ const downloadImage = (base64Image, fileName = "bgremoved-image.png") => {
      </div>
      
      <div className='flex flex-col justify-center items-center gap-6 mb-2'>
-      <h1 className='text-3xl md:text-5xl font-bold'><p ref={bgRef2}>Background Remover </p><p className='text-base mt-4 font-semibold text-center bg-yellow-400 py-1 md:py-2 rounded-lg'>100% Automatically and Free</p></h1>
-     <div className='flex flex-col bg-white/40 justify-center items-center gap-5 border border-gray-600 border-dashed p-6 md:p-18 md:px-26 rounded-2xl'>
+      <h1 className='text-3xl md:text-5xl font-bold'><p ref={bgRef2}>Background Remover </p><p className='boxRef text-base mt-4 font-semibold text-center bg-yellow-400 py-1 md:py-2 rounded-lg'>100% Automatically and Free</p></h1>
+     <div className='boxRef flex flex-col bg-white/40 justify-center items-center gap-5 border border-gray-600 border-dashed p-6 md:p-18 md:px-26 rounded-2xl'>
       <LuUpload className='text-gray-600 text-5xl md:text-8xl'/>
       <div className="group flex justify-center">
             <label className="bg-blue-600 text-white md:font-bold w-2xs md:w-xs ring-blue-300 hover:ring-3 text-lg md:text-xl rounded-full py-2 md:p-5 text-center cursor-pointer active:scale-95">

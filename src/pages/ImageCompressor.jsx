@@ -27,8 +27,12 @@ const ImageCompressor = () => {
     const handleImageChange = () =>{
       if(!user) setLogin(true);
       const files = Array.from(event.target.files);
-      setImages(files);
-      setCompress([]);
+      setLoading(true);
+      setTimeout(() => {
+        setImages(files);
+        setCompress([]);
+        setLoading(false)
+      }, 1200);
       
     }
     
@@ -62,6 +66,7 @@ const ImageCompressor = () => {
         
         if (!response.ok) throw new Error('Conversion failed'+response.err);
         const data = await response.json();
+        console.log(data);
         setCompress(data.Images);
         setLoading(false);
       } catch (err) {
@@ -112,13 +117,13 @@ const download = (base64String, fileName = "image") => {
    <div className="max-w-[1800px] w-full min-h-[92vh] bg-green-200 flex justify-centerce items-center">
     { images.length <= 0 && (  
       <div className="relative w-full flex flex-col justify-center items-center">
-      <span className='hidden md:block'><img src="/png/022-minimize-1.png" alt="" width={100} className='absolute -top-20 right-60 scale-svg'/></span>
-      <span className='hidden md:block'><img src="/png/021-minimize.png" alt="" width={130} className='absolute -bottom-20 left-50 scale-svg'/></span>
+      <span className='hidden xl:block'><img src="/png/022-minimize-1.png" alt="" width={100} className='absolute -top-20 right-60 scale-svg'/></span>
+      <span className='hidden xl:block'><img src="/png/021-minimize.png" alt="" width={130} className='absolute -bottom-20 left-50 scale-svg'/></span>
       <h2 className="text-4xl md:text-7xl text-gray-800 font-bold text-center mb-4" ref={compressRef}>Image Compressor</h2>
       <h3 className="mb-8 text-green-700 text-center px-2 font-semibold text-lg">Instantly reduce file size for faster uploads and sharing.</h3>
       <div className="group flex justify-center">
         <label className="bg-green-500 md:font-bold text-white w-xs md:w-2xl ring-green-300 hover:ring-4 text-lg md:text-xl rounded-full py-2 md:p-5 text-center cursor-pointer active:scale-95">
-          Upload Image
+          {loading ? "Uploading..." : "Upload Image"}
         <input type="file" multiple accept="image/*" onChange={handleImageChange} className="hidden" />
         </label>
       </div>

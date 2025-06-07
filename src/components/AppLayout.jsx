@@ -5,7 +5,6 @@ import { Outlet, useLocation } from "react-router-dom";
 const AppLayout = () => {
   const location = useLocation();
 
-  // Hide Navbar & Footer for "/image-editor"
   const hideNavAndFooter = location.pathname === "/edit-image";
 
   return (
