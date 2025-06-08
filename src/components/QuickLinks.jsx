@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import {MdOutlineDraw, MdOutlineImageSearch} from "react-icons/md";
+import { MdOutlineDraw, MdOutlineImageSearch } from "react-icons/md";
 import { TbBackground } from "react-icons/tb";
 import { PiFilePdfLight } from "react-icons/pi";
 import { RiImageAiLine, RiAiGenerate2 } from "react-icons/ri";

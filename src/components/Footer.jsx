@@ -8,25 +8,23 @@ const Footer = () => {
         <div>
           <NavLink to='/'><img src="/img/logo.png" className="w-[100px] md:w-[200px]" alt="" /></NavLink>
         </div>
-
         <div className="col-span-1 md:col-span-2">
-        <h3 className="text-lg font-semibold mb-3">App Tools</h3>
-        <div className="grid md:grid-cols-2 gap-2">
-          <ul className="space-y-2">
-            <li><NavLink to='edit-image' className="text-gray-600 hover:text-blue-700 hover:underline">Image Editor</NavLink></li>
-            <li><NavLink to='image-enhancer' href="#" className="text-gray-700 hover:text-blue-700 hover:underline">Image Enhancer</NavLink></li>
-            <li><NavLink to='image-convertor' className="text-gray-600 hover:text-blue-700 hover:underline">Format Convertor</NavLink></li>
-            <li><NavLink to='image-compressor' className="text-gray-700 hover:text-blue-700 hover:underline">Image Compressor</NavLink></li>
-          </ul>
-          <ul className="space-y-2">
-            <li><NavLink to='pdf-maker' className="text-gray-700 hover:text-blue-700 hover:underline">PDF Maker</NavLink></li>
-            <li><NavLink to='bg-remover' className="text-gray-700 hover:text-blue-700 hover:underline">BG Remover</NavLink></li>
-            <li><NavLink to='image-detector' className="text-gray-700 hover:text-blue-700 hover:underline">Image Analyzer</NavLink></li>
-            <li><NavLink to='text-to-image' className="text-gray-700 hover:text-blue-700 hover:underline">Image Generator</NavLink></li>
-          </ul>
+          <h3 className="text-lg font-semibold mb-3">App Tools</h3>
+          <div className="grid md:grid-cols-2 gap-2">
+            <ul className="space-y-2">
+              <li><NavLink to='image-editor' className="text-gray-600 hover:text-blue-700 hover:underline">Image Editor</NavLink></li>
+              <li><NavLink to='image-enhancer' href="#" className="text-gray-700 hover:text-blue-700 hover:underline">Image Enhancer</NavLink></li>
+              <li><NavLink to='image-convertor' className="text-gray-600 hover:text-blue-700 hover:underline">Format Convertor</NavLink></li>
+              <li><NavLink to='image-compressor' className="text-gray-700 hover:text-blue-700 hover:underline">Image Compressor</NavLink></li>
+            </ul>
+            <ul className="space-y-2">
+              <li><NavLink to='pdf-maker' className="text-gray-700 hover:text-blue-700 hover:underline">PDF Maker</NavLink></li>
+              <li><NavLink to='bg-remover' className="text-gray-700 hover:text-blue-700 hover:underline">BG Remover</NavLink></li>
+              <li><NavLink to='image-detector' className="text-gray-700 hover:text-blue-700 hover:underline">Image Reader</NavLink></li>
+              <li><NavLink to='text-to-image' className="text-gray-700 hover:text-blue-700 hover:underline">Image Generator</NavLink></li>
+            </ul>
+          </div>
         </div>
-        </div>
-
         <div>
           <h3 className="text-lg font-semibold mb-3 w-full">Help & Docs </h3>
           <ul className="space-y-2">
@@ -36,7 +34,6 @@ const Footer = () => {
             <li><a href="#" className="text-gray-700 hover:text-blue-700 hover:underline">Documentation</a></li>
           </ul>
         </div>
-
         <div>
           <h3 className="text-lg font-semibold mb-3 w-full">Quick Links</h3>
           <ul className="space-y-2">
@@ -46,8 +43,10 @@ const Footer = () => {
             <li><a href="#" className="text-gray-700 hover:text-blue-700 hover:underline">Privacy Policy</a></li>
           </ul>
         </div>
+      </div>
 
-        <div className="col-span-1 flex justify-center mt-6 md:justify-center space-x-4">
+      <div className="mt-15 w-full text-center text-gray-500 text-sm">
+        <div className="flex justify-center w-full gap-4 mb-4">
           <a href="#" className="text-gray-700 hover:text-blue-700">
             <Facebook size={24} />
           </a>
@@ -61,10 +60,6 @@ const Footer = () => {
             <Linkedin size={24} />
           </a>
         </div>
-      </div>
-
-      {/* Bottom Section */}
-      <div className="mt-8 text-center text-gray-500 text-sm">
         © {new Date().getFullYear()} Pixelo. All rights reserved.
       </div>
     </footer>

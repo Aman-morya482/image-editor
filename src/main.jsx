@@ -7,7 +7,7 @@ import ContextProvider from './utils/ContextProvider.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ContextProvider>
-    <App />
+      <App />
     </ContextProvider>
   </StrictMode>,
 )

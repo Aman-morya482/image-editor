@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-const faqs =[
+const faqs = [
   {
     question: "What is Pixelo?",
     answer: "Pixelo is an advanced online image editing platform designed for both beginners and professionals. It provides a seamless, user-friendly experience with tools such as photo editing, background removal, PDF creation, Image compressor ,some AI-powered tools and more. Whether you're a photographer, designer, or social media creator, Pixelo makes image editing easy and efficient, directly from your browser without the need for software installation."
@@ -11,8 +11,8 @@ const faqs =[
     answer: "Absolutely! Pixelo is built with user security and privacy in mind. We do not store or use your images without consent. All image processing happens securely in real-time, and we use encrypted connections to keep your data safe. Additionally, we do not require unnecessary personal information, ensuring a safe and private editing experience for all users."
   },
   {
-  question: "What AI tools does Pixelo offer?",
-  answer: "Pixelo integrates advanced AI technology to simplify and enhance your image editing experience. Currently, we offer two AI-powered tools: 1>AI Image Generator: Transforms text descriptions into visually stunning AI-generated images. This tool is perfect for artists, designers, and content creators looking to generate unique visuals effortlessly. 2>AI Image Analyzer: Uses AI to analyze images and provide detailed descriptions, identifying key elements within the image. This is useful for accessibility, content tagging, and understanding image composition."
+    question: "What AI tools does Pixelo offer?",
+    answer: "Pixelo integrates advanced AI technology to simplify and enhance your image editing experience. Currently, we offer two AI-powered tools: 1>AI Image Generator: Transforms text descriptions into visually stunning AI-generated images. This tool is perfect for artists, designers, and content creators looking to generate unique visuals effortlessly. 2>AI Image Analyzer: Uses AI to analyze images and provide detailed descriptions, identifying key elements within the image. This is useful for accessibility, content tagging, and understanding image composition."
   },
   {
     question: "Can I use Pixelo on different devices?",
@@ -30,7 +30,6 @@ const faqs =[
     question: "Can I use Pixelo without signing up?",
     answer: "Yes, you can start using Pixelo without creating an account. Many basic tools are available for immediate use. However, signing up allows you to access additional features such as downloading, saving draft. For professional users, having an account ensures that your work is saved and can be accessed from any device."
   },
-
 ];
 
 export default function FAQ() {
@@ -48,7 +47,6 @@ export default function FAQ() {
         </span>
         <h2 className="text-3xl md:text-4xl font-bold mt-3">Do You Have a Question?</h2>
       </div>
-
       <div className="max-w-4xl mx-auto mt-8">
         {faqs.map((faq, index) => (
           <div key={index} className="border-b border-white/40">

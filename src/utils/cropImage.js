@@ -2,7 +2,6 @@ export default async function getCroppedImg(imageSrc, pixelCrop) {
   const image = await createImage(imageSrc);
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
-
   canvas.width = pixelCrop.width;
   canvas.height = pixelCrop.height;
 
@@ -18,11 +17,7 @@ export default async function getCroppedImg(imageSrc, pixelCrop) {
     pixelCrop.height
   );
 
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => {
-      resolve(URL.createObjectURL(blob));
-    }, "image/jpeg");
-  });
+  return new Promise((resolve) => {canvas.toBlob((blob) => {resolve(URL.createObjectURL(blob))}, "image/jpeg");});
 }
 
 // Helper to create an image from a URL

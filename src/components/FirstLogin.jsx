@@ -1,25 +1,18 @@
-import React, {useContext, useEffect} from 'react'
-import { NavLink, useNavigate } from "react-router-dom";
+import { useContext, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import { userContext } from '../utils/ContextProvider';
 
-const FirstLogin = ({open}) => {
+const FirstLogin = ({ open }) => {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-    const {url} = useContext(userContext);
+  useEffect(() => {
+    if (open) { document.body.style.overflow = "hidden" }
+    else { document.body.style.overflow = "auto" }
+    return () => { document.body.style.overflow = "auto" }
+  }, [open])
 
-    useEffect(() =>{
-        if(open){document.body.style.overflow = "hidden"}
-        else {document.body.style.overflow = "auto"}
-
-        return ()=>{document.body.style.overflow = "auto"}
-    },[open])
-
-    const handleLogin = ()=>{
-      navigate('/login');
-    }
-    const handleSignup = ()=>{
-        navigate('/signup');
-    }
+  const handleLogin = () => {navigate('/login')}
+  const handleSignup = () => {navigate('/signup')}
 
   return (
     <div className={`fixed inset-0 z-100 flex justify-center items-center bg-black/50`}>
@@ -27,7 +20,7 @@ const FirstLogin = ({open}) => {
         <p className='text-3xl font-semibold mb-5 text-center'>Login to Download</p>
         <p onClick={handleLogin} className='bg-blue-500 text-white rounded-md w-full text-center py-2 cursor-pointer'>Login</p>
         <p onClick={handleSignup} className='bg-gray-300 rounded-md w-full text-center py-2 cursor-pointer'>Sign up</p>
-        <p onClick={()=>open()} className='rounded-md text-center underline cursor-pointer'>Stay Logged out</p>
+        <p onClick={() => open()} className='rounded-md text-center underline cursor-pointer'>Stay Logged out</p>
       </div>
     </div>
   )
