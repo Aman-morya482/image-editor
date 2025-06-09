@@ -6,7 +6,7 @@ import ConvertPreview from '../components/ConvertPreview';
 import gsap from "gsap";
 
 const ImageConvertor = () => {
-  const { user } = useContext(userContext);
+  const { user, url } = useContext(userContext);
   const [images, setImages] = useState([]);
   const [type, setType] = useState("png");
   const [convert, setConvert] = useState([]);
@@ -44,7 +44,7 @@ const ImageConvertor = () => {
       const base64Images = await Promise.all(images.map((img) => convertToBase64(img)));
       const imagePayload = { images: base64Images, qualityOrType: type };
 
-      const response = await fetch('http://localhost:8080/image/get-convert', {
+      const response = await fetch(`${url}/image/get-convert`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(imagePayload),

@@ -41,7 +41,7 @@ const PDFmaker = () => {
       );
       const imagePayload = { images: base64Images };
 
-      const response = await fetch('http://localhost:8080/pdf/make-pdf', {
+      const response = await fetch(`${url}/pdf/make-pdf`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(imagePayload),

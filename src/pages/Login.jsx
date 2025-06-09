@@ -27,7 +27,7 @@ const Login = () => {
     console.log("LoginReq: ", data);
 
     try {
-      const response = await fetch('http://localhost:8080/login/get-login', {
+      const response = await fetch(`${url}/login/get-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

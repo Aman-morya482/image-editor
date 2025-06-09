@@ -3,7 +3,7 @@ export const userContext = createContext();
 
 const ContextProvider = ({ children }) => {
   const [user, setUser] = useState("")
-  const [url, serUrl] = useState("http://localhost:8080");
+  const [url, serUrl] = useState("https://image-editor-8h7m.onrender.com");
   const [drafts, setDrafts] = useState({});
 
   const download = async () => {

@@ -11,7 +11,7 @@ const ImageCompressor = () => {
   const [loading, setLoading] = useState(false);
   const [login, setLogin] = useState(false);
   const compressRef = useRef(null);
-  const { user } = useContext(userContext);
+  const { user, url } = useContext(userContext);
 
   useEffect(() => {
     gsap.fromTo(compressRef.current, { y: "15%", opacity: 0 }, {
@@ -46,7 +46,7 @@ const ImageCompressor = () => {
       );
       const imagePayload = { images: base64Images, qualityOrType: quality };
 
-      const response = await fetch('http://localhost:8080/image/get-compressed-quality', {
+      const response = await fetch(`${url}/image/get-compressed-quality`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(imagePayload),

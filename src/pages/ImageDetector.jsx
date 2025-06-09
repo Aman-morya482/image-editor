@@ -11,13 +11,12 @@ const ImageDetector = () => {
   const [img, setImg] = useState(null);
   const [message, setmessage] = useState("");
   const [description, setDescription] = useState(``);
-  const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [login, setLogin] = useState(false);
   const [text, setText] = useState(``);
   const [copy, setCopy] = useState(false);
   const buttonRef = useRef(null)
-  const { user } = useContext(userContext);
+  const { user, url } = useContext(userContext);
 
   const handleFileChange = async (e) => {
     if (!user) setLogin(true);
@@ -50,14 +49,13 @@ const ImageDetector = () => {
       formData.append("image", img);
       formData.append("expiration", 300);
 
-      const response = await axios.post("https://api.imgbb.com/1/upload", formData.toString(), {
+      const response = await axios.post(`${url}/api.imgbb.com/1/upload`, formData.toString(), {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
 
       imageUrl = response.data?.data?.url;
-      setUrl(imageUrl);
     } catch (error) {
       console.error("Upload failed:", error);
       alert("Image upload failed: " + error.message);
@@ -67,9 +65,8 @@ const ImageDetector = () => {
 
     const payload = { imageData: imageUrl, message: message };
     console.log("payload", payload)
-    console.log("url", imageUrl);
     try {
-      const response = await fetch("http://localhost:8080/api/imageReader", {
+      const response = await fetch(`${url}/api/imageReader`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
