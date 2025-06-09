@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { userContext } from '../utils/ContextProvider'
+import { toast } from 'react-toastify';
 
 const EditUser = ({ open, setOpen }) => {
   const { user, url } = useContext(userContext);
@@ -22,11 +23,11 @@ const EditUser = ({ open, setOpen }) => {
         headers: { Authorization: `Bearer ${user.value.token}` }
       })
       console.log(response)
-      if (response.ok) alert("Username updated successfully");
+      if (response.ok) toast.success("Username updated successfully!!");
       setOpen(false);
     } catch (error) {
       console.log("err", error)
-      alert("something went wrong");
+      toast.error("something went wrong!!");
     }
   }
 

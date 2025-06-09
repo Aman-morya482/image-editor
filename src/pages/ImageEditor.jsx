@@ -20,6 +20,7 @@ import { HiAdjustmentsHorizontal, HiOutlineFolderOpen } from "react-icons/hi2";
 import { MdCropFree, MdCropRotate, MdOutlineRotate90DegreesCw } from "react-icons/md";
 import { RiColorFilterFill, RiImageAddLine, RiMenuUnfold3Line, RiMenuFold3Line, RiResetLeftFill } from "react-icons/ri";
 import FirstLogin from "../components/FirstLogin";
+import { toast } from "react-toastify";
 
 const ImageEditor = () => {
   const { url, user } = useContext(userContext);
@@ -456,10 +457,10 @@ const ImageEditor = () => {
         body: JSON.stringify({ image: lastImageUrl }),
       })
       console.log("res", response);
-      if (response.ok) alert("Draft saved successfully !!")
+      if (response.ok) toast.success("Draft saved successfully !!")
     } catch (error) {
       console.log("err", error);
-      alert("Something went wrong");
+      toast.error("Something went wrong!!");
     }
   }
 

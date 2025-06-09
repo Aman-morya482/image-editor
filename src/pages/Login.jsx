@@ -4,6 +4,7 @@ import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import "../App.css"
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,8 +23,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     console.log(data);
     e.preventDefault();
-    if (data.email == "") { return alert("Enter Email Address") }
-    if (data.password == "") { return alert("Enter Password") }
+    if (data.email == "") { return toast.info("Enter Email Address") }
+    if (data.password == "") { return toast.info("Enter Password") }
     console.log("LoginReq: ", data);
 
     try {
@@ -35,14 +36,14 @@ const Login = () => {
       if (!response.ok) throw new Error('Conversion failed' + response.err);
       const data2 = await response.json();
       console.log("LoginRes:", data2)
-      if (!data2) return alert("Invalid Email or Password !!")
-      data2 && alert("Login Successfull !!")
+      if (!data2) return toast.error("Invalid Email or Password !!")
+      data2 && toast.success("Login Successfull!!")
       login(data2);
       setData({ email: "", password: "" })
       navigate("/")
     } catch (err) {
       console.error('Error:', err);
-      alert("Something went wrong !! Try again after some time.");
+      toast.error("Something went wrong!!");
     }
   };
 

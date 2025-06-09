@@ -74,8 +74,8 @@ const Home = () => {
     <div>
       <div className='grid grid-cols-1 place-items-center'>
         <div className='h-[92vh] w-full max-w-[1800px] relative overflow-hidden flex flex-col md:flex-row justify-center items-center gap-20 md:px-15 py-20 md:py-30 lg:py-40'>
-          <div ref={blurDiv1} className="z-[-1] absolute -right-[200px] w-[500px] h-[500px] hidden md:block  bg-blue-600 rounded-full opacity-90 blur-[80px] shadow-[0_0_80px_200px_rgb(96, 165, 250)]"></div>
-          <div ref={blurDiv2} className="z-[-1] absolute -left-[150px] w-[400px] h-[400px] hidden md:block bg-blue-600 rounded-full opacity-90 blur-[80px] shadow-[0_0_80px_200px_rgb(96, 165, 250)]"></div>
+          <div ref={blurDiv1} className="z-[-1] absolute -right-100 -top-50 md:top-10 md:-right-[200px] w-[500px] h-[500px] block  bg-blue-600 rounded-full opacity-90 blur-[80px] shadow-[0_0_80px_200px_rgb(96, 165, 250)]"></div>
+          <div ref={blurDiv2} className="z-[-1] absolute -bottom-40 -left-20 md:bottom-10 md:-left-[150px] w-[400px] h-[400px] block bg-blue-600 rounded-full opacity-90 blur-[80px] shadow-[0_0_80px_200px_rgb(96, 165, 250)]"></div>
           <div className='textRef w-full h-full text-4xl md:text-6xl xl:text-8xl text-black flex flex-col md:justify-center text-center md:text-left'>
             <h1 className='font-bold'>One Place</h1>
             <h1 className='font-bold'>Solution for</h1>
@@ -103,7 +103,7 @@ const Home = () => {
                   <p>Images with Ease!</p>
                 </div>
                 <h1 className='tracking-wider text-sm'>Transform your photos with editing tools. Crop, rotate, apply stunning filters, adjust lighting, and add text effortlessly. Perfect your visuals in just a few clicks!</h1>
-                <button className='bg-blue-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='/edit-image'>Try Now</NavLink></button>
+                <button className='bg-blue-500 text-white py-1 md:py-2 w-[80px] md:w-[120px] rounded hover:ring-3 ring-blue-300 hover:cursor-pointer'><NavLink to='/image-editor'>Try Now</NavLink></button>
               </div>
             </div>
             <div><img src="/img/photo-collage.png" alt="" className='max-w-[240px] sm:max-w-sm leftBox1 ' /></div>

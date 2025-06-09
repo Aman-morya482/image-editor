@@ -1,9 +1,10 @@
 import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 export const userContext = createContext();
 
 const ContextProvider = ({ children }) => {
   const [user, setUser] = useState("")
-  const [url, serUrl] = useState("https://image-editor-8h7m.onrender.com");
+  const [url, serUrl] = useState("http://localhost:8080");
   const [drafts, setDrafts] = useState({});
 
   const download = async () => {
@@ -20,7 +21,7 @@ const ContextProvider = ({ children }) => {
         return result;
       } catch (error) {
         console.log("error", error);
-        alert("Something went wrong")
+        toast.error("failed to store")
       }
     }
   }
@@ -46,6 +47,7 @@ const ContextProvider = ({ children }) => {
     localStorage.removeItem("User");
     localStorage.removeItem("pendingImage");
     setUser("");
+    toast.info("Logout Successfull!!")
   }
 
   return (

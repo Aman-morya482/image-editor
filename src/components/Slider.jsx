@@ -11,7 +11,7 @@ export default function App() {
   const compareRef = useRef();
 
   useEffect(() => {
-    const stopPropagation = (e) => {e.stopPropagation()};
+    const stopPropagation = (e) => { e.stopPropagation() };
 
     const current = compareRef.current;
     if (current) {

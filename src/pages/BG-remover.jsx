@@ -6,6 +6,7 @@ import { userContext } from "../utils/ContextProvider";
 import { LuUpload } from "react-icons/lu";
 import { IoIosArrowBack } from 'react-icons/io';
 import FirstLogin from '../components/FirstLogin';
+import { toast } from 'react-toastify';
 
 const BgRemover = () => {
   const [image, setImage] = useState(null);
@@ -71,7 +72,7 @@ const BgRemover = () => {
       setResult(data.Image);
     } catch (err) {
       console.error('Error:', err);
-      alert("convertion failed");
+      toast.error("convertion failed");
     } finally { setLoading(false) }
   };
 

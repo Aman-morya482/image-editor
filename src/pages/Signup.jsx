@@ -4,6 +4,7 @@ import { LuEyeOff } from "react-icons/lu";
 import "../App.css"
 import { NavLink, useNavigate } from "react-router-dom";
 import { userContext } from "../utils/ContextProvider";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -31,11 +32,11 @@ const Signup = () => {
     console.log(data);
     e.preventDefault();
     if (data.userName === '') {
-      alert("Oops! You forgot to enter your userName.");
+      toast.info("Enter userName.");
       return;
     };
     if (data.password.length < 6) {
-      alert("Please enter a password with at least 6 characters.");
+      toast.info("Password too short.");
       return;
     }
     console.log("signupReq: ", data);
@@ -50,11 +51,11 @@ const Signup = () => {
       const data2 = await response.json();
       console.log("signupRes: ", data2);
       data2 && setResult(true);
-      data2 && alert("Signup Successfull !!")
-      !data2 && alert("User Already Exists !!")
+      data2 && toast.success("Signup Successfull !!")
+      !data2 && toast.error("User Already Exists !!")
     } catch (err) {
       console.error('Error:', err);
-      alert("Something went wrong !! Try again after some time.");
+      toast.error("Something went wrong !!");
     }
   };
 

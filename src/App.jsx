@@ -14,10 +14,22 @@ import Login from "./pages/Login";
 import ImageDetector from "./pages/ImageDetector";
 import ImageEnhancer from "./pages/ImageEnhancer";
 import EditUser from "./components/EditUser";
+import { ToastContainer, toast, Slide, Bounce, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <Router>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+        transition={Zoom}
+      />
       <Routes>
         {/* Routes inside AppLayout (with Navbar/Footer) */}
         <Route path="/" element={<AppLayout />}>

@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { userContext } from '../utils/ContextProvider';
 import { AiOutlineDelete } from "react-icons/ai";
+import { toast } from 'react-toastify';
 
 const SavedDrafts = ({ open, setImage, sideMenu }) => {
   const { drafts, setDrafts, user, url } = useContext(userContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [select, setSelect] = useState(null);
-  
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (open) { document.body.style.overflow = "hidden" }
     else { document.body.style.overflow = "auto" }
@@ -17,6 +19,7 @@ const SavedDrafts = ({ open, setImage, sideMenu }) => {
   }, [open])
 
   const fetchDraft = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${url}/draft/image?email=${user.value.email}`, {
         method: 'GET',
@@ -27,10 +30,10 @@ const SavedDrafts = ({ open, setImage, sideMenu }) => {
       setDrafts(data);
     } catch (error) {
       console.log("err", error);
-      alert("Something went wrong !!");
-    }
+      toast.error("Something went wrong !!");
+    } finally { setLoading(false) }
   }
-  
+
   useEffect(() => {
     fetchDraft();
   }, [])
@@ -54,10 +57,11 @@ const SavedDrafts = ({ open, setImage, sideMenu }) => {
         method: 'DELETE',
         headers: { "Authorization": `Bearer ${user.value.token}` }
       })
+      toast.success("Draft deleted successfully!!")
       fetchDraft();
       setSelect(null);
       console.log("delete res", response);
-    } catch (error) { console.log("deletion erro", error)}
+    } catch (error) { console.log("deletion erro", error) }
   }
 
   return (
@@ -67,14 +71,15 @@ const SavedDrafts = ({ open, setImage, sideMenu }) => {
           <p className='md:text-3xl font-semibold text-gray-600 font-ubuntu'>Saved Drafts</p>
           <div onClick={() => deleteDraft(select)} className={`${select == null ? "text-gray-400 cursor-not-allowed" : "text-red-600 cursor-pointer"}`} disabled={select == null}><AiOutlineDelete size={30} /></div>
         </div>
-        <div className='border border-gray-400 rounded-md h-[400px] flex flex-col items-center gap-5 overflow-y-auto p-5'>
+        <div className='border border-gray-400 rounded-md h-[400px] w-full flex flex-col items-center gap-5 overflow-y-auto p-5'>
+          {loading && <p className='text-center text-gray-700 text-2xl'>Fetching draft images...</p>}
+          {!loading && (Object.keys(drafts).length <= 0) && (<p>No Draft</p>)}
           <ul className='grid grid-cols-2 gap-5'>
-            {(Object.keys(drafts).length > 0) && Object.entries(drafts).map(([id, image], ind) => (
+            {!loading && (Object.keys(drafts).length > 0) && Object.entries(drafts).map(([id, image], ind) => (
               <li key={id} onClick={() => setSelect((pre) => (pre === id ? null : id))} className={`border cursor-pointer border-gray-400 ${select === id ? "ring-2 ring-purple-500" : ""} bg-gray-200 p-2 rounded-md`}>
-                <img src={image} alt={`draft ${id}`} className="h-[200px] w-[300px] object-cover"/>
+                <img src={image} alt={`draft ${id}`} className="h-[200px] w-[300px] object-cover" />
               </li>
             ))}
-            {(Object.keys(drafts).length <= 0) && ( <p>No Draft</p> )}
           </ul>
         </div>
         <div className='flex gap-3 justify-end text-lg'>

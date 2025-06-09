@@ -6,6 +6,7 @@ import FirstLogin from '../components/FirstLogin';
 import { IoCopyOutline } from "react-icons/io5";
 import { LuCopyCheck } from "react-icons/lu";
 import { IoIosArrowBack } from 'react-icons/io';
+import { toast } from 'react-toastify';
 
 const ImageDetector = () => {
   const [img, setImg] = useState(null);
@@ -49,7 +50,7 @@ const ImageDetector = () => {
       formData.append("image", img);
       formData.append("expiration", 300);
 
-      const response = await axios.post(`${url}/api.imgbb.com/1/upload`, formData.toString(), {
+      const response = await axios.post(`https://api.imgbb.com/1/upload`, formData.toString(), {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -79,7 +80,7 @@ const ImageDetector = () => {
       setDescription(data.data);
     } catch (err) {
       console.error(err);
-      alert("Something went wrong! Try again later.");
+      toast.error("Something went wrong!!");
       setImg(null);
     } finally {
       setLoading(false);

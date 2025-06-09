@@ -4,6 +4,7 @@ import { userContext } from '../utils/ContextProvider';
 import FirstLogin from '../components/FirstLogin';
 import ConvertPreview from '../components/ConvertPreview';
 import gsap from "gsap";
+import { toast } from 'react-toastify';
 
 const ImageConvertor = () => {
   const { user, url } = useContext(userContext);
@@ -57,7 +58,7 @@ const ImageConvertor = () => {
     } catch (err) {
       console.error('Error:', err);
       setLoading(false);
-      alert("convertion failed");
+      toast.error("convertion failed");
     } finally { setLoading(false) }
   };
 

@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { RxCross2 } from "react-icons/rx";
 import { userContext } from '../utils/ContextProvider';
+import { toast } from 'react-toastify';
 
 const DraftConfirm = ({ cancel, image }) => {
   const { user, url } = useContext(userContext);
@@ -31,7 +32,7 @@ const DraftConfirm = ({ cancel, image }) => {
       console.log("res", response);
     } catch (error) {
       console.log("err", error);
-      alert("Something went wrong");
+      toast.error("Something went wrong!!");
     }
   }
 

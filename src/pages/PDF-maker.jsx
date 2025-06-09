@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import PdfPreview from "../components/PdfImagePreview";
 import { userContext } from "../utils/ContextProvider";
 import gsap from "gsap";
+import { toast } from "react-toastify";
 
 const PDFmaker = () => {
   const [images, setImages] = useState([]);
@@ -51,7 +52,7 @@ const PDFmaker = () => {
       setTimeout(() => { setPdf(url) }, 2000);
     } catch (err) {
       console.error('Error:', err);
-      alert("failed to convert");
+      toast.error("failed to convert");
     } finally { setLoading(false) }
   };
 

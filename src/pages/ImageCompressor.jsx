@@ -3,6 +3,7 @@ import { gsap } from "gsap/gsap-core";
 import { userContext } from "../utils/ContextProvider";
 import CompressPreview from "../components/CompressPreview";
 import FirstLogin from "../components/FirstLogin";
+import { toast } from "react-toastify";
 
 const ImageCompressor = () => {
   const [images, setImages] = useState([]);
@@ -59,7 +60,7 @@ const ImageCompressor = () => {
     } catch (err) {
       console.error('Error:', err);
       setLoading(false);
-      alert("failed");
+      toast.error("Compress Failed!!");
     } finally { setLoading(false) }
   };
 
