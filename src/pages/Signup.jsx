@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import "../App.css"
 import { NavLink, useNavigate } from "react-router-dom";
 import { userContext } from "../utils/ContextProvider";
@@ -12,6 +13,7 @@ const Signup = () => {
   const [result, setResult] = useState(false);
   const { url } = useContext(userContext);
   const [data, setData] = useState({ userName: "", email: "", password: "" })
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,6 +42,7 @@ const Signup = () => {
       return;
     }
     console.log("signupReq: ", data);
+    setLoading(true);
 
     try {
       const response = await fetch(`${url}/signup/signup`, {
@@ -56,7 +59,7 @@ const Signup = () => {
     } catch (err) {
       console.error('Error:', err);
       toast.error("Something went wrong !!");
-    }
+    } finally { setLoading(false) }
   };
 
   return (
@@ -80,8 +83,8 @@ const Signup = () => {
               {!hide && <LuEyeOff size={22} onClick={() => setHide(pre => !pre)} className="absolute right-2 top-3 hover:cursor-pointer" />}
             </div>
             <div className="relative">
-              <button type="submit" className="w-full bg-blue-600 text-white p-3 hover:cursor-pointer hover:ring-blue-200 ring-5 rounded-lg transition">
-                Sign Up
+              <button type="submit" className="w-full bg-blue-600 text-white p-3 flex justify-center hover:cursor-pointer hover:ring-blue-200 ring-5 rounded-lg transition">
+                {!loading ? "Sign up" : <AiOutlineLoading3Quarters size={22} className="rotate-icon" />}
               </button>
               <p className="absolute right-2 top-14 text-sm">Already have account ? <NavLink to="/login" className="text-blue-800 underline">Login</NavLink></p>
             </div>

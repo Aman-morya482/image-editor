@@ -555,11 +555,20 @@ const ImageEditor = () => {
         },
         body: JSON.stringify({ image: lastImageUrl }),
       })
-      console.log("res", response);
-      if (response.ok) toast.success("Draft saved successfully !!")
+      if (!response.ok) {
+        const errorText = await response.text(); // Get the text sent from backend
+        if (response.status === 500) {
+          toast.error("Draft Limit Reached");
+          console.log("error", errorText)
+        } else {
+          toast.error("Draft not saved: " + errorText);
+        }
+        return;
+      }
+      toast.success("Draft saved successfully!!");
     } catch (error) {
-      console.log("err", error);
-      toast.error("Something went wrong, Draft not saved!!");
+      console.error("Network or JS Error:", error);
+      toast.error("Something went wrong. Please try again.");
     }
   }
 

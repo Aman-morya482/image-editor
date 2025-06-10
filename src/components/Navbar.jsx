@@ -117,21 +117,21 @@ const Navbar = () => {
         </ul>
 
         <div className="flex gap-6 items-center">
-            <NavLink to="/login" className={`${user ? "hidden" : "block"} navRef bg-blue-500 text-white px-4 py-2 text-sm md:text-base rounded-lg hover:bg-blue-600`}>
-              Login
-            </NavLink> 
-            
-            <div>
-              <div className="flex gap-6">
-                {user &&
-                  <p className={`${user ? "block" : "hidden"} navRef ml-22 md:ml-0 relative text-white bg-gradient-to-br from-blue-400 to-violet-700 py-[8px] px-[14px] text-xl rounded-full uppercase hover:cursor-pointer hover:ring-3 ring-gray-300`} onClick={() => setClick(!click)}>{user.value.name.slice(0,1)}</p>
-                }
+          <NavLink to="/login" className={`${user ? "hidden" : "block"} navRef bg-blue-500 text-white px-4 py-2 text-sm md:text-base rounded-lg hover:bg-blue-600`}>
+            Login
+          </NavLink>
+
+          <div>
+            <div className="flex gap-6">
+              {user &&
+                <p className={`${user ? "block" : "hidden"} navRef ml-22 md:ml-0 relative text-white bg-gradient-to-br from-blue-400 to-violet-700 py-[8px] px-[14px] text-xl rounded-full uppercase hover:cursor-pointer hover:ring-3 ring-gray-300`} onClick={() => setClick(!click)}>{user.value.name.slice(0, 1)}</p>
+              }
               <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
                 {isOpen ? <X size={34} /> : <Menu size={34} />}
               </button>
-              </div>
-              {user &&
-                <div className={`absolute top-15 right-10 z-100 bg-white border border-gray-300 rounded-md w-[150px]  ${click ? "block" : "hidden"}  `}>
+            </div>
+            {user &&
+              <div className={`absolute top-15 right-10 z-100 bg-white border border-gray-300 rounded-md w-[150px]  ${click ? "block" : "hidden"}  `}>
                 <ul className="flex flex-col font-normal">
                   <li className="p-2 text-violet-700 font-semibold">{user.value.name}</li>
                   <li className="flex items-center gap-2 hover:bg-gray-100 hover:cursor-pointer p-2" onClick={() => { setEdit(true); setClick(false) }}>Edit<FaRegEdit size={18} className="mb-1" /></li>
@@ -139,10 +139,10 @@ const Navbar = () => {
                   <li className="text-red-500 font-semibold hover:bg-red-500 hover:text-white hover:cursor-pointer p-2 flex items-center gap-2" onClick={() => setConfirm(true)}>Logout<IoIosLogOut size={20} /></li>
                 </ul>
               </div>
-              }
-              {edit && <EditUser open={edit} setOpen={setEdit} />}
-              {confirm && <LogoutConfirm logout={logout} setClick={setClick} setConfirm={setConfirm} />}
-            </div>
+            }
+            {edit && <EditUser open={edit} setOpen={setEdit} />}
+            {confirm && <LogoutConfirm logout={logout} setClick={setClick} setConfirm={setConfirm} />}
+          </div>
 
           {draftOpen && <SavedDrafts open={setDraftOpen} />}
         </div>
@@ -172,7 +172,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to="/text-to-image" onClick={() => setIsOpen(false)} className={({ isActive }) => `hover:text-gray-400 ${isActive ? "text-blue-600 border-b-2 border-blue-600" : ""}`}>
-              Text-to-image
+              Generate Image
             </NavLink>
           </li>
           <li>
@@ -187,7 +187,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to="/image-detector" onClick={() => setIsOpen(false)} className={({ isActive }) => `hover:text-gray-400 ${isActive ? "text-blue-600 border-b-2 border-blue-600" : ""}`}>
-              Image Analyzer
+              Image Reader
             </NavLink>
           </li>
           <li>
@@ -195,16 +195,16 @@ const Navbar = () => {
               Image enhancer
             </NavLink>
           </li>
-          { !user &&(
-          <li>
-            <NavLink
-              to="/login"
-              onClick={() => setIsOpen(false)}
-              className="bg-blue-500 px-4 py-2 rounded-lg w-full text-white text-center hover:bg-blue-600 block"
+          {!user && (
+            <li>
+              <NavLink
+                to="/login"
+                onClick={() => setIsOpen(false)}
+                className="bg-blue-500 px-4 py-2 rounded-lg w-full text-white text-center hover:bg-blue-600 block"
               >
-              Login
-            </NavLink>
-          </li>
+                Login
+              </NavLink>
+            </li>
           )}
           {user &&
             <li>

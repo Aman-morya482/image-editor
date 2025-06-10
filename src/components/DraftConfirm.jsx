@@ -20,21 +20,34 @@ const DraftConfirm = ({ cancel, image }) => {
   }
 
   const saveDraft = async (image) => {
+    toast.info("Saving Your Draft...");
     try {
       const response = await fetch(`${url}/draft/save?email=${user.value.email}`, {
         method: 'POST',
         headers: {
           "Authorization": `Bearer ${user.value.token}`,
-          "Content-Type": 'application/json'
+          "Content-Type": 'application/json',
         },
-        body: JSON.stringify(image),
-      })
-      console.log("res", response);
+        body: JSON.stringify({ image: image }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text(); // Get the text sent from backend
+        if (response.status === 500) {
+          toast.error("Draft Limit Reached");
+          console.log("error", errorText)
+        } else {
+          toast.error("Draft not saved: " + errorText);
+        }
+        return;
+      }
+
+      toast.success("Draft saved successfully!!");
     } catch (error) {
-      console.log("err", error);
-      toast.error("Something went wrong!!");
+      console.error("Network or JS Error:", error);
+      toast.error("Something went wrong. Please try again.");
     }
-  }
+  };
 
   return (
     <div className='absolute left-0 top-0 z-100 w-full h-screen bg-black/40 flex justify-center items-center font-normal'>

@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { userContext } from "../utils/ContextProvider";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import "../App.css"
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -10,7 +11,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [hide, setHide] = useState(true);
   const { user, login, url, download } = useContext(userContext);
-  const [data, setData] = useState({ email: "", password: "" })
+  const [data, setData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +27,7 @@ const Login = () => {
     e.preventDefault();
     if (data.email == "") { return toast.info("Enter Email Address") }
     if (data.password == "") { return toast.info("Enter Password") }
+    setLoading(true);
     console.log("LoginReq: ", data);
 
     try {
@@ -44,7 +47,7 @@ const Login = () => {
     } catch (err) {
       console.error('Error:', err);
       toast.error("Something went wrong!!");
-    }
+    } finally { setLoading(false) }
   };
 
   const handleImageDownload = (pending) => {
@@ -95,8 +98,8 @@ const Login = () => {
               {!hide && <LuEyeOff size={22} onClick={() => setHide(pre => !pre)} className="absolute right-2 top-3 hover:cursor-pointer" />}
             </div>
             <div className="relative">
-              <button type="submit" className="w-full bg-blue-600 text-white p-3 hover:cursor-pointer hover:ring-blue-200 ring-5 rounded-lg transition">
-                Log in
+              <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-3 hover:cursor-pointer hover:ring-blue-200 ring-5 flex justify-center rounded-lg transition">
+                {!loading ? "Login" : <AiOutlineLoading3Quarters size={22} className="rotate-icon" />}
               </button>
               <p className="absolute right-2 top-14 text-sm">Not have account ? <NavLink to="/signup" className="text-blue-800 underline">Sign up</NavLink></p>
             </div>
