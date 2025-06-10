@@ -16,8 +16,17 @@ import ImageEnhancer from "./pages/ImageEnhancer";
 import EditUser from "./components/EditUser";
 import { ToastContainer, toast, Slide, Bounce, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
 function App() {
+
+  useEffect(() => {
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+    };
+    document.addEventListener("contextmenu", handleContextMenu);
+  }, [])
+
   return (
     <Router>
       <ToastContainer
@@ -29,6 +38,7 @@ function App() {
         draggable
         theme="light"
         transition={Zoom}
+        toastClassName="custom-toast"
       />
       <Routes>
         {/* Routes inside AppLayout (with Navbar/Footer) */}

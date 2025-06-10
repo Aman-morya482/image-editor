@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from "gsap"
 
@@ -9,6 +9,7 @@ import { MdOutlineTextFields } from "react-icons/md";
 
 const Editor = () => {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     gsap.fromTo(".boxRef1", { y: "10%", opacity: 0 }, {
@@ -29,11 +30,13 @@ const Editor = () => {
     const file = e.target.files[0];
     console.log(file);
     if (file) {
+      setLoading(true);
       const reader = new FileReader();
       reader.onload = () => {
         localStorage.setItem("uploadedImage", reader.result);
-        console.log(reader.result);
-        navigate("/edit-image", { state: { newImage: reader.result } });
+        setTimeout(() => {
+          navigate("/edit-image", { state: { newImage: reader.result } });
+        }, 1200);
       }
       reader.readAsDataURL(file);
     }
@@ -46,8 +49,8 @@ const Editor = () => {
           <div className='flex flex-col justify-center items-center'>
             <h1 className='boxRef2 text-4xl md:text-6xl font-bold leading-[50px] md:leading-[70px] text-center'>The Online <br className='md:hidden' /> <span className='text-blue-700'>image Editor</span> <br />Made for Everyone</h1>
             <label className='boxRef2 w-xs md:w-xl py-3 md:py-4 px-5 mt-6 text-center text-2xl active:scale-95 cursor-pointer hover:ring-3 ring-blue-400 bg-blue-600 text-white rounded-full font-semibold tracking-wider'>
-              Start Editing
-              <input type="file" onChange={handleImageUpload} accept='image/*' className='hidden' />
+              {!loading ? "Start Editing" : "Uploading..."}
+                < input type="file" onChange={handleImageUpload} accept='image/*' className='hidden' />
             </label>
           </div>
 

@@ -236,3 +236,24 @@ input[type="range"]::-moz-range-thumb {
 .rotate-svg{
   animation: rotate 10s ease infinite;
 }
+
+* {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE10+/Edge */
+}
+
+.custom-toast {
+  font-size: 14px;
+  padding: 10px;
+}
+
+@media (max-width: 600px) {
+  .custom-toast {
+    font-size: 13px;
+    padding: 8px;
+    width: 80% !important;
+    margin: 20px auto;
+  }
+}

@@ -10,7 +10,7 @@ const PDFmaker = () => {
   const [login, setLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const pdfRef = useRef(null);
-  const { user } = useContext(userContext);
+  const { user, url } = useContext(userContext);
 
   useEffect(() => {
     gsap.fromTo(pdfRef.current, { y: "15%", opacity: 0 }, {
@@ -22,7 +22,11 @@ const PDFmaker = () => {
   }, [])
 
   const handleRemoveImage = (index) => { setImages((prevImages) => prevImages.filter((_, i) => i !== index)); };
-  const handleImageChange = (e) => { const files = Array.from(e.target.files); setImages(files) };
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setLoading(true);
+    setTimeout(() => { setImages(files); setLoading(false) }, 1200)
+  };
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -35,7 +39,6 @@ const PDFmaker = () => {
 
   const sendToBackend = async () => {
     setLoading(true);
-
     try {
       const base64Images = await Promise.all(
         images.map((img) => convertToBase64(img))
@@ -48,12 +51,12 @@ const PDFmaker = () => {
         body: JSON.stringify(imagePayload),
       });
       const data = await response.blob();
-      const url = URL.createObjectURL(data);
-      setTimeout(() => { setPdf(url) }, 2000);
+      const data2 = URL.createObjectURL(data);
+      setTimeout(() => { setPdf(data2)}, 2000);
     } catch (err) {
       console.error('Error:', err);
       toast.error("failed to convert");
-    } finally { setLoading(false) }
+    } finally { setTimeout(()=>setLoading(false),2000) }
   };
 
   const downloadPdf = () => {
@@ -84,7 +87,7 @@ const PDFmaker = () => {
             <h2 ref={pdfRef} className="text-4xl md:text-7xl font-bold text-center mb-4">Convert Images to PDF</h2>
             <h4 className="mb-8 text-amber-600 font-semibold text-lg text-center">Upload your images and instantly generate high-quality PDFs.</h4>
             <div className="relative group">
-              <p className='bg-amber-500 tracking-wider w-xs md:w-3xl text-white md:font-bold group-active:scale-95  ring-yellow-400 group-hover:ring-4 text-lg md:text-xl rounded-full p-5 text-center '>Upload Image</p>
+              <p className='bg-amber-500 tracking-wider w-xs md:w-3xl text-white md:font-bold group-active:scale-95  ring-yellow-400 group-hover:ring-4 text-lg md:text-xl rounded-full p-5 text-center '>{!loading ? "Upload Image" : "Uploading..."}</p>
               <input type="file" name="" id="" multiple accept="image/*" onChange={handleImageChange} className='absolute top-10 md:-top-0 cursor-pointer bg-red-600 opacity-0 w-xs md:w-3xl text-white text-xl rounded-2xl p-2 md:p-5 text-center' />
             </div>
             <h1 className='font-semibold text-xl md:text-3xl text-gray-600 mt-6'>-- How it Works -- </h1>

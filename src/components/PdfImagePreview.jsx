@@ -6,12 +6,12 @@ const PdfPreview = (prop) => {
   const { images, setImages, login, cancelLogin, pdf, setPdf, loading, createPdf, downloadPdf, remove } = prop;
 
   return (
-    <div className='w-full md:w-3/4 mx-auto'>
+    <div className='w-[90%] md:w-3/4 mx-auto'>
       <div className='relative flex flex-col md:justify-between bg-white items-center px-5 lg:p-30 py-50 overflow-hidden my-10'>
-        <p className='absolute top-0 md:top-6 text-center text-4xl font-semibold text-gray-600'>{!pdf ? "Images Review" : "PDF Preview"}</p>
+        <p className='absolute top-2 md:top-6 text-center text-3xl md:text-4xl font-semibold text-gray-600'>{!pdf ? "Images Review" : "PDF Preview"}</p>
         <div>
           <button className='absolute top-15 left-5 md:left-10 text-black rounded-md hover:cursor-pointer active:scale-95 border p-2 pr-4 text-xl flex gap-2 items-center' onClick={() => pdf ? setPdf("") : setImages("")}><IoIosArrowBack />Back</button>
-          <button className='absolute top-15 right-5 md:right-10 bg-amber-500 text-white rounded-md hover:cursor-pointer ring-amber-300 active:scale-95 hover:ring-3 px-4 py-2 text-xl font-semibold' onClick={pdf ? downloadPdf : createPdf}>{pdf ? "Download" : loading ? "Converting..." : "Create PDF"}</button>
+          <button className='absolute top-15 right-5 md:right-10 bg-amber-500 text-white rounded-md hover:cursor-pointer ring-amber-300 active:scale-95 hover:ring-3 px-4 py-2 text-xl font-semibold' disabled={loading} onClick={pdf ? downloadPdf : createPdf}>{pdf ? "Download" : loading ? "Converting..." : "Create PDF"}</button>
         </div>
         {!pdf && images && (
           <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6 w-full overflow-x-scroll border-gray-200 border-2 p-5 rounded-md">

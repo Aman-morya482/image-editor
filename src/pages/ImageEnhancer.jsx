@@ -94,7 +94,7 @@ const ImageEnhancer = () => {
       const base64 = canvas.toDataURL();
 
       // Use the base64 string in your app
-      setTimeout(() => { setEnhancedImage(base64); setLoading(false)},2000)
+      setTimeout(() => { setEnhancedImage(base64); setLoading(false) }, 2000)
     };
 
     img.src = imageSrc; // pass your source image URL or base64
@@ -142,8 +142,8 @@ const ImageEnhancer = () => {
         <div className="relative max-w-[1800px] w-full min-h-[92vh] bg-rose-200 flex flex-col justify-center items-center ">
           <div className="w-full flex flex-col justify-center items-center relative mb-20">
             <h2 ref={enhanceRef} className="text-4xl md:text-7xl font-bold text-center mb-4">Image Enhancer</h2>
-          <span className='hidden xl:block'><img src="/png/014-filter.png" alt="" width={130} className='absolute -top-20 right-60 float-svg' /></span>
-          <span className='hidden xl:block'><img src="/png/025-ai-art.png" alt="" width={110} className='absolute -bottom-20 left-50 scale-svg' /></span>
+            <span className='hidden xl:block'><img src="/png/014-filter.png" alt="" width={130} className='absolute -top-20 right-60 float-svg' /></span>
+            <span className='hidden xl:block'><img src="/png/025-ai-art.png" alt="" width={110} className='absolute -bottom-20 left-50 scale-svg' /></span>
             <h3 className="mb-8 text-rose-600 text-center px-2 font-semibold text-lg">Transform low-quality images into crisp, vibrant ones.</h3>
 
             <div className="group flex flex-col items-center justify-center">
@@ -160,10 +160,10 @@ const ImageEnhancer = () => {
       {
         !enhancedImage && image && (
           <div className="max-w-[1800px] w-full min-h-[92vh] bg-rose-300 flex flex-col justify-center items-center relative">
-            <div className='w-3/4 flex flex-col bg-white my-10 gap-20 md:gap-10 justify-center items-center py-10 overflow-hidden'>
+            <div className='w-[90%] md:w-3/4 max-w-[1200px] flex flex-col bg-white my-10 gap-20 md:gap-10 justify-center items-center py-10 overflow-hidden'>
               <div className='relative flex justify-between w-4/5'>
                 <button onClick={handleBack} className='flex items-center border-gray-400 border-2 gap-1 rounded-md px-3 py-2 cursor-pointer active:scale-95'><IoIosArrowBack size={14} />Back</button>
-                <button className='flex items-center bg-rose-500 ring-red-300 hover:ring-3 active:scale-95 rounded-md py-2 text-white cursor-pointer'><p onClick={() => makeEnhanced(image)} className='px-2'>{!loading ? "Enhance Now" : "Processing..."}</p></button>
+                <button onClick={() => makeEnhanced(image)} disabled={loading} className='flex items-center bg-rose-500 ring-red-300 hover:ring-3 active:scale-95 rounded-md py-2 text-white cursor-pointer'><p className='px-2'>{!loading ? "Enhance Now" : "Processing..."}</p></button>
                 <div className={`absolute right-0 top-10 z-10 w-[80px] ${open ? 'opacity-100' : 'opacity-0'}`}>
                   <ul className='flex flex-col bg-gray-200 border border-gray-200 rounded-md'>
                     <li onClick={(e) => { changeFormat(e) }} data-format="image/jpeg" className={`hover:bg-gray-300 px-3 py-2 ${format === "image/jpeg" ? 'bg-gray-300' : 'bg-gray-200'}`}>JPEG</li>
@@ -172,7 +172,7 @@ const ImageEnhancer = () => {
                   </ul>
                 </div>
               </div>
-              <div className='w-[240px] h-[240px] object-contain md:w-[500px] md:h-[500px] border overflow-hidden rounded-md'>
+              <div className='w-[240px] h-auto max-h-[500px] md:w-[500px] md:max-h-[700px] border overflow-hidden rounded-md'>
                 <img src={image} alt="" className='object-contain object-center' />
               </div>
 
@@ -183,7 +183,7 @@ const ImageEnhancer = () => {
 
       {enhancedImage && image && (
         <div className="max-w-[1800px] bg-rose-300 w-full min-h-[92vh] flex flex-col justify-center items-center relative">
-          <div className='w-3/4 bg-white flex flex-col gap-20 md:gap-10 justify-center items-center py-10 my-10'>
+          <div className='w-[90%] md:w-3/4 max-w-[1200px] bg-white flex flex-col gap-20 md:gap-10 justify-center items-center py-10 my-10'>
             <div className='relative flex justify-between w-4/5'>
               <button onClick={handleBack} className='flex items-center border border-gray-400 border-2 gap-1 rounded-md px-3 py-2 cursor-pointer active:scale-95'><IoIosArrowBack size={14} />Back</button>
               <button className='flex items-center bg-rose-500 ring-red-300 hover:ring-3 rounded-md  text-white cursor-pointer'><p onClick={handleDownload} className='border-r px-2 active:scale-90'>Download</p><span className='mb-1 p-2' onClick={() => { setOpen(!open) }}><FaAngleDown size={16} /></span></button>
@@ -195,7 +195,7 @@ const ImageEnhancer = () => {
                 </ul>
               </div>
             </div>
-            <div className='w-[240px] h-[240px] md:w-[500px] md:h-[500px] border overflow-hidden rounded-md'>
+            <div className='w-[240px] h-auto max-h-[500px] md:w-[500px] md:max-h-[700px] border overflow-hidden rounded-md'>
               <ReactCompareImage
                 leftImage={image}
                 rightImage={enhancedImage}

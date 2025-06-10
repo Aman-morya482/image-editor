@@ -138,7 +138,7 @@ const ImageDetector = () => {
       )}
 
       {img && (
-        <div className="w-3/4 bg-white flex flex-col xl:flex-row my-10 px-4 py-10 md:px-10 xl:px-10">
+        <div className="w-[90%] md:w-3/4 max-w-[1200px] bg-white flex flex-col xl:flex-row my-10 px-4 py-10 md:px-10 xl:px-10">
           <div className="w-full flex flex-col gap-3">
             <div className='flex justify-between w-full'>
               <button onClick={() => { description ? setDescription(``) : setImg(null) }} className='text-black rounded-md hover:cursor-pointer active:scale-95 border p-1 pr-2 md:text-lg flex gap-1 items-center'><IoIosArrowBack />Back</button>
@@ -146,12 +146,13 @@ const ImageDetector = () => {
                 <button
                   ref={buttonRef}
                   onClick={sendToBackend}
+                  disabled={loading}
                   className={`bg-green-600 active:scale-95 text-white hover:cursor-pointer ring-green-300 hover:ring-2 rounded-md py-2 px-5 text-center`}>
                   {loading ? "Processing..." : "Analyze Image"}
                 </button>
               )}
             </div>
-            <div className={`flex flex-col md:flex-row ${!description ? "" : "justify-center items-center w-full"} gap-6 mt-6 overflow-hidden`}>
+            <div className={`flex flex-col md:flex-row ${!description ? "items-center md:items-start" : "justify-center items-center w-full"} gap-6 mt-6 overflow-hidden`}>
               <img src={`data:image/jpeg;base64,${img}`} alt="Uploaded" className={`${description ? "w-[250px] h-[250px] md:w-[400px] md:h-[400px]" : "w-[250px] h-[250px] md:w-[500px] md:h-[450px]"} border rounded-md shadow-lg object-cover`} />
               {!description && img &&
                 <div className='w-full '>

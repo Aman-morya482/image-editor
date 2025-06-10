@@ -121,12 +121,12 @@ const BgRemover = () => {
       }
       {!result && image && (
         <div className="max-w-[1800px] w-full min-h-[92vh] flex flex-col justify-center items-center relative bg-yellow-200">
-          <div className='w-3/4 flex flex-col gap-20 md:gap-10 justify-center items-center py-10 mb-20 md:mb-0 bg-white overflow-hidden'>
+          <div className='w-[90%] md:w-3/4 flex flex-col gap-20 md:gap-10 justify-center items-center py-10 mb-20 md:mb-0 bg-white overflow-hidden'>
             <div className='relative flex justify-between w-4/5'>
               <button onClick={handleBack} className='flex items-center md:text-lg border-2 border-gray-400 gap-1 rounded-md px-3 py-2 cursor-pointer active:scale-95'><IoIosArrowBack size={14} />Back</button>
-              <button className='flex items-center bg-orange-400 md:text-lg rounded-md py-2 px-2 md:px-4 text-white active:scale-95 cursor-pointer ring-yellow-200 hover:ring-3'><p onClick={() => sendToBackend()}>{loading ? "Processing..." : "Remove BG"}</p></button>
+              <button onClick={() => sendToBackend()} disabled={loading == true} className={`flex items-center bg-orange-400 md:text-lg rounded-md py-2 px-2 md:px-4 text-white active:scale-95 ring-yellow-200 hover:ring-3 cursor-pointer`}><p>{loading ? "Processing..." : "Remove BG"}</p></button>
             </div>
-            <div className='w-[240px] h-[240px] md:w-[500px] md:h-[500px] border overflow-hidden'>
+            <div className='w-[240px] h-auto max-h-[500px] md:w-[500px] md:max-h-[600px] border overflow-hidden'>
               <img src={image} alt="uploaded image" className='w-full h-full' />
             </div>
           </div>
@@ -139,7 +139,7 @@ const BgRemover = () => {
               <button onClick={handleBack} className='flex items-center md:text-lg border-2 border-gray-400 gap-1 rounded-md px-3 py-2 cursor-pointer active:scale-95'><IoIosArrowBack size={14} />Back</button>
               <button className='flex items-center bg-orange-400 md:text-lg cursor-pointer active:scale-95 ring-yellow-200 hover:ring-3 rounded-md py-2 px-2 md:px-4 text-white'><p onClick={() => downloadImage(result)}>Download</p></button>
             </div>
-            <div className='w-[240px] h-[240px] md:w-[500px] rounded-md md:h-[500px] border overflow-hidden'>
+            <div className='w-[240px] h-auto max-h-[500px] md:w-[500px] md:max-h-[700px] rounded-md border overflow-hidden'>
               <ReactCompareImage
                 leftImage={image}
                 rightImage={result}
