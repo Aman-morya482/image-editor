@@ -17,6 +17,7 @@ import EditUser from "./components/EditUser";
 import { ToastContainer, toast, Slide, Bounce, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
+import MoreRating from "./components/MoreRating";
 
 function App() {
 
@@ -56,6 +57,7 @@ function App() {
           <Route path="/image-editor" element={<Editor />} />
           <Route path="/edit-image" element={<ImageEditor />} />
           <Route path="/edit-user" element={<EditUser />} />
+          <Route path="/user-rating" element={<MoreRating />} />
         </Route>
       </Routes>
     </Router>

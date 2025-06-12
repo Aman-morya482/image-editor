@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import { NavLink } from "react-router-dom";
 import { TextPlugin } from "gsap/TextPlugin";
 import { ScrollTrigger } from 'gsap/all';
@@ -14,6 +14,9 @@ import { RiImageAiLine } from "react-icons/ri";
 import { PiCursorClick } from "react-icons/pi";
 import { LuUpload } from "react-icons/lu";
 import { FiDownload } from "react-icons/fi";
+import ReviewForm from '../components/ReviewForm';
+import { userContext } from '../utils/ContextProvider';
+import HomeRating from '../components/HomeRating';
 
 
 const Home = () => {
@@ -25,6 +28,9 @@ const Home = () => {
   const marText1 = useRef(null);
   const marText2 = useRef(null);
   const gradientText = useRef(null);
+  const [openRating, setOpenRating] = useState(false);
+  const [login, setLogin] = useState(false);
+  const { user } = useContext(userContext);
   const words = ["Editing", "Compressor", "Enhancer", "BG Remover", "Generation", "Conversion"];
   const [wordIndex, setWordIndex] = useState(0);
   const [text, setText] = useState("");
@@ -185,6 +191,8 @@ const Home = () => {
         </div>
 
         <FAQ />
+        <HomeRating open={setOpenRating} />
+        {openRating && <ReviewForm open={setOpenRating} />}
 
       </div>
     </div>

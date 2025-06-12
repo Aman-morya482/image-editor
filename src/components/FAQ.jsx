@@ -40,7 +40,7 @@ export default function FAQ() {
   };
 
   return (
-    <section className="w-full max-w-[1800px] bg-gradient-to-br from-orange-300 to-orange-600 text-white p-10 md:py-16 md:px-6">
+    <section className="w-full max-w-[1800px] bg-gradient-to-b from-orange-300 to-orange-600 text-white p-10 md:py-16 md:px-6">
       <div className="w-full mx-auto text-center">
         <span className="bg-orange-600 text-white px-3 py-1 rounded-full text-xs md:text-sm  font-semibold uppercase">
           Frequently Asked

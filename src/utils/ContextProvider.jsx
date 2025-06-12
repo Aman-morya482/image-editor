@@ -10,7 +10,6 @@ const ContextProvider = ({ children }) => {
   const download = async () => {
     if (user) {
       try {
-
         console.log(user.value.name);
         console.log(user.value.email);
         const result = await fetch(`${url}/download/download?email=${user.value.email}`, {

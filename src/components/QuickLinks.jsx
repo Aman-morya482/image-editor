@@ -24,7 +24,7 @@ const QuickLinks = () => {
         {tools.map((tool, index) => (
           <NavLink key={index} to={tool.path}>
             <div className='quick w-[300px] md:w-xs h-auto active:scale-95 p-3 px-4 md:p-5 border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md hover:cursor-pointer group flex justify-between items-center'>
-              <span className='group-hover:scale-110 transition-all duration-100 ease-linear'>{tool.icon}</span>
+              <span className={`${tool.text == "Image Compressor" ? "group-hover:scale-90" : "group-hover:scale-110"} transition-all duration-100 ease-linear`}>{tool.icon}</span>
               <p>{tool.text}</p>
             </div>
           </NavLink>

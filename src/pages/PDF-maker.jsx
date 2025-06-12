@@ -52,11 +52,11 @@ const PDFmaker = () => {
       });
       const data = await response.blob();
       const data2 = URL.createObjectURL(data);
-      setTimeout(() => { setPdf(data2)}, 2000);
+      setTimeout(() => { setPdf(data2) }, 2000);
     } catch (err) {
       console.error('Error:', err);
       toast.error("failed to convert");
-    } finally { setTimeout(()=>setLoading(false),2000) }
+    } finally { setTimeout(() => setLoading(false), 2000) }
   };
 
   const downloadPdf = () => {
